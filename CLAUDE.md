@@ -20,19 +20,20 @@ securelens/
 │   └── src/main/java/com/securelens/
 │       ├── SecureLensApplication.java
 │       ├── config/             # Security config, CORS, API keys
-│       ├── controller/         # REST controllers
-│       ├── model/              # JPA entities
-│       ├── repository/         # Spring Data JPA repos
-│       ├── service/            # Business logic
+│       ├── controller/         # REST controllers (Auth, Health, Log)
+│       ├── model/              # JPA entities (User, Log, Role, Severity)
+│       ├── repository/         # Spring Data JPA repos + Specifications
+│       ├── service/            # Business logic (Auth, Log)
 │       ├── dto/                # Request/Response DTOs
+│       ├── exception/          # Custom exceptions + GlobalExceptionHandler
 │       ├── scheduler/          # Scheduled detection jobs
-│       └── security/           # JWT auth filter
+│       └── security/           # JWT auth filter, JwtUtil
 ├── frontend/                   # React application
 │   ├── package.json
 │   └── src/
 │       ├── App.jsx
-│       ├── components/         # Reusable components
-│       ├── pages/              # Page-level components
+│       ├── components/         # Reusable components (Navbar, ProtectedRoute)
+│       ├── pages/              # Page-level components (Home, Login, Register, Dashboard, Logs)
 │       ├── services/           # API call functions (axios)
 │       ├── context/            # Auth context
 │       └── utils/              # Helpers
@@ -55,7 +56,12 @@ incidents, audit_trail, saved_hunts
 - Every feature must have both backend AND frontend working together
 
 ## Current Phase
-Phase 1 — Project skeleton setup
+Phase 3 — Log Ingestion (completed)
+
+## Completed Phases
+- Phase 1: Project skeleton — Spring Boot backend + React frontend with Vite, Tailwind, health endpoint
+- Phase 2: JWT Authentication — User entity, register/login with BCrypt + JWT, protected routes, AuthContext
+- Phase 3: Log Ingestion — Log entity with Specification-based dynamic filtering, batch ingestion API, paginated log viewer with color-coded severity badges and expandable rows
 
 ## Important Notes
 - This is an MVP — functional correctness over visual polish
