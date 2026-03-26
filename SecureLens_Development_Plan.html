@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SecureLens — Solo Development Plan (Claude Code)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0d1117; color: #c9d1d9; line-height: 1.7; padding: 2rem; max-width: 1100px; margin: 0 auto; }
+  h1 { color: #58a6ff; font-size: 2rem; border-bottom: 2px solid #21262d; padding-bottom: 1rem; margin-bottom: 2rem; }
+  h2 { color: #79c0ff; font-size: 1.5rem; margin: 2.5rem 0 1rem; border-left: 4px solid #58a6ff; padding-left: 0.75rem; }
+  h3 { color: #d2a8ff; font-size: 1.15rem; margin: 1.5rem 0 0.5rem; }
+  h4 { color: #7ee787; font-size: 1rem; margin: 1.2rem 0 0.4rem; }
+  p { margin: 0.5rem 0; }
+  code { background: #161b22; padding: 2px 6px; border-radius: 4px; font-family: 'Fira Code', monospace; font-size: 0.9em; color: #e6edf3; }
+  pre { background: #161b22; padding: 1rem; border-radius: 8px; overflow-x: auto; margin: 0.75rem 0; border: 1px solid #21262d; }
+  pre code { padding: 0; background: none; }
+  .phase { background: #161b22; border: 1px solid #21262d; border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; }
+  .phase-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .phase-number { background: #58a6ff; color: #0d1117; font-weight: 700; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+  .phase-title { font-size: 1.3rem; color: #58a6ff; font-weight: 600; }
+  .phase-meta { color: #8b949e; font-size: 0.85rem; margin-bottom: 1rem; }
+  .task { background: #0d1117; border: 1px solid #21262d; border-radius: 8px; padding: 1rem 1.25rem; margin: 0.75rem 0; }
+  .task-title { color: #e6edf3; font-weight: 600; margin-bottom: 0.3rem; }
+  .task-detail { color: #8b949e; font-size: 0.9rem; }
+  .prompt-box { background: #1c2333; border: 1px solid #388bfd44; border-radius: 8px; padding: 1rem 1.25rem; margin: 0.75rem 0; }
+  .prompt-label { color: #58a6ff; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem; }
+  .prompt-text { color: #c9d1d9; font-style: italic; }
+  .tip { background: #1a2332; border-left: 3px solid #58a6ff; padding: 0.75rem 1rem; margin: 0.75rem 0; border-radius: 0 6px 6px 0; }
+  .warning { background: #2a1f16; border-left: 3px solid #d29922; padding: 0.75rem 1rem; margin: 0.75rem 0; border-radius: 0 6px 6px 0; }
+  .warning::before { content: "⚠ "; }
+  .success { background: #162c1a; border-left: 3px solid #3fb950; padding: 0.75rem 1rem; margin: 0.75rem 0; border-radius: 0 6px 6px 0; }
+  .success::before { content: "✓ "; }
+  .checkpoint { background: #1a2332; border: 2px dashed #388bfd44; border-radius: 8px; padding: 1rem; margin: 1rem 0; text-align: center; color: #58a6ff; font-weight: 600; }
+  ul { padding-left: 1.5rem; margin: 0.5rem 0; }
+  li { margin: 0.3rem 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  th { background: #161b22; color: #58a6ff; padding: 0.6rem 1rem; text-align: left; border: 1px solid #21262d; }
+  td { padding: 0.6rem 1rem; border: 1px solid #21262d; }
+  .tag { display: inline-block; background: #21262d; color: #79c0ff; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; margin: 2px; }
+  .tag-green { background: #1a2e1a; color: #7ee787; }
+  .tag-yellow { background: #2a2314; color: #e3b341; }
+  .tag-red { background: #2d1a1a; color: #f85149; }
+  hr { border: none; border-top: 1px solid #21262d; margin: 2rem 0; }
+  .toc { background: #161b22; border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; }
+  .toc a { color: #58a6ff; text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  .toc ul { list-style: none; padding-left: 0; }
+  .toc li { padding: 0.2rem 0; }
+  .toc li li { padding-left: 1.5rem; }
+</style>
+</head>
+<body>
+
+<h1>SecureLens — Solo Development Plan</h1>
+<p>Complete feature-by-feature development roadmap for vibe coding with Claude Code.<br>
+<strong>Approach:</strong> Each feature = backend + frontend + visual test. Generic styling first → UI/UX polish after MVP.</p>
+
+<div class="toc">
+<h3>Table of Contents</h3>
+<ul>
+  <li><a href="#part0">Part 0 — How to Use Claude Code Effectively</a></li>
+  <li><a href="#phase1">Phase 1 — Project Skeleton & Dev Environment</a></li>
+  <li><a href="#phase2">Phase 2 — Authentication & User Management</a></li>
+  <li><a href="#phase3">Phase 3 — Log Ingestion & Storage</a></li>
+  <li><a href="#phase4">Phase 4 — Log Simulator</a></li>
+  <li><a href="#phase5">Phase 5 — SIEM Detection Engine (8 Rules)</a></li>
+  <li><a href="#phase6">Phase 6 — Alert Management Dashboard</a></li>
+  <li><a href="#phase7">Phase 7 — Threat Intelligence Hub</a></li>
+  <li><a href="#phase8">Phase 8 — Mistral AI Alert Triage</a></li>
+  <li><a href="#phase9">Phase 9 — AI Investigation Assistant (Chatbot)</a></li>
+  <li><a href="#phase10">Phase 10 — Threat Hunting</a></li>
+  <li><a href="#phase11">Phase 11 — Incident Reporting (PDF)</a></li>
+  <li><a href="#phase12">Phase 12 — Real-Time Dashboard & Analytics</a></li>
+  <li><a href="#phase13">Phase 13 — Deployment (Railway + Vercel)</a></li>
+  <li><a href="#phase14">Phase 14 — Integration Testing & Bug Fixes</a></li>
+  <li><a href="#phase15">Phase 15 — UI/UX Polish (Post-MVP)</a></li>
+</ul>
+</div>
+
+<hr>
+
+<!-- ============================================ -->
+<h2 id="part0">Part 0 — How to Use Claude Code Effectively for This Project</h2>
+<!-- ============================================ -->
+
+<h3>The Core Workflow</h3>
+<p>You're going to be working feature-by-feature, and each feature follows this loop:</p>
+<ol>
+  <li><strong>Prompt Claude Code</strong> with a clear, scoped task (one feature at a time)</li>
+  <li><strong>Review the generated code</strong> — read it, understand it, don't just accept blindly</li>
+  <li><strong>Run it</strong> and test visually in the browser</li>
+  <li><strong>Iterate</strong> — fix bugs, refine, then move to the next feature</li>
+  <li><strong>Commit</strong> after each working feature</li>
+</ol>
+
+<h3>Project Setup for Claude Code</h3>
+<p>Before you write a single line of code, create a <code>CLAUDE.md</code> file in your project root. This is the file Claude Code reads automatically to understand your project. It's the single most important thing for effective vibe coding.</p>
+
+<div class="prompt-box">
+<div class="prompt-label">Your CLAUDE.md file should contain:</div>
+<pre><code># SecureLens — Security Operations Platform
+
+## Project Overview
+A unified Security Operations Platform combining a real-time SIEM engine
+with threat intelligence, AI-powered triage, and incident reporting.
+Solo project built feature-by-feature.
+
+## Tech Stack
+- Backend: Spring Boot 3.x, Java 17, PostgreSQL, Maven
+- Frontend: React 18, React Router, Axios, Tailwind CSS (utility-only, generic)
+- AI: Mistral API for alert triage
+- APIs: VirusTotal, AbuseIPDB, Shodan, NVD, AlienVault OTX
+- Deployment: Railway (backend), Vercel (frontend)
+
+## Project Structure
+securelens/
+├── backend/          # Spring Boot application
+│   └── src/main/java/com/securelens/
+│       ├── config/       # Security config, CORS, API keys
+│       ├── controller/   # REST controllers
+│       ├── model/        # JPA entities
+│       ├── repository/   # Spring Data JPA repos
+│       ├── service/      # Business logic
+│       ├── dto/          # Request/Response DTOs
+│       ├── scheduler/    # Scheduled detection jobs
+│       └── security/     # JWT auth filter
+├── frontend/         # React application
+│   └── src/
+│       ├── components/   # Reusable components
+│       ├── pages/        # Page-level components
+│       ├── services/     # API call functions (axios)
+│       ├── context/      # Auth context
+│       └── utils/        # Helpers
+└── CLAUDE.md
+
+## Database
+PostgreSQL with 6 tables: users, logs, alerts, threat_intel_cache,
+incidents, audit_trail
+
+## Conventions
+- REST endpoints under /api/v1/
+- JWT authentication on all endpoints except /api/v1/auth/**
+- DTOs for all request/response bodies (never expose entities directly)
+- Service layer handles all business logic
+- Controllers are thin — validation + delegation only
+- Frontend uses functional components with hooks
+- Generic Tailwind styling only (no custom design system yet)
+- Every feature must have both backend AND frontend working together
+
+## Current Phase
+[UPDATE THIS AS YOU PROGRESS]
+Phase 1 — Project skeleton setup
+
+## Important Notes
+- This is an MVP — functional correctness over visual polish
+- All 8 MITRE ATT&CK detection rules must work correctly
+- Log simulator must generate realistic test data
+- Mistral AI integration is a key differentiator — it must work well
+- Frontend should be testable visually for every feature</code></pre>
+</div>
+
+<h3>How to Prompt Claude Code — Patterns That Work</h3>
+
+<h4>Pattern 1: Feature-Scoped Prompts</h4>
+<p>Always give Claude Code one complete feature per prompt. Not "build the backend" — that's too broad. Not "create a User entity" — that's too narrow and you'll lose context between prompts.</p>
+
+<div class="prompt-box">
+<div class="prompt-label">Good prompt example</div>
+<div class="prompt-text">"Implement JWT authentication for SecureLens. Create: (1) User entity with id, username, email, password_hash, role, created_at fields mapped to a 'users' PostgreSQL table, (2) a /api/v1/auth/register endpoint accepting username, email, password and returning a JWT, (3) a /api/v1/auth/login endpoint accepting email and password and returning a JWT, (4) a JwtAuthFilter that validates the token on all /api/v1/** routes except /api/v1/auth/**, (5) a SecurityConfig that wires it all together. Use bcrypt for password hashing. The JWT should contain userId, email, and role. Token expiry: 24 hours."</div>
+</div>
+
+<div class="prompt-box">
+<div class="prompt-label">Bad prompt example</div>
+<div class="prompt-text">"Add user authentication"</div>
+</div>
+
+<h4>Pattern 2: Referencing Your Architecture</h4>
+<p>You have the <code>SecureLens_Architecture_Reference.html</code> from our previous conversation. When prompting Claude Code for a feature, reference the specific section. You can even paste relevant excerpts into the prompt.</p>
+
+<div class="prompt-box">
+<div class="prompt-label">Reference-based prompt example</div>
+<div class="prompt-text">"Implement detection rule R-003 (Privilege Escalation). Here's the spec: Trigger when same user_id generates 3+ 'permission_denied' events followed by a 'permission_granted' event within 5 minutes. Severity: HIGH. The rule should run as a @Scheduled job every 60 seconds, query the logs table, and create an alert in the alerts table with mitre_tactic='TA0004', mitre_technique='T1548'."</div>
+</div>
+
+<h4>Pattern 3: Fix-and-Iterate Prompts</h4>
+<p>When something breaks (it will), give Claude Code the exact error:</p>
+
+<div class="prompt-box">
+<div class="prompt-label">Debug prompt example</div>
+<div class="prompt-text">"The /api/v1/alerts endpoint returns 403 even though I'm passing a valid JWT. Here's the error from the browser console: [paste error]. Here's what I see in the Spring Boot logs: [paste relevant logs]. Fix the JWT filter — I think the token extraction from the Authorization header might be wrong."</div>
+</div>
+
+<h4>Pattern 4: Frontend-with-Backend Prompts</h4>
+<p>Since you're going feature-by-feature with visual testing, always ask for the frontend as part of the feature:</p>
+
+<div class="prompt-box">
+<div class="prompt-label">Full-feature prompt example</div>
+<div class="prompt-text">"Now create the React frontend for the login/register feature. Create: (1) a LoginPage with email and password fields that calls POST /api/v1/auth/login, stores the JWT in localStorage, and redirects to /dashboard, (2) a RegisterPage with username, email, password fields that calls POST /api/v1/auth/register, (3) an AuthContext that provides the current user and token to all components, (4) a ProtectedRoute wrapper that redirects to /login if no token exists. Use generic Tailwind styling — just make it functional and clean, no fancy design. I need to test this visually."</div>
+</div>
+
+<h3>Git Discipline</h3>
+<p>Commit after every working feature. This is your safety net:</p>
+<pre><code>git add .
+git commit -m "feat: implement JWT auth with login/register pages"
+git push</code></pre>
+<p>If Claude Code breaks something later, you can always roll back. Name your commits clearly so you can find specific features later.</p>
+
+<h3>Running Both Servers During Development</h3>
+<p>You'll always have two terminals open:</p>
+<pre><code># Terminal 1 — Backend
+cd backend
+./mvnw spring-boot:run
+
+# Terminal 2 — Frontend
+cd frontend
+npm start</code></pre>
+<p>The React dev server typically runs on <code>localhost:3000</code> and proxies API calls to Spring Boot on <code>localhost:8080</code>. You'll configure this proxy in Phase 1.</p>
+
+<div class="warning">Never let Claude Code generate code for multiple unrelated features in one prompt. One feature = one prompt = one commit. This keeps things manageable and debuggable.</div>
+
+<hr>
+
+<!-- ============================================ -->
+<h2 id="phase1">Phase 1 — Project Skeleton & Dev Environment</h2>
+<!-- ============================================ -->
+
+<div class="phase">
+<div class="phase-header">
+  <div class="phase-number">1</div>
+  <div class="phase-title">Project Skeleton & Dev Environment</div>
+</div>
+<div class="phase-meta">Goal: A running Spring Boot + React project with PostgreSQL connected, CORS configured, and a health-check endpoint visible in the browser.</div>
+
+<div class="task">
+  <div class="task-title">Task 1.1 — Initialize Spring Boot Backend</div>
+  <div class="task-detail">
+    <p>Use Spring Initializr (or have Claude Code generate the pom.xml) with these dependencies:</p>
+    <ul>
+      <li>Spring Web</li>
+      <li>Spring Data JPA</li>
+      <li>Spring Security</li>
+      <li>PostgreSQL Driver</li>
+      <li>Spring Boot Starter Validation</li>
+      <li>Lombok</li>
+      <li>jjwt (io.jsonwebtoken) for JWT</li>
+    </ul>
+    <p>Set up the package structure: <code>config</code>, <code>controller</code>, <code>model</code>, <code>repository</code>, <code>service</code>, <code>dto</code>, <code>scheduler</code>, <code>security</code>.</p>
+  </div>
+</div>
+
+<div class="prompt-box">
+<div class="prompt-label">Claude Code Prompt</div>
+<div class="prompt-text">"Initialize a Spring Boot 3.x project with Maven for SecureLens. Java 17. Set up the package structure under com.securelens with subpackages: config, controller, model, repository, service, dto, scheduler, security. Add dependencies: spring-boot-starter-web, spring-boot-starter-data-jpa, spring-boot-starter-security, spring-boot-starter-validation, postgresql driver, lombok, jjwt (0.12.x). Create application.yml with PostgreSQL connection to a local database named 'securelens_db' (user: postgres, password from env variable DB_PASSWORD). Create a simple /api/v1/health endpoint that returns {status: 'UP', timestamp: now}. Temporarily permit all requests in SecurityConfig so we can test the health endpoint."</div>
+</div>
+
+<div class="task">
+  <div class="task-title">Task 1.2 — Initialize React Frontend</div>
+  <div class="task-detail">
+    <p>Create React app with: React Router, Axios, Tailwind CSS. Set up proxy to backend. Create a minimal App.jsx with routing skeleton.</p>
+  </div>
+</div>
+
+<div class="prompt-box">
+<div class="prompt-label">Claude Code Prompt</div>
+<div class="prompt-text">"Create a React 18 app in the frontend/ directory for SecureLens. Install: react-router-dom, axios, tailwindcss and its peer dependencies. Set up Tailwind with a basic config. Configure a proxy in package.json to forward /api calls to http://localhost:8080. Create: (1) App.jsx with React Router and placeholder routes for /login, /register, /dashboard, (2) a simple HomePage that calls GET /api/v1/health and displays the response to prove the connection works, (3) an api.js axios instance configured with baseURL and default headers. Use generic Tailwind — just enough to be readable."</div>
+</div>
+
+<div class="task">
+  <div class="task-title">Task 1.3 — PostgreSQL Setup & Database Creation</div>
+  <div class="task-detail">
+    <p>Create the local database. Spring Boot with JPA will auto-create tables from entities, but you need the database itself to exist.</p>
+    <pre><code>createdb securelens_db
+# or via psql:
+psql -U postgres -c "CREATE DATABASE securelens_db;"</code></pre>
+  </div>
+</div>
+
+<div class="task">
+  <div class="task-title">Task 1.4 — Create CLAUDE.md</div>
+  <div class="task-detail">
+    <p>Create the CLAUDE.md file described in Part 0. Place it in the project root. Update it as you complete each phase.</p>
+  </div>
+</div>
+
+<div class="task">
+  <div class="task-title">Task 1.5 — Git Init & First Commit</div>
+  <div class="task-detail">
+    <pre><code>git init
+echo "node_modules/\ntarget/\n.env\n*.log" > .gitignore
+git add .
+git commit -m "feat: project skeleton — Spring Boot + React + PostgreSQL"</code></pre>
+  </div>
+</div>
+
+<div class="checkpoint">✓ Checkpoint: Open browser → see health check response → backend and frontend are connected</div>
+</div>
+
+<hr>
+
+<!-- ============================================ -->
+<h2 id="phase2">Phase 2 — Authentication & User Management</h2>
+<!-- ============================================ -->
+
+<div class="phase">
+<div class="phase-header">
+  <div class="phase-number">2</div>
+  <div class="phase-title">Authentication & User Management</div>
+</div>
+<div class="phase-meta">Goal: Register, login, JWT-protected routes, and a visible auth flow in the browser.</div>
+
+<div class="task">
+  <div class="task-title">Task 2.1 — User Entity & Repository</div>
+  <div class="task-detail">
+    <p>User entity: <code>id</code> (UUID), <code>username</code>, <code>email</code> (unique), <code>password_hash</code>, <code>role</code> (ADMIN/ANALYST), <code>created_at</code>. JPA entity mapped to <code>users</code> table. Spring Data repository.</p>
+  </div>
+</div>
+
+<div class="task">
+  <div class="task-title">Task 2.2 — JWT Utility & Auth Service</div>
+  <div class="task-detail">
+    <p>JwtUtil class: generate token (containing userId, email, role), validate token, extract claims. Token expiry: 24h. Secret from env variable <code>JWT_SECRET</code>. AuthService: register (hash password with bcrypt, save user, return JWT), login (verify credentials, return JWT).</p>
+  </div>
+</div>
+
+<div class="task">
+  <div class="task-title">Task 2.3 — Auth Controller & Security Config</div>
+  <div class="task-detail">
+    <p>AuthController: <code>POST /api/v1/auth/register</code>, <code>POST /api/v1/auth/login</code>. Both return <code>{token, user}</code>. JwtAuthFilter: extracts JWT from Authorization header, validates, sets SecurityContext. SecurityConfig: permit <code>/api/v1/auth/**</code>, require auth on everything else. CORS: allow <code>localhost:3000</code>.</p>
+  </div>
+</div>
+
+<div class="task">
+  <div class="task-title">Task 2.4 — Frontend Auth Pages</div>
+  <div class="task-detail">
+    <p>LoginPage, RegisterPage, AuthContext (stores token + user in localStorage, provides login/logout/isAuthenticated), ProtectedRoute component that redirects to /login. After login → redirect to /dashboard (placeholder for now). Include a Navbar with user info and logout button.</p>
+  </div>
+</div>
+
+<div class="prompt-box">
+<div class="prompt-label">Claude Code Prompt (combine 2.1–2.4 into one)</div>
+<div class="prompt-text">"Implement full JWT authentication for SecureLens. Backend: (1) User entity with fields: id (UUID, auto-generated), username (unique, not blank), email (unique, not blank), passwordHash, role (enum: ADMIN, ANALYST), createdAt. Map to 'users' table. (2) UserRepository with findByEmail. (3) JwtUtil: generateToken(user) with claims userId/email/role, validateToken, extractClaims. 24h expiry. Secret from env JWT_SECRET. (4) AuthService: register(dto) — validate, hash password with bcrypt, save, return JWT+user; login(dto) — verify credentials, return JWT+user. (5) AuthController: POST /api/v1/auth/register, POST /api/v1/auth/login. Use DTOs for request/response. (6) JwtAuthFilter as OncePerRequestFilter. (7) SecurityConfig: permit /api/v1/auth/**, require authentication on all other /api/v1/** paths. Enable CORS for localhost:3000. Frontend: (1) AuthContext with login/logout/register functions, token stored in localStorage. (2) LoginPage with email+password form. (3) RegisterPage with username+email+password form. (4) ProtectedRoute wrapper. (5) Simple Navbar showing username and logout button. (6) After login redirect to /dashboard (just show 'Dashboard — coming soon'). Generic Tailwind styling."</div>
+</div>
+
+<div class="checkpoint">✓ Checkpoint: Register a user → Login → See dashboard placeholder → Refresh page (token persists) → Logout → Can't access /dashboard</div>
+</div>
+
+<hr>
+
+<!-- ============================================ -->
+<h2 id="phase3">Phase 3 — Log Ingestion & Storage</h2>
+<!-- ============================================ -->
+
+<div class="phase">
+<div class="phase-header">
+  <div class="phase-number">3</div>
+  <div class="phase-title">Log Ingestion & Storage</div>
+</div>
+<div class="phase-meta">Goal: POST logs via API, store them, view them in a paginated log viewer page.</div>
+
+<div class="task">
+  <div class="task-title">Task 3.1 — Log Entity & Schema</div>
+  <div class="task-detail">
+    <p>Log entity: <code>id</code> (Long, auto), <code>timestamp</code> (Instant), <code>source_ip</code>, <code>destination_ip</code>, <code>event_type</code>, <code>severity</code> (INFO/LOW/MEDIUM/HIGH/CRITICAL), <code>user_id_field</code> (the user referenced in the log, not our app user), <code>raw_message</code> (TEXT), <code>metadata</code> (JSON string), <code>ingested_at</code>. Index on timestamp, source_ip, event_type.</p>
+  </div>
+</div>
+
+<div class="task">
+  <div class="task-title">Task 3.2 — Log Ingestion API</div>
+  <div class="task-detail">
+    <p><code>POST /api/v1/logs</code> — accepts single log. <code>POST /api/v1/logs/batch</code> — accepts array of logs (for the simulator). <code>GET /api/v1/logs</code> — paginated, filterable by source_ip, event_type, severity, date range. <code>GET /api/v1/logs/{id}</code> — single log detail.</p>
+  </div>
+</div>
+
+<div class="task">
+  <div class="task-title">Task 3.3 — Log Viewer Page (Frontend)</div>
+  <div class="task-detail">
+    <p>LogsPage: table view of logs with columns (timestamp, source_ip, event_type, severity, message preview). Filters bar: event_type dropdown, severity dropdown, date range picker, source IP text input. Pagination controls. Click a row → expand to show full raw_message and metadata. Color-code severity levels.</p>
+  </div>
+</div>
+
+<div class="prompt-box">
+<div class="prompt-label">Claude Code Prompt</div>
+<div class="prompt-text">"Implement log ingestion and viewing for SecureLens. Backend: (1) Log entity mapped to 'logs' table with fields: id (Long, auto-increment), timestamp (Instant), sourceIp (String), destinationIp (String), eventType (String — values like 'login_failed', 'login_success', 'file_access', 'permission_denied', 'permission_granted', 'port_scan', 'data_transfer', 'process_execution', 'config_change', 'network_connection'), severity (enum: INFO, LOW, MEDIUM, HIGH, CRITICAL), userIdField (String — the user referenced in the log event, NOT our app's user), rawMessage (TEXT), metadata (TEXT — JSON string for extra data), ingestedAt (Instant, auto-set). Add DB indexes on timestamp, sourceIp, eventType. (2) LogRepository with findAll using Specification for dynamic filtering. (3) LogService with ingest(dto), ingestBatch(list), findAll with filters and pagination. (4) LogController: POST /api/v1/logs, POST /api/v1/logs/batch, GET /api/v1/logs (paginated with query params: sourceIp, eventType, severity, startDate, endDate, page, size), GET /api/v1/logs/{id}. Frontend: (1) LogsPage showing a table of logs with columns: timestamp, source IP, event type, severity badge (color-coded), message preview (truncated). (2) Filter bar at top with: event type dropdown, severity dropdown, source IP text input, date range. (3) Pagination controls. (4) Click a row to expand and show full rawMessage and metadata. (5) Add /logs route and nav link. Generic Tailwind."</div>
+</div>
+
+<div class="checkpoint">✓ Checkpoint: Use Postman/curl to POST a few test logs → See them in the Log Viewer → Filters work → Pagination works</div>
+</div>
+
+<hr>
+
+<!-- ============================================ -->
+<h2 id="phase4">Phase 4 — Log Simulator</h2>
+<!-- ============================================ -->
+
+<div class="phase">
+<div class="phase-header">
+  <div class="phase-number">4</div>
+  <div class="phase-title">Log Simulator</div>
+</div>
+<div class="phase-meta">Goal: A built-in simulator that generates realistic security logs — both benign and malicious — so you can test detection rules without real data.</div>
+
+<div class="task">
+  <div class="task-title">Task 4.1 — Simulator Service (Backend)</div>
+  <div class="task-detail">
+    <p>A service that generates logs matching each of the 8 detection rule patterns, plus normal baseline traffic. The simulator should be configurable: number of logs, time window, ratio of malicious to benign. It should use realistic IP addresses, usernames, and event types. The simulator POSTs logs through the same ingestion API to keep things consistent.</p>
+    <p><strong>Log scenarios to generate:</strong></p>
+    <ul>
+      <li><strong>Normal traffic:</strong> Scattered logins, file accesses, network connections with varied IPs and users</li>
+      <li><strong>Brute force (R-001):</strong> 5+ login_failed from same source_ip in 5 minutes</li>
+      <li><strong>Impossible travel (R-002):</strong> Same user_id login_success from IPs in different countries within 30 minutes (store country in metadata)</li>
+      <li><strong>Privilege escalation (R-003):</strong> Same user_id with 3+ permission_denied then permission_granted in 5 minutes</li>
+      <li><strong>Data exfiltration (R-004):</strong> Same source_ip with 10+ data_transfer events totaling >100MB in 10 minutes (store bytes in metadata)</li>
+      <li><strong>Port scan (R-005):</strong> Same source_ip hitting 20+ distinct destination ports in 2 minutes (store port in metadata)</li>
+      <li><strong>Lateral movement (R-006):</strong> Same user_id connecting to 5+ distinct internal IPs in 10 minutes</li>
+      <li><strong>Malware beacon (R-007):</strong> Same source_ip making network_connection to same destination_ip at regular intervals (±2s jitter) 10+ times in 30 minutes</li>
+      <li><strong>Off-hours access (R-008):</strong> login_success or file_access events between 00:00–05:00 local time for users not flagged as shift workers</li>
+    </ul>
+  </div>
+</div>
+
+<div class="task">
+  <div class="task-title">Task 4.2 — Simulator API & Frontend Controls</div>
+  <div class="task-detail">
+    <p><code>POST /api/v1/simulator/run</code> — accepts config: scenarioTypes (list), logCount, timeWindowMinutes. Returns count of generated logs. Frontend: a SimulatorPage with checkboxes for each scenario, a "Run Simulation" button, and a results summary showing how many logs were generated per scenario.</p>
+  </div>
+</div>
+
+<div class="prompt-box">
+<div class="prompt-label">Claude Code Prompt</div>
+<div class="prompt-text">"Build the log simulator for SecureLens. This generates realistic security logs for testing detection rules. Backend: (1) LogSimulatorService with a method runSimulation(config) that generates logs and posts them through the existing LogService.ingest(). The config includes: scenarioTypes (list of strings), logCount (int), timeWindowMinutes (int). (2) Generate logs for these scenarios: NORMAL — scattered logins, file accesses, connections from varied IPs/users; BRUTE_FORCE — 5+ login_failed from same sourceIp in 5min; IMPOSSIBLE_TRAVEL — same userIdField login_success from IPs in different geolocations within 30min (store {country: 'US'} and {country: 'RU'} in metadata JSON); PRIVILEGE_ESCALATION — same userIdField with 3+ permission_denied then permission_granted in 5min; DATA_EXFILTRATION — same sourceIp with 10+ data_transfer events totaling >100MB in 10min (store {bytes: N} in metadata); PORT_SCAN — same sourceIp hitting 20+ distinct ports in 2min (store {port: N} in metadata); LATERAL_MOVEMENT — same userIdField connecting to 5+ distinct internal IPs in 10min; MALWARE_BEACON — same sourceIp making network_connection to same destinationIp at regular ~60s intervals 10+ times in 30min; OFF_HOURS — login_success or file_access between 00:00-05:00. (3) Use realistic data: IPs from 10.0.0.0/8 for internal, random public IPs for external, usernames like 'jsmith', 'admin', 'svc_backup'. (4) SimulatorController: POST /api/v1/simulator/run. Frontend: (1) SimulatorPage at /simulator route. (2) Checkboxes for each scenario, number input for log count, number input for time window. (3) 'Run Simulation' button that calls the API. (4) Results panel showing how many logs were generated per scenario type. (5) A 'Generate All Scenarios' quick button that selects everything. Add nav link. Generic Tailwind."</div>
+</div>
+
+<div class="checkpoint">✓ Checkpoint: Run simulator with all scenarios → Go to Log Viewer → See realistic mixed traffic → Filter by event_type → Verify malicious patterns are present in the data</div>
+</div>
+
+<hr>
+
+<!-- ============================================ -->
+<h2 id="phase5">Phase 5 — SIEM Detection Engine (8 Rules)</h2>
+<!-- ============================================ -->
+
+<div class="phase">
+<div class="phase-header">
+  <div class="phase-number">5</div>
+  <div class="phase-title">SIEM Detection Engine (8 MITRE ATT&CK Rules)</div>
+</div>
+<div class="phase-meta">Goal: Scheduled detection jobs that scan logs and create alerts. This is the core of SecureLens — take extra care here.</div>
+
+<div class="warning">This is the most important phase. Each rule must be implemented correctly with the exact trigger conditions from the architecture spec. Test each rule individually with the simulator.</div>
+
+<div class="task">
+  <div class="task-title">Task 5.1 — Alert Entity & Schema</div>
+  <div class="task-detail">
+    <p>Alert entity: <code>id</code> (Long), <code>rule_id</code> (String, e.g., "R-001"), <code>rule_name</code>, <code>severity</code>, <code>mitre_tactic</code>, <code>mitre_technique</code>, <code>source_ip</code>, <code>user_id_field</code>, <code>description</code> (TEXT), <code>evidence_log_ids</code> (JSON array of log IDs that triggered this alert), <code>status</code> (NEW/INVESTIGATING/RESOLVED/FALSE_POSITIVE), <code>created_at</code>, <code>updated_at</code>, <code>resolved_by</code> (nullable, references app user), <code>ai_triage_result</code> (TEXT, nullable — filled later by Mistral).</p>
+  </div>
+</div>
+
+<div class="task">
+  <div class="task-title">Task 5.2 — Detection Rule Framework</div>
+  <div class="task-detail">
+    <p>Create a <code>DetectionRule</code> interface with method <code>evaluate()</code> that queries recent logs and returns a list of alerts. Create a <code>DetectionEngine</code> service that: runs all rules on a schedule (@Scheduled, every 60 seconds), deduplicates alerts (don't create duplicate alert for same source_ip+rule_id within same time window), saves new alerts to DB.</p>
+  </div>
+</div>
+
+<div class="task">
+  <div class="task-title">Task 5.3 — Implement All 8 Rules</div>
+  <div class="task-detail">
+    <p>Implement each rule as a separate class implementing DetectionRule. Here are the exact specs:</p>
+    <table>
+      <tr><th>Rule</th><th>Name</th><th>Trigger</th><th>MITRE</th><th>Severity</th></tr>
+      <tr><td>R-001</td><td>Brute Force</td><td>≥5 login_failed from same source_ip in 5min</td><td>TA0006/T1110</td><td>HIGH</td></tr>
+      <tr><td>R-002</td><td>Impossible Travel</td><td>Same user login_success from 2 different countries within 30min</td><td>TA0001/T1078</td><td>CRITICAL</td></tr>
+      <tr><td>R-003</td><td>Privilege Escalation</td><td>Same user: 3+ permission_denied then permission_granted in 5min</td><td>TA0004/T1548</td><td>HIGH</td></tr>
+      <tr><td>R-004</td><td>Data Exfiltration</td><td>Same source_ip: 10+ data_transfer totaling >100MB in 10min</td><td>TA0010/T1041</td><td>CRITICAL</td></tr>
+      <tr><td>R-005</td><td>Port Scan</td><td>Same source_ip: 20+ distinct dest ports in 2min</td><td>TA0007/T1046</td><td>MEDIUM</td></tr>
+      <tr><td>R-006</td><td>Lateral Movement</td><td>Same user: connections to 5+ distinct internal IPs in 10min</td><td>TA0008/T1021</td><td>HIGH</td></tr>
+      <tr><td>R-007</td><td>Malware Beacon</td><td>Same src→dst IP at regular intervals (±2s) 10+ times in 30min</td><td>TA0011/T1071</td><td>CRITICAL</td></tr>
+      <tr><td>R-008</td><td>Off-Hours Access</td><td>login_success or file_access between 00:00–05:00</td><td>TA0001/T1078</td><td>LOW</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="tip">Implement rules one or two at a time. After implementing each rule, run the simulator for that specific scenario, wait 60 seconds for the detection engine to run, then check if the alert was created. Don't implement all 8 at once.</div>
+
+<div class="prompt-box">
+<div class="prompt-label">Claude Code Prompt (first batch: R-001, R-002, R-003)</div>
+<div class="prompt-text">"Implement the SIEM detection engine for SecureLens — starting with the first 3 rules. (1) Alert entity mapped to 'alerts' table with fields: id (Long auto), ruleId (String), ruleName (String), severity (enum), mitreTactic (String), mitreTechnique (String), sourceIp (String), userIdField (String), description (TEXT), evidenceLogIds (TEXT — JSON array of log IDs), status (enum: NEW, INVESTIGATING, RESOLVED, FALSE_POSITIVE — default NEW), createdAt (Instant), updatedAt (Instant), resolvedBy (String nullable), aiTriageResult (TEXT nullable). (2) AlertRepository. (3) DetectionRule interface with method List&lt;Alert&gt; evaluate(). (4) DetectionEngine service: @Scheduled(fixedRate=60000) runs all injected DetectionRule beans, deduplicates (skip if alert with same ruleId+sourceIp+userIdField exists and was created within the rule's time window), saves new alerts. (5) Rule R-001 BruteForceRule: query logs where eventType='login_failed', group by sourceIp, if count≥5 within last 5 minutes → create alert with severity HIGH, mitreTactic TA0006, mitreTechnique T1110, include the matching log IDs as evidence. (6) Rule R-002 ImpossibleTravelRule: query login_success logs, group by userIdField, for each user check if two logs have different countries in metadata JSON within 30 minutes → CRITICAL alert, TA0001/T1078. (7) Rule R-003 PrivilegeEscalationRule: query by userIdField, look for 3+ permission_denied followed by permission_granted within 5 minutes → HIGH alert, TA0004/T1548. No frontend yet for alerts — that's next phase. Just the engine."</div>
+</div>
+
+<div class="prompt-box">
+<div class="prompt-label">Claude Code Prompt (second batch: R-004, R-005, R-006)</div>
+<div class="prompt-text">"Add detection rules R-004, R-005, R-006 to the SecureLens SIEM engine. (1) R-004 DataExfiltrationRule: query data_transfer logs, group by sourceIp, if count≥10 AND sum of 'bytes' from metadata JSON >100MB (104857600) within 10 minutes → CRITICAL, TA0010/T1041. (2) R-005 PortScanRule: query logs, group by sourceIp, count distinct destination ports from metadata JSON 'port' field, if ≥20 distinct ports within 2 minutes → MEDIUM, TA0007/T1046. (3) R-006 LateralMovementRule: query network_connection logs, group by userIdField, count distinct destinationIp where destinationIp starts with '10.' (internal), if ≥5 distinct internal IPs within 10 minutes → HIGH, TA0008/T1021. Follow the same DetectionRule interface and deduplication pattern."</div>
+</div>
+
+<div class="prompt-box">
+<div class="prompt-label">Claude Code Prompt (third batch: R-007, R-008)</div>
+<div class="prompt-text">"Add detection rules R-007 and R-008 to complete the SIEM engine. (1) R-007 MalwareBeaconRule: query network_connection logs, group by (sourceIp, destinationIp) pairs, for each pair sort by timestamp, compute intervals between consecutive events, if there are 10+ events in 30 minutes AND the standard deviation of intervals is ≤2 seconds (regular beaconing pattern) → CRITICAL, TA0011/T1071. (2) R-008 OffHoursAccessRule: query login_success and file_access logs where timestamp hour is between 00:00 and 05:00 UTC → LOW, TA0001/T1078. This completes all 8 detection rules."</div>
+</div>
+
+<div class="task">
+  <div class="task-title">Task 5.4 — Testing Each Rule</div>
+  <div class="task-detail">
+    <p>For each rule, follow this exact loop:</p>
+    <ol>
+      <li>Go to the Simulator page</li>
+      <li>Select ONLY that scenario (e.g., BRUTE_FORCE)</li>
+      <li>Run simulation</li>
+      <li>Wait 60+ seconds for the detection engine to run</li>
+      <li>Check the database directly: <code>SELECT * FROM alerts WHERE rule_id = 'R-001';</code></li>
+      <li>Verify: correct severity, correct MITRE codes, evidence_log_ids are populated</li>
+    </ol>
+  </div>
+</div>
+
+<div class="checkpoint">✓ Checkpoint: Run ALL simulator scenarios → Wait for detection engine → Query alerts table → All 8 rule types have generated alerts → Evidence log IDs are correct</div>
+</div>
+
+<hr>
+
+<!-- ============================================ -->
+<h2 id="phase6">Phase 6 — Alert Management Dashboard</h2>
+<!-- ============================================ -->
+
+<div class="phase">
+<div class="phase-header">
+  <div class="phase-number">6</div>
+  <div class="phase-title">Alert Management Dashboard</div>
+</div>
+<div class="phase-meta">Goal: View, filter, and manage alerts with status updates. The visual center of SecureLens.</div>
+
+<div class="task">
+  <div class="task-title">Task 6.1 — Alert API Endpoints</div>
+  <div class="task-detail">
+    <ul>
+      <li><code>GET /api/v1/alerts</code> — paginated, filterable (severity, status, ruleId, dateRange)</li>
+      <li><code>GET /api/v1/alerts/{id}</code> — single alert with full evidence</li>
+      <li><code>PATCH /api/v1/alerts/{id}/status</code> — update status (INVESTIGATING, RESOLVED, FALSE_POSITIVE)</li>
+      <li><code>GET /api/v1/alerts/stats</code> — counts by severity, by status, by rule</li>
+    </ul>
+  </div>
+</div>
+
+<div class="task">
+  <div class="task-title">Task 6.2 — Alerts Page (Frontend)</div>
+  <div class="task-detail">
+    <p>AlertsPage: table of alerts with severity badges, MITRE tactic/technique tags, status badges. Filter bar: severity, status, rule name, date range. Click an alert → AlertDetailPage showing: full description, evidence logs (fetched by IDs), MITRE reference, status update buttons, AI triage result (empty for now — will be filled in Phase 8).</p>
+  </div>
+</div>
+
+<div class="prompt-box">
+<div class="prompt-label">Claude Code Prompt</div>
+<div class="prompt-text">"Build the alert management feature for SecureLens. Backend: (1) AlertController: GET /api/v1/alerts (paginated, query params: severity, status, ruleId, startDate, endDate, page, size, sortBy=createdAt, sortDir=desc), GET /api/v1/alerts/{id} (return alert + fetch the actual log objects from evidenceLogIds), PATCH /api/v1/alerts/{id}/status (body: {status, resolvedBy}), GET /api/v1/alerts/stats (return counts grouped by severity, by status, by ruleId). (2) AlertService with filter/pagination logic using Specifications. Frontend: (1) AlertsPage at /alerts route: table with columns — severity (color-coded badge), rule name, MITRE tactic, source IP / user, status (badge), created_at. Filter bar with dropdowns for severity, status, rule. Pagination. (2) AlertDetailPage at /alerts/:id: full alert info, status update buttons (Investigate / Resolve / Mark False Positive), a section showing the evidence logs in a mini table (fetch by IDs), a placeholder section labeled 'AI Triage' showing aiTriageResult or 'Not yet triaged'. (3) Add /alerts nav link, highlight it with count of NEW alerts. Generic Tailwind."</div>
+</div>
+
+<div class="checkpoint">✓ Checkpoint: Run simulator → Wait for alerts → See alerts in dashboard → Filter by severity → Click alert → See evidence logs → Change status to INVESTIGATING → Status persists on refresh</div>
+</div>
+
+<hr>
+
+<!-- ============================================ -->
+<h2 id="phase7">Phase 7 — Threat Intelligence Hub</h2>
+<!-- ============================================ -->
+
+<div class="phase">
+<div class="phase-header">
+  <div class="phase-number">7</div>
+  <div class="phase-title">Threat Intelligence Hub</div>
+</div>
+<div class="phase-meta">Goal: Query external threat intel APIs and display enriched data. Five integrations: VirusTotal, AbuseIPDB, Shodan, NVD, AlienVault OTX.</div>
+
+<div class="task">
+  <div class="task-title">Task 7.1 — Threat Intel Cache Entity</div>
+  <div class="task-detail">
+    <p>Cache responses to avoid hitting API rate limits. Entity: <code>id</code>, <code>query_type</code> (IP/DOMAIN/HASH/CVE), <code>query_value</code>, <code>provider</code> (VIRUSTOTAL/ABUSEIPDB/SHODAN/NVD/OTX), <code>response_data</code> (TEXT — full JSON response), <code>risk_score</code> (Integer, normalized 0-100), <code>cached_at</code>, <code>expires_at</code>. Cache TTL: 1 hour.</p>
+  </div>
+</div>
+
+<div class="task">
+  <div class="task-title">Task 7.2 — Provider Service Classes</div>
+  <div class="task-detail">
+    <p>One service class per provider, each implementing a <code>ThreatIntelProvider</code> interface:</p>
+    <ul>
+      <li><strong>VirusTotalService:</strong> IP reputation, file hash lookup. API: <code>GET https://www.virustotal.com/api/v3/ip_addresses/{ip}</code></li>
+      <li><strong>AbuseIPDBService:</strong> IP abuse check. API: <code>GET https://api.abuseipdb.com/api/v2/check?ipAddress={ip}</code></li>
+      <li><strong>ShodanService:</strong> IP host info. API: <code>GET https://api.shodan.io/shodan/host/{ip}?key={key}</code></li>
+      <li><strong>NvdService:</strong> CVE lookup. API: <code>GET https://services.nvd.nist.gov/rest/json/cves/2.0?cveId={cve}</code></li>
+      <li><strong>OtxService:</strong> IP/domain pulse info. API: <code>GET https://otx.alienvault.com/api/v1/indicators/IPv4/{ip}/general</code></li>
+    </ul>
+    <p>Each service: checks cache first → if miss, calls external API → normalizes response → caches → returns.</p>
+  </div>
+</div>
+
+<div class="task">
+  <div class="task-title">Task 7.3 — Threat Intel Controller & Aggregator</div>
+  <div class="task-detail">
+    <p><code>GET /api/v1/intel/ip/{ip}</code> — queries ALL providers for this IP, returns aggregated results with normalized risk score. <code>GET /api/v1/intel/cve/{cveId}</code> — queries NVD. <code>GET /api/v1/intel/hash/{hash}</code> — queries VirusTotal. Also: a <code>POST /api/v1/intel/enrich-alert/{alertId}</code> endpoint that takes an alert's source_ip and automatically enriches it with all providers.</p>
+  </div>
+</div>
+
+<div class="task">
+  <div class="task-title">Task 7.4 — Threat Intel Page (Frontend)</div>
+  <div class="task-detail">
+    <p>IntelPage: search bar (input IP, hash, or CVE), auto-detect query type, display results from all providers in cards. Each card shows: provider name, risk score (color-coded gauge), key findings. Also: add an "Enrich" button on the AlertDetailPage that calls the enrich endpoint and shows intel data inline.</p>
+  </div>
+</div>
+
+<div class="prompt-box">
+<div class="prompt-label">Claude Code Prompt</div>
+<div class="prompt-text">"Build the Threat Intelligence Hub for SecureLens. Backend: (1) ThreatIntelCache entity mapped to 'threat_intel_cache' table: id (Long), queryType (enum: IP, DOMAIN, HASH, CVE), queryValue (String), provider (enum: VIRUSTOTAL, ABUSEIPDB, SHODAN, NVD, OTX), responseData (TEXT — raw JSON), riskScore (Integer 0-100), cachedAt (Instant), expiresAt (Instant — cachedAt + 1 hour). (2) ThreatIntelProvider interface: CompletableFuture&lt;ThreatIntelResult&gt; lookup(String query, QueryType type). (3) Implement 5 providers — each checks cache first; on miss, calls external API via RestTemplate, normalizes a risk score 0-100, caches, returns. APIs: VirusTotal (GET /api/v3/ip_addresses/{ip}, header x-apikey), AbuseIPDB (GET /api/v2/check?ipAddress={ip}, header Key), Shodan (GET /shodan/host/{ip}?key={key}), NVD (GET /rest/json/cves/2.0?cveId={id}), AlienVault OTX (GET /api/v1/indicators/IPv4/{ip}/general, header X-OTX-API-KEY). API keys from env variables: VT_API_KEY, ABUSEIPDB_API_KEY, SHODAN_API_KEY, OTX_API_KEY. If an API key is missing, that provider returns empty result (don't crash). (4) ThreatIntelAggregator service: lookupIp(ip) calls all IP-capable providers in parallel using CompletableFuture, aggregates results. (5) ThreatIntelController: GET /api/v1/intel/ip/{ip}, GET /api/v1/intel/cve/{cveId}, GET /api/v1/intel/hash/{hash}, POST /api/v1/intel/enrich-alert/{alertId} (looks up alert's sourceIp). Frontend: (1) IntelPage at /intel: search input, auto-detect type (IP regex, CVE-YYYY-NNNNN pattern, else hash), results displayed as provider cards with: provider logo placeholder, risk score as colored bar (green 0-30, yellow 31-70, red 71-100), key facts from response. (2) On AlertDetailPage, add 'Enrich with Threat Intel' button that calls enrich-alert and shows results inline. (3) Add /intel nav link. Generic Tailwind. Handle errors gracefully — if a provider is down or key missing, show 'unavailable' for that provider."</div>
+</div>
+
+<div class="tip">You probably won't have all API keys immediately. That's fine — the code should handle missing keys gracefully. Get at least VirusTotal (free) and AbuseIPDB (free) working first. Those are the most impactful for demos.</div>
+
+<div class="checkpoint">✓ Checkpoint: Search a known malicious IP (e.g., from AbuseIPDB's reported IPs) → See results from available providers → Risk scores display correctly → Go to an alert → Click "Enrich" → Intel data appears inline</div>
+</div>
+
+<hr>
+
+<!-- ============================================ -->
+<h2 id="phase8">Phase 8 — Mistral AI Alert Triage</h2>
+<!-- ============================================ -->
+
+<div class="phase">
+<div class="phase-header">
+  <div class="phase-number">8</div>
+  <div class="phase-title">Mistral AI Alert Triage</div>
+</div>
+<div class="phase-meta">Goal: Automated AI analysis of alerts using Mistral, producing structured triage reports. This is a key differentiator.</div>
+
+<div class="task">
+  <div class="task-title">Task 8.1 — Mistral Integration Service</div>
+  <div class="task-detail">
+    <p>MistralService: calls Mistral API (chat completions) with a carefully crafted system prompt that includes the alert details, evidence logs, threat intel data (if available), and MITRE ATT&CK context. Returns a structured triage report.</p>
+    <p><strong>System prompt should instruct Mistral to return:</strong></p>
+    <ul>
+      <li>Severity assessment (agree/disagree with rule severity + justification)</li>
+      <li>Attack context (what this MITRE technique means in practice)</li>
+      <li>Recommended actions (specific investigation steps for an analyst)</li>
+      <li>False positive likelihood (LOW/MEDIUM/HIGH with reasoning)</li>
+      <li>Related indicators to investigate</li>
+    </ul>
+  </div>
+</div>
+
+<div class="task">
+  <div class="task-title">Task 8.2 — Triage API & Frontend Integration</div>
+  <div class="task-detail">
+    <p><code>POST /api/v1/alerts/{id}/triage</code> — triggers Mistral analysis, stores result in alert's <code>ai_triage_result</code> field. Frontend: on AlertDetailPage, add a "Run AI Triage" button. When clicked, show a loading state, then display the triage report in a formatted section. If already triaged, show the existing result with a "Re-triage" option.</p>
+  </div>
+</div>
+
+<div class="prompt-box">
+<div class="prompt-label">Claude Code Prompt</div>
+<div class="prompt-text">"Implement Mistral AI alert triage for SecureLens. Backend: (1) MistralService: calls Mistral's chat completion API (POST https://api.mistral.ai/v1/chat/completions, model: mistral-small-latest, Authorization: Bearer {MISTRAL_API_KEY} from env). The method triageAlert(alertId) should: fetch the alert, fetch its evidence logs (from evidenceLogIds), fetch cached threat intel for the alert's sourceIp (if any), then build a prompt. (2) System prompt: 'You are a SOC analyst assistant. Analyze the following security alert and provide a structured triage report.' User prompt includes: alert rule name, severity, MITRE tactic+technique, description, source IP, user ID, all evidence log entries (timestamp, eventType, rawMessage), and any threat intel data. Instruct Mistral to respond in JSON format with fields: severityAssessment (string), attackContext (string), recommendedActions (array of strings), falsePositiveLikelihood (LOW/MEDIUM/HIGH), reasoning (string), relatedIndicators (array of strings). (3) Parse the response, store it as the alert's aiTriageResult field. (4) TriageController (or add to AlertController): POST /api/v1/alerts/{id}/triage — runs triage and returns result. Frontend: On AlertDetailPage, (1) add 'Run AI Triage' button (shows 'Re-triage' if already triaged). (2) Loading spinner while waiting for Mistral. (3) Display triage result in a structured card: severity assessment with colored indicator, attack context paragraph, recommended actions as a numbered list, false positive likelihood badge, reasoning text. Generic Tailwind."</div>
+</div>
+
+<div class="checkpoint">✓ Checkpoint: Open an alert → Click "Run AI Triage" → Loading spinner → Structured triage report appears → Report content is relevant to the alert type → Result persists on page refresh</div>
+</div>
+
+<hr>
+
+<!-- ============================================ -->
+<h2 id="phase9">Phase 9 — AI Investigation Assistant (Chatbot)</h2>
+<!-- ============================================ -->
+
+<div class="phase">
+<div class="phase-header">
+  <div class="phase-number">9</div>
+  <div class="phase-title">AI Investigation Assistant (Chatbot)</div>
+</div>
+<div class="phase-meta">Goal: A persistent chat panel where analysts ask questions in natural language and get answers grounded in real database data. This is the architectural pattern behind Microsoft Copilot for Security, Elastic AI Assistant, and Splunk AI — built from first principles.</div>
+
+<div class="tip">This chatbot is architecturally significant: it transforms SecureLens from a dashboard that presents data into an interface that understands intent. The same data becomes accessible in two modes — structured (pages/tables) and conversational (natural language). It reuses the existing MistralService from Phase 8.</div>
+
+<div class="task">
+  <div class="task-title">Task 9.1 — The Two-Call Mistral Pattern (Backend Core)</div>
+  <div class="task-detail">
+    <p>The chatbot uses a two-call pattern to ensure Mistral never hallucinates data:</p>
+    <ol>
+      <li><strong>Call 1 (Tool Selection):</strong> Analyst's question + tool definitions → Mistral decides which tool to call and with what parameters</li>
+      <li><strong>Spring Boot executes the query:</strong> Runs the actual database query — Mistral never touches the DB directly</li>
+      <li><strong>Call 2 (Answer Generation):</strong> Real data from the query → Mistral formulates a natural language answer</li>
+    </ol>
+    <p>Create <code>ChatService.java</code> that manages this loop, maintains conversation history per request, and handles multi-tool chaining (some questions need multiple tools called in sequence).</p>
+  </div>
+</div>
+
+<div class="task">
+  <div class="task-title">Task 9.2 — The 6 Tool Definitions</div>
+  <div class="task-detail">
+    <p>Spring Boot describes these tools to Mistral at the start of every conversation. Mistral reads the descriptions and decides which one to call. Spring Boot executes only the chosen tool — never arbitrary SQL.</p>
+    <table>
+      <tr><th>Tool Name</th><th>What It Queries</th><th>Key Parameters</th></tr>
+      <tr><td><code>query_events</code></td><td>logs table — raw log lines</td><td>event_type, source_ip, from_time, to_time, limit (max 100)</td></tr>
+      <tr><td><code>query_alerts</code></td><td>alerts table — detected incidents</td><td>status, severity, mitre_tactic, source_ip, from_time, limit (max 50)</td></tr>
+      <tr><td><code>get_alert_detail</code></td><td>Single alert — full detail including AI triage and threat intel</td><td>alert_id</td></tr>
+      <tr><td><code>get_top_attackers</code></td><td>Ranked list of most active source IPs</td><td>metric (events | alerts), from_time, limit (max 20)</td></tr>
+      <tr><td><code>get_event_stats</code></td><td>Aggregated counts grouped by a field</td><td>group_by (source_ip | event_type | severity | hour), from_time, to_time</td></tr>
+      <tr><td><code>investigate_ioc</code></td><td>Threat intel for an IP/domain/hash — uses threat_intel_cache</td><td>ioc_value, ioc_type (IP | DOMAIN | HASH)</td></tr>
+    </table>
+    <p>Each tool maps to an existing repository query. No new tables, no new dependencies.</p>
+  </div>
+</div>
+
+<div class="task">
+  <div class="task-title">Task 9.3 — Chat Controller & API Endpoint</div>
+  <div class="task-detail">
+    <p><code>POST /api/v1/chat</code> — Body: <code>{ message: string, history: Message[] }</code> — Returns: <code>{ answer: string, toolCalled: string, dataSnapshot: object }</code></p>
+    <p>The <code>history</code> array contains previous messages of the current session (maintained in React state on the frontend). This gives Mistral conversation context for follow-up questions. The <code>dataSnapshot</code> contains the raw query results so the frontend can optionally render them as a table alongside the natural language answer.</p>
+  </div>
+</div>
+
+<div class="task">
+  <div class="task-title">Task 9.4 — System Prompt Design</div>
+  <div class="task-detail">
+    <p>The system prompt establishes Mistral's role and data access rules:</p>
+    <pre><code>You are a cybersecurity analyst assistant for the SecureLens SOC platform.
+You have access to the following real-time data through tool calls:
+
+DATABASE SCHEMA CONTEXT:
+- logs table: raw security events (login_failed, login_success, file_access,
+  permission_denied, data_transfer, port_scan, network_connection, etc.)
+- alerts table: detected security incidents with MITRE ATT&CK tags and severity
+- threat_intel_cache: results from VirusTotal, AbuseIPDB, Shodan, NVD, OTX
+
+BEHAVIOR:
+- Always use tool calls to fetch real data before answering
+- Never invent or estimate data — only state what the database returns
+- Be concise and actionable — analysts need fast answers
+- When listing IPs or events, always include counts and timestamps
+- If a question requires multiple data sources, make multiple tool calls
+- Current time context: {current_timestamp}
+
+Respond in clear plain language. Use bullet points for lists.
+Bold important values.</code></pre>
+  </div>
+</div>
+
+<div class="task">
+  <div class="task-title">Task 9.5 — Fallback & Timeout Handling</div>
+  <div class="task-detail">
+    <p>If Mistral's API takes longer than 10 seconds, <code>ChatService</code> should: execute the most likely tool based on keyword matching in the analyst's message (e.g., "failed logins" → <code>query_events</code> with event_type=login_failed), and return the raw query result as a formatted table. The chatbot should never be blocked by API latency.</p>
+  </div>
+</div>
+
+<div class="task">
+  <div class="task-title">Task 9.6 — Chat Panel (Frontend)</div>
+  <div class="task-detail">
+    <p>A slide-in panel accessible from any page via a floating button (bottom-right corner). The panel should include: message input field, message history (analyst messages right-aligned, assistant messages left-aligned), typing indicator while Mistral is processing, markdown rendering for responses, optional data table rendering when <code>dataSnapshot</code> is present. The conversation history is maintained in React state and sent with every request.</p>
+  </div>
+</div>
+
+<div class="prompt-box">
+<div class="prompt-label">Claude Code Prompt (Backend — ChatService + tools)</div>
+<div class="prompt-text">"Build the AI investigation assistant backend for SecureLens. This is a chatbot that lets analysts ask questions in natural language and get answers grounded in real database data. (1) Create ChatService.java. It reuses the existing MistralService HTTP client. The core method is chat(String message, List&lt;ChatMessage&gt; history) which implements a two-call Mistral pattern: Call 1 sends the analyst's message + conversation history + a system prompt + 6 tool definitions to Mistral (mistral-small-latest), Mistral responds with a tool_call indicating which tool to use and with what parameters. Spring Boot then executes the chosen tool (a database query), appends the result to the conversation, and makes Call 2 where Mistral generates a natural language answer based on the real data. (2) Define 6 tools as JSON descriptions sent to Mistral in the 'tools' parameter of the chat completion request. Tool format follows Mistral's function calling spec: {type: 'function', function: {name, description, parameters: {type: 'object', properties: {...}, required: [...]}}}. The 6 tools: query_events (params: event_type, source_ip, from_time, to_time, limit max 100 — queries LogRepository), query_alerts (params: status, severity, mitre_tactic, source_ip, from_time, limit max 50 — queries AlertRepository), get_alert_detail (params: alert_id — fetches single alert with evidence logs and triage data), get_top_attackers (params: metric enum events|alerts, from_time, limit max 20 — custom query grouping by sourceIp and counting), get_event_stats (params: group_by enum source_ip|event_type|severity|hour, from_time, to_time — aggregation query), investigate_ioc (params: ioc_value, ioc_type enum IP|DOMAIN|HASH — queries ThreatIntelCache or calls ThreatIntelAggregator if not cached). (3) Each tool execution method calls existing repositories — no new DB tables needed. (4) Handle multi-tool chaining: if Mistral returns multiple tool_calls, execute all of them and append all results before making Call 2. (5) Fallback: if Mistral API times out after 10 seconds, do keyword-based tool selection (e.g., 'failed login' → query_events with event_type=login_failed) and return raw results formatted as a table string. (6) System prompt includes database schema context and behavioral rules (never invent data, always use tools, be concise). Include {current_timestamp} placeholder replaced at runtime. (7) ChatController: POST /api/v1/chat with body {message: String, history: List of {role: String, content: String}}. Returns {answer: String, toolCalled: String nullable, dataSnapshot: Object nullable — the raw data returned by the tool}."</div>
+</div>
+
+<div class="prompt-box">
+<div class="prompt-label">Claude Code Prompt (Frontend — ChatPanel)</div>
+<div class="prompt-text">"Build the AI investigation assistant frontend for SecureLens. (1) ChatPanel component: a slide-in panel that appears from the right side of the screen. Triggered by a floating action button (bottom-right corner, always visible on every page). Panel has: a header 'SecureLens AI Assistant' with a close button, a scrollable message area, and a text input with send button at the bottom. (2) Messages: analyst messages right-aligned with a subtle background color, assistant messages left-aligned with a different background. Render assistant messages with basic markdown support (bold, bullet points, code blocks) — use a simple regex-based renderer or install react-markdown. (3) When a message is sent: add it to local messages state, show a typing indicator (three animated dots), call POST /api/v1/chat with the message and full conversation history from state, on response: remove typing indicator, add assistant message, if dataSnapshot is present render it as a collapsible data table below the message. (4) Conversation history: maintain in React state as an array of {role, content}. Send the full array with every API call so Mistral has context for follow-ups. (5) Add a 'Clear Chat' button in the header to reset history. (6) The floating button should show on ALL pages (put it in the main App layout, not inside specific pages). (7) Generic Tailwind styling — dark panel background, readable text, clean input field. Panel should be about 400px wide, full viewport height."</div>
+</div>
+
+<div class="task">
+  <div class="task-title">Task 9.7 — Test the Chatbot with Example Questions</div>
+  <div class="task-detail">
+    <p>After implementing, test with these exact questions (run the simulator first to have data):</p>
+    <table>
+      <tr><th>Question</th><th>Expected Tool</th><th>Expected Behavior</th></tr>
+      <tr><td>"Show me failed logins from the last hour"</td><td>query_events</td><td>Returns list of events with IPs and timestamps</td></tr>
+      <tr><td>"What are the top attacking IPs today?"</td><td>get_top_attackers</td><td>Ranked table of IPs with counts</td></tr>
+      <tr><td>"Are there any critical open alerts?"</td><td>query_alerts</td><td>Lists CRITICAL + NEW alerts</td></tr>
+      <tr><td>"How many events per event type today?"</td><td>get_event_stats</td><td>Grouped counts by event type</td></tr>
+      <tr><td>"Is 10.0.0.5 known malicious?"</td><td>investigate_ioc</td><td>Threat intel data for that IP</td></tr>
+      <tr><td>"What happened between 2am and 4am?"</td><td>query_events → query_alerts</td><td>Multi-tool: events then alerts in that window</td></tr>
+    </table>
+    <p>Also test follow-up questions to verify conversation context works: ask "Show me critical alerts", then ask "Tell me more about the first one" — Mistral should use context from the previous answer.</p>
+  </div>
+</div>
+
+<div class="warning">The chatbot depends on having data in the database. Always run the simulator before testing. If Mistral returns empty answers, check that the time windows in your tool queries are matching when the simulated data was generated.</div>
+
+<div class="checkpoint">✓ Checkpoint: Click floating chat button → Panel slides in → Ask "Show me failed logins from the last hour" → Get a natural language answer with real data → Ask a follow-up → Mistral uses conversation context → Close panel → Open from a different page → Panel works everywhere → Test fallback by temporarily setting a 1ms timeout</div>
+</div>
+
+<hr>
+
+<!-- ============================================ -->
+<h2 id="phase10">Phase 10 — Threat Hunting</h2>
+<!-- ============================================ -->
+
+<div class="phase">
+<div class="phase-header">
+  <div class="phase-number">10</div>
+  <div class="phase-title">Threat Hunting</div>
+</div>
+<div class="phase-meta">Goal: Proactive search capability — analysts can write custom queries to hunt for threats beyond the automated rules.</div>
+
+<div class="task">
+  <div class="task-title">Task 10.1 — Hunt Query Engine</div>
+  <div class="task-detail">
+    <p>A flexible query system that lets analysts search logs with complex conditions. Not full SQL — a structured query builder. Supports: field matching (sourceIp = X), event type filtering, time ranges, threshold conditions (count > N), and grouping (group by sourceIp). Returns matching logs grouped by the hunt criteria.</p>
+  </div>
+</div>
+
+<div class="task">
+  <div class="task-title">Task 10.2 — Saved Hunts & Hunt API</div>
+  <div class="task-detail">
+    <p><code>POST /api/v1/hunts/execute</code> — run a hunt query, return results. <code>POST /api/v1/hunts/save</code> — save a hunt query for reuse. <code>GET /api/v1/hunts</code> — list saved hunts. <code>POST /api/v1/hunts/{id}/promote</code> — convert hunt results into an alert.</p>
+  </div>
+</div>
+
+<div class="task">
+  <div class="task-title">Task 10.3 — Hunt Page (Frontend)</div>
+  <div class="task-detail">
+    <p>HuntPage: query builder UI with dropdowns and inputs (field, operator, value). Add/remove conditions. Time range selector. "Execute Hunt" button. Results table. Option to save the query. Option to promote findings to an alert.</p>
+  </div>
+</div>
+
+<div class="prompt-box">
+<div class="prompt-label">Claude Code Prompt</div>
+<div class="prompt-text">"Build the threat hunting feature for SecureLens. Backend: (1) HuntQuery model (not a DB entity, just a DTO): conditions (list of {field, operator, value} where field is one of sourceIp/destinationIp/eventType/severity/userIdField/rawMessage, operator is EQUALS/CONTAINS/STARTS_WITH/NOT_EQUALS, value is string), timeRange ({startDate, endDate}), groupBy (optional field name), threshold (optional minimum count when groupBy is used). (2) HuntService: executeHunt(query) — builds a JPA Specification dynamically from the conditions, applies time range, if groupBy is set then group results and filter by threshold, returns matching logs. saveHunt(name, description, query) — saves to a new 'saved_hunts' table. promoteToAlert(huntResultDTO) — creates a manual alert from hunt findings. (3) SavedHunt entity: id, name, description, queryJson (TEXT — serialized HuntQuery), createdBy, createdAt. (4) HuntController: POST /api/v1/hunts/execute, POST /api/v1/hunts/save, GET /api/v1/hunts (list saved), GET /api/v1/hunts/{id} (get saved hunt), POST /api/v1/hunts/{id}/run (run a saved hunt), POST /api/v1/hunts/promote (create alert from findings). Frontend: (1) HuntPage at /hunt: a query builder UI — each condition row has: field dropdown, operator dropdown, value input, remove button. 'Add Condition' button. Time range date pickers. GroupBy dropdown (optional). Threshold input (shown only when groupBy is selected). (2) 'Execute Hunt' button → results table below. (3) 'Save Hunt' button (name + description inputs). (4) Sidebar or section showing saved hunts list — click to load. (5) 'Promote to Alert' button on results that creates a manual alert. Add /hunt nav link. Generic Tailwind."</div>
+</div>
+
+<div class="checkpoint">✓ Checkpoint: Build a query (sourceIp EQUALS 10.0.0.5, eventType EQUALS login_failed, last 24h) → Execute → See results → Save it → Reload page → Load saved hunt → Run it again → Promote findings to alert → Alert appears in alerts dashboard</div>
+</div>
+
+<hr>
+
+<!-- ============================================ -->
+<h2 id="phase11">Phase 11 — Incident Reporting (PDF)</h2>
+<!-- ============================================ -->
+
+<div class="phase">
+<div class="phase-header">
+  <div class="phase-number">11</div>
+  <div class="phase-title">Automated Incident Reporting (PDF)</div>
+</div>
+<div class="phase-meta">Goal: Generate professional PDF incident reports from alerts with all context included.</div>
+
+<div class="task">
+  <div class="task-title">Task 11.1 — Incident Entity</div>
+  <div class="task-detail">
+    <p>Incident entity: <code>id</code>, <code>title</code>, <code>description</code>, <code>severity</code>, <code>status</code> (OPEN/CONTAINED/ERADICATED/RECOVERED/CLOSED), <code>alert_ids</code> (JSON array — multiple alerts can be grouped into one incident), <code>created_by</code>, <code>created_at</code>, <code>updated_at</code>, <code>timeline</code> (TEXT — JSON array of timestamped notes), <code>report_generated</code> (boolean).</p>
+  </div>
+</div>
+
+<div class="task">
+  <div class="task-title">Task 11.2 — PDF Report Generation</div>
+  <div class="task-detail">
+    <p>Use a Java PDF library (iText or Apache PDFBox). Report includes: incident title, severity, timeline, all associated alerts with their details, evidence logs, threat intel summaries, AI triage results, MITRE ATT&CK references. Professional layout with headers, sections, tables.</p>
+  </div>
+</div>
+
+<div class="task">
+  <div class="task-title">Task 11.3 — Incident API & Frontend</div>
+  <div class="task-detail">
+    <p>API: CRUD for incidents + <code>GET /api/v1/incidents/{id}/report</code> (returns PDF). Frontend: IncidentsPage listing all incidents, create incident form (select alerts to include), incident detail page with timeline management, "Generate Report" button that downloads the PDF.</p>
+  </div>
+</div>
+
+<div class="prompt-box">
+<div class="prompt-label">Claude Code Prompt</div>
+<div class="prompt-text">"Build incident management and PDF reporting for SecureLens. Backend: (1) Incident entity mapped to 'incidents' table: id (Long), title (String), description (TEXT), severity (enum), status (enum: OPEN, CONTAINED, ERADICATED, RECOVERED, CLOSED — default OPEN), alertIds (TEXT — JSON array of alert IDs), createdBy (String), createdAt, updatedAt, timeline (TEXT — JSON array of {timestamp, note, author}), reportGenerated (boolean default false). (2) IncidentService: CRUD + addTimelineEntry(incidentId, note) + generateReport(incidentId). (3) For PDF generation, use Apache PDFBox. The report should include: header with 'SecureLens Incident Report' title, incident metadata (title, severity, status, created date), timeline of events, for each associated alert: rule name, severity, MITRE info, description, evidence log summaries, threat intel summary (if cached), AI triage result (if available). Format with tables, clear sections, page numbers. (4) IncidentController: POST /api/v1/incidents (create with title, description, severity, alertIds), GET /api/v1/incidents (list), GET /api/v1/incidents/{id}, PATCH /api/v1/incidents/{id} (update status), POST /api/v1/incidents/{id}/timeline (add timeline entry), GET /api/v1/incidents/{id}/report (returns PDF as byte stream with Content-Type application/pdf). Frontend: (1) IncidentsPage at /incidents: list of incidents with status badges. 'Create Incident' button. (2) Create incident modal/form: title, description, severity dropdown, multi-select of existing alerts (show alert summaries). (3) IncidentDetailPage at /incidents/:id: incident info, status update buttons, timeline section (add notes with timestamp), associated alerts list, 'Generate PDF Report' button that downloads the PDF. Add /incidents nav link. Generic Tailwind."</div>
+</div>
+
+<div class="checkpoint">✓ Checkpoint: Create an incident from 2-3 alerts → Add timeline notes → Generate PDF → Open PDF → All sections are present with correct data → Alert details, evidence, intel, and triage results are included</div>
+</div>
+
+<hr>
+
+<!-- ============================================ -->
+<h2 id="phase12">Phase 12 — Real-Time Dashboard & Analytics</h2>
+<!-- ============================================ -->
+
+<div class="phase">
+<div class="phase-header">
+  <div class="phase-number">12</div>
+  <div class="phase-title">Real-Time Dashboard & Analytics</div>
+</div>
+<div class="phase-meta">Goal: The main dashboard page with live stats, charts, and activity feed.</div>
+
+<div class="task">
+  <div class="task-title">Task 12.1 — Dashboard API</div>
+  <div class="task-detail">
+    <p><code>GET /api/v1/dashboard/stats</code> — returns: total logs (24h), total alerts (24h), alerts by severity, alerts by status, alerts by rule, top source IPs, recent activity timeline. <code>GET /api/v1/dashboard/trends</code> — hourly alert count for the past 24h (for a trend chart).</p>
+  </div>
+</div>
+
+<div class="task">
+  <div class="task-title">Task 12.2 — Dashboard Page (Frontend)</div>
+  <div class="task-detail">
+    <p>DashboardPage: stat cards (total logs, new alerts, critical alerts, open incidents), alerts by severity bar chart, alerts by rule donut chart, hourly trend line chart, recent alerts feed (last 10, auto-refresh), top attacking IPs table. Use a charting library (Recharts works well with React). Auto-refresh every 30 seconds.</p>
+  </div>
+</div>
+
+<div class="task">
+  <div class="task-title">Task 12.3 — Audit Trail</div>
+  <div class="task-detail">
+    <p>AuditTrail entity: <code>id</code>, <code>action</code> (ALERT_STATUS_CHANGE, TRIAGE_REQUESTED, INCIDENT_CREATED, REPORT_GENERATED, HUNT_EXECUTED, etc.), <code>entity_type</code>, <code>entity_id</code>, <code>user_id</code>, <code>details</code> (TEXT), <code>timestamp</code>. Log all significant actions throughout the app. Display on dashboard as activity feed.</p>
+  </div>
+</div>
+
+<div class="prompt-box">
+<div class="prompt-label">Claude Code Prompt</div>
+<div class="prompt-text">"Build the dashboard and audit trail for SecureLens. Backend: (1) AuditTrail entity mapped to 'audit_trail' table: id (Long), action (String — e.g., 'ALERT_STATUS_CHANGE', 'TRIAGE_REQUESTED', 'INCIDENT_CREATED', 'REPORT_GENERATED', 'HUNT_EXECUTED', 'USER_LOGIN'), entityType (String — e.g., 'ALERT', 'INCIDENT'), entityId (Long), userId (String), details (TEXT), timestamp (Instant). (2) AuditService: log(action, entityType, entityId, userId, details). Go back and add AuditService.log() calls to existing services: AlertService (status changes), TriageController, IncidentService (create, status change, report), HuntService (execute, promote), AuthService (login). (3) DashboardService: getStats() returns {totalLogs24h, totalAlerts24h, alertsBySeverity (map), alertsByStatus (map), alertsByRule (map), topSourceIps (list of {ip, count}, top 10), recentAlerts (last 10)}. getTrends() returns hourly alert counts for past 24h as [{hour, count}]. (4) DashboardController: GET /api/v1/dashboard/stats, GET /api/v1/dashboard/trends, GET /api/v1/audit (paginated, last 50). Frontend: (1) DashboardPage at /dashboard (this replaces the placeholder): stat cards row (total logs 24h, new alerts, critical alerts, open incidents — each with an icon placeholder and count). (2) Charts section using Recharts: alerts by severity (bar chart), alerts by rule (pie/donut chart), hourly trend (line chart). (3) Two-column bottom: recent alerts feed (last 10, clickable) + top attacking IPs table. (4) Auto-refresh every 30 seconds using setInterval. (5) Activity feed section showing audit trail entries. Update nav: Dashboard should be the default/home route. Generic Tailwind."</div>
+</div>
+
+<div class="checkpoint">✓ Checkpoint: Run simulator → Wait for alerts → Dashboard shows: accurate stat counts, charts render correctly, recent alerts feed updates, audit trail captures actions</div>
+</div>
+
+<hr>
+
+<!-- ============================================ -->
+<h2 id="phase13">Phase 13 — Deployment (Railway + Vercel)</h2>
+<!-- ============================================ -->
+
+<div class="phase">
+<div class="phase-header">
+  <div class="phase-number">13</div>
+  <div class="phase-title">Deployment</div>
+</div>
+<div class="phase-meta">Goal: Live on the internet. Backend on Railway (with PostgreSQL addon), frontend on Vercel.</div>
+
+<div class="task">
+  <div class="task-title">Task 13.1 — Prepare Backend for Railway</div>
+  <div class="task-detail">
+    <ul>
+      <li>Create <code>Dockerfile</code> or use Railway's buildpack detection (Maven)</li>
+      <li>Move all secrets to environment variables (DB_URL, DB_USERNAME, DB_PASSWORD, JWT_SECRET, all API keys)</li>
+      <li>Create <code>application-prod.yml</code> with <code>${DATABASE_URL}</code> from Railway's PostgreSQL addon</li>
+      <li>Set <code>spring.profiles.active=prod</code> in Railway env</li>
+      <li>Configure CORS to allow your Vercel domain</li>
+    </ul>
+  </div>
+</div>
+
+<div class="task">
+  <div class="task-title">Task 13.2 — Prepare Frontend for Vercel</div>
+  <div class="task-detail">
+    <ul>
+      <li>Set <code>REACT_APP_API_URL</code> environment variable pointing to Railway backend URL</li>
+      <li>Update axios baseURL to use this env variable</li>
+      <li>Create <code>vercel.json</code> with SPA redirect rules</li>
+      <li>Deploy via Vercel CLI or GitHub integration</li>
+    </ul>
+  </div>
+</div>
+
+<div class="task">
+  <div class="task-title">Task 13.3 — Deploy & Verify</div>
+  <div class="task-detail">
+    <ol>
+      <li>Push backend to GitHub → connect to Railway → add PostgreSQL addon → set env vars → deploy</li>
+      <li>Push frontend to GitHub → connect to Vercel → set env vars → deploy</li>
+      <li>Test: register, login, run simulator, check alerts, run triage, create incident, generate report</li>
+    </ol>
+  </div>
+</div>
+
+<div class="prompt-box">
+<div class="prompt-label">Claude Code Prompt</div>
+<div class="prompt-text">"Prepare SecureLens for deployment. (1) Create application-prod.yml: datasource URL from env DATABASE_URL (Railway format), show-sql false, ddl-auto update, server port from env PORT. (2) Update SecurityConfig CORS: allowed origins from env FRONTEND_URL (for Vercel domain), plus localhost:3000 for dev. (3) Create Procfile for Railway: 'web: java -jar target/*.jar --spring.profiles.active=prod'. (4) Update frontend api.js: baseURL should use process.env.REACT_APP_API_URL or default to '' (for local proxy). (5) Create vercel.json with rewrites: all routes → /index.html (SPA). (6) Create a .env.example file listing all required env variables with descriptions: DATABASE_URL, JWT_SECRET, VT_API_KEY, ABUSEIPDB_API_KEY, SHODAN_API_KEY, OTX_API_KEY, MISTRAL_API_KEY, FRONTEND_URL. (7) Update README.md with deployment instructions for both Railway and Vercel."</div>
+</div>
+
+<div class="checkpoint">✓ Checkpoint: App is live on the internet → Register on deployed version → Full flow works end-to-end → Share URL with someone to test</div>
+</div>
+
+<hr>
+
+<!-- ============================================ -->
+<h2 id="phase14">Phase 14 — Integration Testing & Bug Fixes</h2>
+<!-- ============================================ -->
+
+<div class="phase">
+<div class="phase-header">
+  <div class="phase-number">14</div>
+  <div class="phase-title">Integration Testing & Bug Fixes</div>
+</div>
+<div class="phase-meta">Goal: End-to-end verification that everything works together. Fix anything broken.</div>
+
+<div class="task">
+  <div class="task-title">Task 14.1 — Full Flow Test Script</div>
+  <div class="task-detail">
+    <p>Walk through this exact sequence on the deployed version:</p>
+    <ol>
+      <li>Register a new user (ANALYST role)</li>
+      <li>Login</li>
+      <li>Run simulator with ALL scenarios (50+ logs)</li>
+      <li>Wait 2 minutes for detection engine</li>
+      <li>Check dashboard: stats should update, charts should show data</li>
+      <li>Go to alerts: should see alerts from multiple rules</li>
+      <li>Click a CRITICAL alert → verify evidence logs load</li>
+      <li>Click "Enrich with Threat Intel" → verify provider data loads (at least for providers with valid keys)</li>
+      <li>Click "Run AI Triage" → verify Mistral returns structured analysis</li>
+      <li>Change alert status to INVESTIGATING → verify it persists</li>
+      <li>Open AI chatbot panel → ask "Show me failed logins from the last hour" → verify real data answer</li>
+      <li>Ask a follow-up question → verify conversation context is maintained</li>
+      <li>Close chatbot → navigate to a different page → reopen → verify it works from any page</li>
+      <li>Go to Hunt page → build a query → execute → verify results</li>
+      <li>Save the hunt → reload → load saved hunt → run again</li>
+      <li>Create an incident from 2-3 alerts</li>
+      <li>Add timeline notes to the incident</li>
+      <li>Generate PDF report → download and verify contents</li>
+      <li>Check audit trail on dashboard → all actions logged</li>
+      <li>Go to log viewer → verify all filters work</li>
+      <li>Logout → verify protected routes redirect to login</li>
+    </ol>
+  </div>
+</div>
+
+<div class="task">
+  <div class="task-title">Task 14.2 — Fix All Issues Found</div>
+  <div class="task-detail">
+    <p>Use Claude Code to fix each issue individually. Be specific about what's broken and include error messages.</p>
+  </div>
+</div>
+
+<div class="success">MVP COMPLETE. At this point, SecureLens is fully functional with all features working correctly and generic styling. Everything from here is polish.</div>
+</div>
+
+<hr>
+
+<!-- ============================================ -->
+<h2 id="phase15">Phase 15 — UI/UX Polish (Post-MVP)</h2>
+<!-- ============================================ -->
+
+<div class="phase">
+<div class="phase-header">
+  <div class="phase-number">15</div>
+  <div class="phase-title">UI/UX Polish (Post-MVP)</div>
+</div>
+<div class="phase-meta">Goal: Transform generic styling into a professional security operations interface.</div>
+
+<p>This phase is done incrementally, page by page. Suggested order:</p>
+
+<div class="task">
+  <div class="task-title">15.1 — Design System Foundation</div>
+  <div class="task-detail">Dark theme (cybersecurity standard), color palette (severity colors, accent colors), typography, component library (buttons, badges, cards, tables, forms). Consider using a pre-built component set like shadcn/ui with a dark theme.</div>
+</div>
+
+<div class="task">
+  <div class="task-title">15.2 — Dashboard Polish</div>
+  <div class="task-detail">Animated stat counters, polished charts with tooltips, responsive grid, real-time update indicators.</div>
+</div>
+
+<div class="task">
+  <div class="task-title">15.3 — Alerts Page Polish</div>
+  <div class="task-detail">Better table styling, inline severity indicators, status transition animations, alert detail slide-out panel.</div>
+</div>
+
+<div class="task">
+  <div class="task-title">15.4 — Log Viewer Polish</div>
+  <div class="task-detail">Log-style monospace display, syntax highlighting for JSON metadata, infinite scroll or virtual table for performance.</div>
+</div>
+
+<div class="task">
+  <div class="task-title">15.5 — Threat Intel Polish</div>
+  <div class="task-detail">Provider result cards with visual risk gauges, comparison view, loading skeletons.</div>
+</div>
+
+<div class="task">
+  <div class="task-title">15.6 — AI Chatbot Polish</div>
+  <div class="task-detail">Polished chat bubble animations, proper markdown rendering with syntax highlighting, data table visualization for dataSnapshot responses, smooth slide-in/out transitions, message timestamps, copy-to-clipboard on code blocks.</div>
+</div>
+
+<div class="task">
+  <div class="task-title">15.7 — Hunt Page Polish</div>
+  <div class="task-detail">Visual query builder with drag-and-drop conditions, results highlighting matching fields.</div>
+</div>
+
+<div class="task">
+  <div class="task-title">15.8 — Responsive & Accessibility</div>
+  <div class="task-detail">Mobile-responsive layouts, keyboard navigation, screen reader support, loading states everywhere.</div>
+</div>
+</div>
+
+<hr>
+
+<h2>Quick Reference — Phase Summary</h2>
+<table>
+  <tr><th>Phase</th><th>What You Build</th><th>Key Deliverable</th></tr>
+  <tr><td>1</td><td>Project Skeleton</td><td>Running Spring Boot + React + PostgreSQL</td></tr>
+  <tr><td>2</td><td>Authentication</td><td>Register/Login/JWT/Protected routes</td></tr>
+  <tr><td>3</td><td>Log Ingestion</td><td>Log API + Log Viewer page</td></tr>
+  <tr><td>4</td><td>Log Simulator</td><td>Realistic log generator for all 8 attack scenarios</td></tr>
+  <tr><td>5</td><td>Detection Engine</td><td>8 MITRE ATT&CK rules generating alerts</td></tr>
+  <tr><td>6</td><td>Alert Dashboard</td><td>View/filter/manage alerts with evidence</td></tr>
+  <tr><td>7</td><td>Threat Intel Hub</td><td>5 provider integrations + enrichment</td></tr>
+  <tr><td>8</td><td>Mistral AI Triage</td><td>AI-powered alert analysis</td></tr>
+  <tr><td>9</td><td>AI Investigation Assistant</td><td>Chatbot with 6 tools, two-call Mistral pattern, slide-in panel</td></tr>
+  <tr><td>10</td><td>Threat Hunting</td><td>Custom query builder + saved hunts</td></tr>
+  <tr><td>11</td><td>Incident Reporting</td><td>Incident management + PDF generation</td></tr>
+  <tr><td>12</td><td>Dashboard & Audit</td><td>Real-time stats, charts, activity log</td></tr>
+  <tr><td>13</td><td>Deployment</td><td>Live on Railway + Vercel</td></tr>
+  <tr><td>14</td><td>Integration Testing</td><td>Full flow verified, bugs fixed</td></tr>
+  <tr><td>15</td><td>UI/UX Polish</td><td>Professional security interface (post-MVP)</td></tr>
+</table>
+
+<hr>
+
+<h2>Claude Code Efficiency Tips</h2>
+
+<div class="tip"><strong>Update CLAUDE.md after each phase.</strong> Change the "Current Phase" section so Claude Code always knows where you are in the project.</div>
+
+<div class="tip"><strong>If Claude Code generates something wrong,</strong> don't start over. Say: "The X you generated has this problem: [specific issue]. Fix only that — don't touch anything else."</div>
+
+<div class="tip"><strong>When you're stuck,</strong> paste the exact error message. Claude Code works best with specific errors, not "it doesn't work."</div>
+
+<div class="tip"><strong>After finishing each phase,</strong> run <code>git diff --stat</code> to see what changed, then commit with a meaningful message. This is your undo button.</div>
+
+<div class="tip"><strong>If a prompt is generating too much at once</strong> and the result is buggy, split it into two prompts. It's better to do two clean prompts than one messy one.</div>
+
+<div class="tip"><strong>Keep the backend running while working on frontend features.</strong> Test in the browser after every change. Don't wait until the end of a phase to test.</div>
+
+<div class="warning"><strong>Don't skip the checkpoints.</strong> Every checkpoint is a moment where you verify the feature works. If you skip verification and move to the next phase, bugs compound and become much harder to fix later.</div>
+
+</body>
+</html>

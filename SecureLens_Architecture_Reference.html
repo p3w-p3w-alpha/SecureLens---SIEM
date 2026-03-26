@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SecureLens — Architecture & Design Reference</title>
+<style>
+  :root {
+    --teal: #1D9E75; --teal-l: #E1F5EE; --teal-d: #085041;
+    --purple: #7F77DD; --purple-l: #EEEDFE; --purple-d: #3C3489;
+    --coral: #D85A30; --coral-l: #FAECE7; --coral-d: #993C1D;
+    --amber: #BA7517; --amber-l: #FAEEDA; --amber-d: #633806;
+    --blue: #378ADD; --blue-l: #E6F1FB; --blue-d: #0C447C;
+    --gray: #888780; --gray-l: #F1EFE8; --gray-d: #444441;
+    --red: #E24B4A; --red-l: #FCEBEB;
+    --text: #1a1a18; --text-m: #5F5E5A; --text-l: #888780;
+    --border: #D3D1C7; --bg: #FAFAF8; --white: #ffffff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; line-height: 1.7; color: var(--text); background: var(--bg); }
+  .page { max-width: 900px; margin: 0 auto; padding: 48px 32px; }
+
+  /* Cover */
+  .cover { padding: 80px 0 60px; border-bottom: 2px solid var(--teal); margin-bottom: 48px; }
+  .cover h1 { font-size: 42px; font-weight: 700; color: var(--teal-d); line-height: 1.1; margin-bottom: 10px; }
+  .cover .tagline { font-size: 18px; color: var(--text-m); margin-bottom: 32px; }
+  .meta-grid { display: grid; grid-template-columns: 160px 1fr; gap: 8px 16px; margin-top: 24px; }
+  .meta-key { font-weight: 600; color: var(--text-m); font-size: 13px; }
+  .meta-val { color: var(--text); font-size: 13px; }
+  .cover-note { margin-top: 28px; padding: 16px 20px; background: var(--teal-l); border-left: 4px solid var(--teal); border-radius: 0 8px 8px 0; font-size: 13px; color: var(--teal-d); line-height: 1.6; }
+
+  /* TOC */
+  .toc { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 28px 32px; margin-bottom: 48px; }
+  .toc h2 { font-size: 16px; color: var(--teal-d); margin-bottom: 16px; }
+  .toc ol { padding-left: 20px; }
+  .toc li { margin-bottom: 6px; font-size: 13px; }
+  .toc a { color: var(--purple-d); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+
+  /* Sections */
+  .section { margin-bottom: 56px; }
+  h2.section-title { font-size: 24px; font-weight: 700; color: var(--teal-d); margin-bottom: 6px; padding-bottom: 10px; border-bottom: 2px solid var(--teal-l); }
+  .section-num { font-size: 13px; color: var(--teal); font-weight: 600; margin-bottom: 4px; }
+  h3 { font-size: 16px; font-weight: 600; color: var(--purple-d); margin: 24px 0 10px; }
+  p { margin-bottom: 12px; color: var(--text); line-height: 1.75; }
+  ul, ol { padding-left: 20px; margin-bottom: 12px; }
+  li { margin-bottom: 5px; line-height: 1.65; }
+  code { font-family: 'Courier New', monospace; font-size: 12px; background: var(--gray-l); padding: 2px 6px; border-radius: 4px; color: var(--purple-d); }
+  pre { background: var(--gray-l); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; font-size: 12px; font-family: 'Courier New', monospace; overflow-x: auto; margin-bottom: 16px; color: var(--text); line-height: 1.6; }
+
+  /* Diagram container */
+  .diagram-wrap { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin: 20px 0; overflow-x: auto; }
+  .diagram-caption { text-align: center; font-size: 12px; color: var(--text-l); margin-top: 8px; font-style: italic; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px; }
+  thead th { background: var(--teal-d); color: white; font-weight: 600; padding: 10px 12px; text-align: left; }
+  tbody tr:nth-child(even) { background: var(--teal-l); }
+  tbody tr:nth-child(odd) { background: var(--white); }
+  td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .rules-table thead th { background: var(--purple-d); }
+  .rules-table tbody tr:nth-child(even) { background: var(--purple-l); }
+  .api-table thead th { background: var(--blue-d); }
+  .api-table tbody tr:nth-child(even) { background: var(--blue-l); }
+  .db-table thead th { background: var(--blue-d); }
+  .db-table tbody tr:nth-child(even) { background: var(--blue-l); }
+
+  /* Badges */
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 11px; font-weight: 700; }
+  .badge-critical { background: var(--red-l); color: var(--red); }
+  .badge-high { background: var(--amber-l); color: var(--amber-d); }
+  .badge-medium { background: var(--blue-l); color: var(--blue-d); }
+  .badge-teal { background: var(--teal-l); color: var(--teal-d); }
+  .badge-purple { background: var(--purple-l); color: var(--purple-d); }
+
+  /* CV line box */
+  .cv-box { background: var(--teal-l); border: 2px solid var(--teal); border-radius: 10px; padding: 20px 24px; margin: 24px 0; font-style: italic; line-height: 1.8; color: var(--teal-d); font-size: 15px; }
+
+  /* Info box */
+  .info-box { background: var(--purple-l); border-left: 4px solid var(--purple); border-radius: 0 8px 8px 0; padding: 14px 18px; margin: 16px 0; font-size: 13px; color: var(--purple-d); }
+  .warn-box { background: var(--amber-l); border-left: 4px solid var(--amber); border-radius: 0 8px 8px 0; padding: 14px 18px; margin: 16px 0; font-size: 13px; color: var(--amber-d); }
+
+  /* Sprint grid */
+  .sprint-grid { display: grid; grid-template-columns: 60px 1fr 1fr 1fr; gap: 2px; margin-bottom: 16px; }
+  .sprint-header { background: var(--purple-d); color: white; font-weight: 600; font-size: 12px; padding: 8px 10px; border-radius: 4px; }
+  .sprint-day { background: var(--gray-l); color: var(--text-m); font-weight: 700; font-size: 12px; padding: 8px 10px; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
+  .sprint-cell { background: var(--white); border: 1px solid var(--border); font-size: 12px; padding: 8px 10px; border-radius: 4px; line-height: 1.5; }
+  .sprint-checkpoint { grid-column: 1 / -1; background: var(--teal); color: white; font-weight: 600; font-size: 12px; padding: 8px 12px; border-radius: 4px; text-align: center; }
+  .sprint-buffer { grid-column: 1 / -1; background: var(--amber-l); color: var(--amber-d); font-weight: 600; font-size: 12px; padding: 8px 12px; border-radius: 4px; text-align: center; }
+
+  /* SVG theming for embedded diagrams */
+  svg .t  { font: 14px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; fill: #1a1a18; }
+  svg .ts { font: 12px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; fill: #5F5E5A; }
+  svg .th { font: 500 14px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; fill: #1a1a18; }
+  svg .arr { stroke: #888780; stroke-width: 1.5; fill: none; }
+  svg .box { fill: #F1EFE8; stroke: #888780; stroke-width: 0.5; }
+  svg .node { cursor: default; }
+  svg .c-purple > rect, svg .c-purple > ellipse, svg .c-purple > circle { fill: #EEEDFE; stroke: #534AB7; }
+  svg .c-purple > text.th { fill: #3C3489; }
+  svg .c-purple > text.ts { fill: #534AB7; }
+  svg .c-teal > rect, svg .c-teal > ellipse, svg .c-teal > circle { fill: #E1F5EE; stroke: #0F6E56; }
+  svg .c-teal > text.th { fill: #085041; }
+  svg .c-teal > text.ts { fill: #0F6E56; }
+  svg .c-coral > rect, svg .c-coral > ellipse, svg .c-coral > circle { fill: #FAECE7; stroke: #993C1D; }
+  svg .c-coral > text.th { fill: #993C1D; }
+  svg .c-coral > text.ts { fill: #D85A30; }
+  svg .c-amber > rect, svg .c-amber > ellipse, svg .c-amber > circle { fill: #FAEEDA; stroke: #854F0B; }
+  svg .c-amber > text.th { fill: #633806; }
+  svg .c-amber > text.ts { fill: #854F0B; }
+  svg .c-blue > rect, svg .c-blue > ellipse, svg .c-blue > circle { fill: #E6F1FB; stroke: #185FA5; }
+  svg .c-blue > text.th { fill: #0C447C; }
+  svg .c-blue > text.ts { fill: #185FA5; }
+  svg .c-gray > rect, svg .c-gray > ellipse, svg .c-gray > circle { fill: #F1EFE8; stroke: #5F5E5A; }
+  svg .c-gray > text.th { fill: #444441; }
+  svg .c-gray > text.ts { fill: #5F5E5A; }
+  svg .c-red > rect, svg .c-red > ellipse, svg .c-red > circle { fill: #FCEBEB; stroke: #A32D2D; }
+  svg .c-red > text.th { fill: #791F1F; }
+  svg .c-red > text.ts { fill: #A32D2D; }
+
+  @media print {
+    body { background: white; }
+    .page { padding: 24px; max-width: 100%; }
+    .diagram-wrap { break-inside: avoid; }
+    .section { break-inside: avoid; }
+    h2.section-title { break-after: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ══════════════════════════════════════════════════════ COVER -->
+<div class="cover">
+  <h1>SecureLens</h1>
+  <div class="tagline">AI-Assisted Security Operations Platform — Complete Architecture &amp; Design Reference</div>
+  <div class="meta-grid">
+    <span class="meta-key">Project type</span><span class="meta-val">Academic final project — Digital Culture module</span>
+    <span class="meta-key">Stack</span><span class="meta-val">Spring Boot · PostgreSQL · React + TypeScript · Mistral AI</span>
+    <span class="meta-key">Team</span><span class="meta-val">3 developers · 2-week sprint</span>
+    <span class="meta-key">External APIs</span><span class="meta-val">VirusTotal · AbuseIPDB · Shodan · NVD · AlienVault OTX · Mistral AI</span>
+    <span class="meta-key">MITRE coverage</span><span class="meta-val">8 detection rules aligned to ATT&amp;CK framework</span>
+    <span class="meta-key">Deployment</span><span class="meta-val">Spring Boot → Railway · React → Vercel · securelens.app</span>
+    <span class="meta-key">Status</span><span class="meta-val">Architecture complete — ready for sprint</span>
+  </div>
+  <div class="cover-note">
+    This document contains the complete user requirements, system architecture, SIEM correlation rules, database schema, full API contract, React page specifications, Mistral AI prompt design, log simulator design, deployment architecture, team sprint plan, and CV positioning for the SecureLens platform. It serves as the single source of truth for the development sprint.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ TOC -->
+<div class="toc">
+  <h2>Table of Contents</h2>
+  <ol>
+    <li><a href="#s1">What SecureLens is</a></li>
+    <li><a href="#s2">User roles and requirements</a></li>
+    <li><a href="#s3">Full system architecture</a></li>
+    <li><a href="#s4">SIEM correlation engine — all 8 rules</a></li>
+    <li><a href="#s5">Database schema — all 6 tables</a></li>
+    <li><a href="#s6">Complete API contract</a></li>
+    <li><a href="#s7">The 7 React pages</a></li>
+    <li><a href="#s8">Mistral AI integration — exact prompt design</a></li>
+    <li><a href="#s9">Log simulator — four source types</a></li>
+    <li><a href="#s10">Deployment architecture</a></li>
+    <li><a href="#s11">Team split and sprint plan</a></li>
+    <li><a href="#s12">Complete feature inventory</a></li>
+    <li><a href="#s13">AI investigation assistant — chatbot layer</a></li>
+
+  </ol>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ S1 -->
+<div class="section" id="s1">
+  <div class="section-num">Section 1</div>
+  <h2 class="section-title">What SecureLens is</h2>
+  <p>SecureLens is a unified Security Operations Platform built for SOC analysts. It combines three capabilities that in the real world exist as separate expensive enterprise tools: a SIEM engine for real-time log correlation and alerting, a threat intelligence hub for IOC investigation across five public APIs, and an AI-assisted triage layer powered by Mistral that explains alerts and recommends analyst actions in plain language.</p>
+  <p>It is deployed as a live web application. Anyone with the URL can log in and use it as a real SOC dashboard.</p>
+  <p>The two modules feed each other through automated enrichment: when the SIEM correlation engine fires an alert, it automatically triggers a threat intelligence investigation on the source IP. By the time an analyst clicks the alert, the AbuseIPDB score, Shodan port data, and VirusTotal malware score are already populated on the alert card. This integration is what makes SecureLens a platform rather than a collection of tools.</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ S2 -->
+<div class="section" id="s2">
+  <div class="section-num">Section 2</div>
+  <h2 class="section-title">User roles and requirements</h2>
+
+  <div class="diagram-wrap">
+    <svg width="100%" viewBox="0 0 680 580">
+    <defs><marker id="a1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+    <g class="c-purple"><rect x="20" y="16" width="300" height="250" rx="10" stroke-width="0.5"/><text class="th" x="170" y="40" text-anchor="middle" dominant-baseline="central">ANALYST requirements</text></g>
+    <text class="ts" x="38" y="64" dominant-baseline="central">UR-01  See all alerts in real time as they fire</text>
+    <text class="ts" x="38" y="84" dominant-baseline="central">UR-02  Understand what each alert means instantly</text>
+    <text class="ts" x="38" y="104" dominant-baseline="central">UR-03  Know the reputation of any attacking IP</text>
+    <text class="ts" x="38" y="124" dominant-baseline="central">UR-04  Triage and track alert status</text>
+    <text class="ts" x="38" y="144" dominant-baseline="central">UR-05  Add investigation notes to alerts</text>
+    <text class="ts" x="38" y="164" dominant-baseline="central">UR-06  Search raw events by any field</text>
+    <text class="ts" x="38" y="184" dominant-baseline="central">UR-07  Hunt for threats not yet in rules</text>
+    <text class="ts" x="38" y="204" dominant-baseline="central">UR-08  Investigate any IP, domain, hash, CVE</text>
+    <text class="ts" x="38" y="224" dominant-baseline="central">UR-09  Download a report when closing incident</text>
+    <text class="ts" x="38" y="244" dominant-baseline="central">UR-10  See dashboard metrics at a glance</text>
+    <g class="c-teal"><rect x="360" y="16" width="300" height="250" rx="10" stroke-width="0.5"/><text class="th" x="510" y="40" text-anchor="middle" dominant-baseline="central">ADMIN requirements</text></g>
+    <text class="ts" x="378" y="64" dominant-baseline="central">UR-11  Create and manage analyst accounts</text>
+    <text class="ts" x="378" y="84" dominant-baseline="central">UR-12  Create new detection rules via UI</text>
+    <text class="ts" x="378" y="104" dominant-baseline="central">UR-13  Edit rule thresholds and time windows</text>
+    <text class="ts" x="378" y="124" dominant-baseline="central">UR-14  Enable or disable rules without redeploy</text>
+    <text class="ts" x="378" y="144" dominant-baseline="central">UR-15  Trigger an attack simulation for demo</text>
+    <text class="ts" x="378" y="164" dominant-baseline="central">UR-16  See system-wide analytics and KPIs</text>
+    <text class="ts" x="378" y="184" dominant-baseline="central">UR-17  Review all analyst activity history</text>
+    <g class="c-gray"><rect x="20" y="300" width="640" height="250" rx="10" stroke-width="0.5"/><text class="th" x="340" y="324" text-anchor="middle" dominant-baseline="central">Non-functional requirements</text></g>
+    <text class="ts" x="38" y="350" dominant-baseline="central">NFR-01  Alert must appear on dashboard within 5 seconds of correlation engine detecting it</text>
+    <text class="ts" x="38" y="372" dominant-baseline="central">NFR-02  IOC investigation must return results within 10 seconds (parallel API calls)</text>
+    <text class="ts" x="38" y="394" dominant-baseline="central">NFR-03  Mistral AI summary must appear on alert card within 8 seconds of alert creation</text>
+    <text class="ts" x="38" y="416" dominant-baseline="central">NFR-04  All endpoints require JWT authentication — no anonymous access</text>
+    <text class="ts" x="38" y="438" dominant-baseline="central">NFR-05  Application must be deployed and accessible via permanent public URL</text>
+    <text class="ts" x="38" y="460" dominant-baseline="central">NFR-06  Dashboard must work on desktop browsers — Chrome, Firefox, Safari</text>
+    <text class="ts" x="38" y="482" dominant-baseline="central">NFR-07  PDF reports must be generated within 3 seconds of analyst request</text>
+    <text class="ts" x="38" y="504" dominant-baseline="central">NFR-08  System must pre-load 7 days of realistic synthetic data on first boot</text>
+    <text class="ts" x="38" y="526" dominant-baseline="central">NFR-09  Correlation engine must evaluate all active rules every 30 seconds</text>
+    </svg>
+    <div class="diagram-caption">Figure 1 — Complete user requirements for ANALYST and ADMIN roles, plus non-functional requirements</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ S3 -->
+<div class="section" id="s3">
+  <div class="section-num">Section 3</div>
+  <h2 class="section-title">Full system architecture</h2>
+  <p>The system is organized into five horizontal layers, each with a clear responsibility boundary. Data flows top-to-bottom: from generation, through detection and enrichment, through the API layer, into storage and the React frontend. The two modules (SIEM and Threat Intel) share the same Spring Boot backend and PostgreSQL instance, connected by automated IOC enrichment triggered on every alert.</p>
+
+  <div class="diagram-wrap">
+    <svg width="100%" viewBox="0 0 680 620">
+    <defs><marker id="a2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+    <rect x="20" y="14" width="640" height="80" rx="10" fill="none" stroke="#D3D1C7" stroke-width="0.5" stroke-dasharray="5 3"/>
+    <text class="ts" x="30" y="30" dominant-baseline="central" opacity="0.5">Data generation layer</text>
+    <g class="node c-gray"><rect x="36" y="36" width="110" height="44" rx="6" stroke-width="0.5"/><text class="th" x="91" y="54" text-anchor="middle" dominant-baseline="central">SSH log gen</text><text class="ts" x="91" y="70" text-anchor="middle" dominant-baseline="central">auth events</text></g>
+    <g class="node c-gray"><rect x="160" y="36" width="110" height="44" rx="6" stroke-width="0.5"/><text class="th" x="215" y="54" text-anchor="middle" dominant-baseline="central">Firewall gen</text><text class="ts" x="215" y="70" text-anchor="middle" dominant-baseline="central">allow/deny</text></g>
+    <g class="node c-gray"><rect x="284" y="36" width="110" height="44" rx="6" stroke-width="0.5"/><text class="th" x="339" y="54" text-anchor="middle" dominant-baseline="central">Apache gen</text><text class="ts" x="339" y="70" text-anchor="middle" dominant-baseline="central">HTTP requests</text></g>
+    <g class="node c-gray"><rect x="408" y="36" width="120" height="44" rx="6" stroke-width="0.5"/><text class="th" x="468" y="54" text-anchor="middle" dominant-baseline="central">Windows gen</text><text class="ts" x="468" y="70" text-anchor="middle" dominant-baseline="central">4625 · 4720</text></g>
+    <g class="node c-amber"><rect x="542" y="36" width="110" height="44" rx="6" stroke-width="0.5"/><text class="th" x="597" y="54" text-anchor="middle" dominant-baseline="central">Attack sim</text><text class="ts" x="597" y="70" text-anchor="middle" dominant-baseline="central">on-demand burst</text></g>
+    <line x1="340" y1="94" x2="340" y2="120" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#a2)"/>
+    <rect x="20" y="120" width="640" height="80" rx="10" fill="none" stroke="#D3D1C7" stroke-width="0.5" stroke-dasharray="5 3"/>
+    <text class="ts" x="30" y="136" dominant-baseline="central" opacity="0.5">SIEM core — Spring Boot scheduled services</text>
+    <g class="node c-purple"><rect x="36" y="142" width="150" height="44" rx="6" stroke-width="0.5"/><text class="th" x="111" y="160" text-anchor="middle" dominant-baseline="central">Normalizer</text><text class="ts" x="111" y="176" text-anchor="middle" dominant-baseline="central">→ unified schema</text></g>
+    <g class="node c-purple"><rect x="202" y="142" width="160" height="44" rx="6" stroke-width="0.5"/><text class="th" x="282" y="160" text-anchor="middle" dominant-baseline="central">Correlation engine</text><text class="ts" x="282" y="176" text-anchor="middle" dominant-baseline="central">8 rules · every 30s</text></g>
+    <g class="node c-purple"><rect x="378" y="142" width="150" height="44" rx="6" stroke-width="0.5"/><text class="th" x="453" y="160" text-anchor="middle" dominant-baseline="central">Alert generator</text><text class="ts" x="453" y="176" text-anchor="middle" dominant-baseline="central">MITRE · severity</text></g>
+    <g class="node c-purple"><rect x="544" y="142" width="108" height="44" rx="6" stroke-width="0.5"/><text class="th" x="598" y="160" text-anchor="middle" dominant-baseline="central">MTTD tracker</text><text class="ts" x="598" y="176" text-anchor="middle" dominant-baseline="central">ms precision</text></g>
+    <line x1="340" y1="200" x2="340" y2="226" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#a2)"/>
+    <rect x="20" y="226" width="640" height="80" rx="10" fill="none" stroke="#D3D1C7" stroke-width="0.5" stroke-dasharray="5 3"/>
+    <text class="ts" x="30" y="242" dominant-baseline="central" opacity="0.5">Enrichment layer — async parallel</text>
+    <g class="node c-amber"><rect x="36" y="248" width="100" height="44" rx="6" stroke-width="0.5"/><text class="th" x="86" y="266" text-anchor="middle" dominant-baseline="central">Mistral AI</text><text class="ts" x="86" y="282" text-anchor="middle" dominant-baseline="central">alert summary</text></g>
+    <g class="node c-amber"><rect x="150" y="248" width="100" height="44" rx="6" stroke-width="0.5"/><text class="th" x="200" y="266" text-anchor="middle" dominant-baseline="central">VirusTotal</text><text class="ts" x="200" y="282" text-anchor="middle" dominant-baseline="central">malware score</text></g>
+    <g class="node c-amber"><rect x="264" y="248" width="100" height="44" rx="6" stroke-width="0.5"/><text class="th" x="314" y="266" text-anchor="middle" dominant-baseline="central">AbuseIPDB</text><text class="ts" x="314" y="282" text-anchor="middle" dominant-baseline="central">abuse reports</text></g>
+    <g class="node c-amber"><rect x="378" y="248" width="100" height="44" rx="6" stroke-width="0.5"/><text class="th" x="428" y="266" text-anchor="middle" dominant-baseline="central">Shodan</text><text class="ts" x="428" y="282" text-anchor="middle" dominant-baseline="central">ports · banners</text></g>
+    <g class="node c-amber"><rect x="492" y="248" width="80" height="44" rx="6" stroke-width="0.5"/><text class="th" x="532" y="266" text-anchor="middle" dominant-baseline="central">NVD</text><text class="ts" x="532" y="282" text-anchor="middle" dominant-baseline="central">CVE data</text></g>
+    <g class="node c-amber"><rect x="586" y="248" width="66" height="44" rx="6" stroke-width="0.5"/><text class="th" x="619" y="266" text-anchor="middle" dominant-baseline="central">OTX</text><text class="ts" x="619" y="282" text-anchor="middle" dominant-baseline="central">pulses</text></g>
+    <line x1="340" y1="306" x2="340" y2="332" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#a2)"/>
+    <rect x="20" y="332" width="640" height="80" rx="10" fill="none" stroke="#D3D1C7" stroke-width="0.5" stroke-dasharray="5 3"/>
+    <text class="ts" x="30" y="348" dominant-baseline="central" opacity="0.5">Spring Boot API layer</text>
+    <g class="node c-teal"><rect x="36" y="354" width="130" height="44" rx="6" stroke-width="0.5"/><text class="th" x="101" y="372" text-anchor="middle" dominant-baseline="central">REST API</text><text class="ts" x="101" y="388" text-anchor="middle" dominant-baseline="central">30+ endpoints</text></g>
+    <g class="node c-teal"><rect x="182" y="354" width="130" height="44" rx="6" stroke-width="0.5"/><text class="th" x="247" y="372" text-anchor="middle" dominant-baseline="central">WebSocket</text><text class="ts" x="247" y="388" text-anchor="middle" dominant-baseline="central">STOMP · /topic/alerts</text></g>
+    <g class="node c-teal"><rect x="328" y="354" width="130" height="44" rx="6" stroke-width="0.5"/><text class="th" x="393" y="372" text-anchor="middle" dominant-baseline="central">JWT security</text><text class="ts" x="393" y="388" text-anchor="middle" dominant-baseline="central">Spring Security</text></g>
+    <g class="node c-teal"><rect x="474" y="354" width="130" height="44" rx="6" stroke-width="0.5"/><text class="th" x="539" y="372" text-anchor="middle" dominant-baseline="central">PDF generator</text><text class="ts" x="539" y="388" text-anchor="middle" dominant-baseline="central">iText · on demand</text></g>
+    <line x1="200" y1="412" x2="200" y2="438" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#a2)"/>
+    <line x1="480" y1="412" x2="480" y2="438" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#a2)"/>
+    <g class="c-blue"><rect x="80" y="438" width="240" height="44" rx="8" stroke-width="0.5"/><text class="th" x="200" y="456" text-anchor="middle" dominant-baseline="central">PostgreSQL</text><text class="ts" x="200" y="472" text-anchor="middle" dominant-baseline="central">6 tables · Railway managed</text></g>
+    <g class="c-coral"><rect x="360" y="438" width="240" height="44" rx="8" stroke-width="0.5"/><text class="th" x="480" y="456" text-anchor="middle" dominant-baseline="central">React + TypeScript</text><text class="ts" x="480" y="472" text-anchor="middle" dominant-baseline="central">7 pages · Vercel deployed</text></g>
+    <line x1="340" y1="412" x2="480" y2="438" stroke="#1D9E75" stroke-width="0.8" fill="none" marker-end="url(#a2)" opacity="0.5"/>
+    <rect x="80" y="510" width="520" height="40" rx="8" fill="none" stroke="#D3D1C7" stroke-dasharray="4 3" stroke-width="0.5"/>
+    <text class="th" x="340" y="526" text-anchor="middle" dominant-baseline="central">Deployed stack</text>
+    <text class="ts" x="340" y="542" text-anchor="middle" dominant-baseline="central">Spring Boot → Railway · PostgreSQL → Railway · React → Vercel · securelens.app</text>
+    </svg>
+    <div class="diagram-caption">Figure 2 — Full five-layer system architecture with data flow direction</div>
+  </div>
+
+  <h3>SIEM data flow — from log line to dashboard alert</h3>
+  <div class="diagram-wrap">
+    <svg width="100%" viewBox="0 0 680 580">
+    <defs><marker id="a3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+    <g class="node c-gray"><rect x="100" y="16" width="480" height="52" rx="8" stroke-width="0.5"/><text class="th" x="340" y="36" text-anchor="middle" dominant-baseline="central">Log simulator — Spring Boot scheduled task</text><text class="ts" x="340" y="54" text-anchor="middle" dominant-baseline="central">Generates realistic log lines every 200ms across 4 source types</text></g>
+    <g class="node c-gray"><rect x="40" y="92" width="130" height="44" rx="6" stroke-width="0.5"/><text class="th" x="105" y="110" text-anchor="middle" dominant-baseline="central">SSH auth log</text><text class="ts" x="105" y="126" text-anchor="middle" dominant-baseline="central">failed · accepted</text></g>
+    <g class="node c-gray"><rect x="185" y="92" width="130" height="44" rx="6" stroke-width="0.5"/><text class="th" x="250" y="110" text-anchor="middle" dominant-baseline="central">Firewall log</text><text class="ts" x="250" y="126" text-anchor="middle" dominant-baseline="central">ALLOW · DENY · DROP</text></g>
+    <g class="node c-gray"><rect x="330" y="92" width="130" height="44" rx="6" stroke-width="0.5"/><text class="th" x="395" y="110" text-anchor="middle" dominant-baseline="central">Apache log</text><text class="ts" x="395" y="126" text-anchor="middle" dominant-baseline="central">GET · POST · 4xx · 5xx</text></g>
+    <g class="node c-gray"><rect x="475" y="92" width="165" height="44" rx="6" stroke-width="0.5"/><text class="th" x="557" y="110" text-anchor="middle" dominant-baseline="central">Windows event log</text><text class="ts" x="557" y="126" text-anchor="middle" dominant-baseline="central">4625 · 4648 · 4720</text></g>
+    <line x1="105" y1="68" x2="105" y2="92" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#a3)" opacity="0.3"/>
+    <line x1="250" y1="68" x2="250" y2="92" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#a3)" opacity="0.3"/>
+    <line x1="395" y1="68" x2="395" y2="92" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#a3)" opacity="0.3"/>
+    <line x1="557" y1="68" x2="557" y2="92" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#a3)" opacity="0.3"/>
+    <line x1="340" y1="136" x2="340" y2="172" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#a3)" opacity="0.4"/>
+    <g class="node c-purple"><rect x="140" y="172" width="400" height="52" rx="8" stroke-width="0.5"/><text class="th" x="340" y="192" text-anchor="middle" dominant-baseline="central">Normalization — unified event schema</text><text class="ts" x="340" y="210" text-anchor="middle" dominant-baseline="central">source · timestamp · src_ip · event_type · raw · severity</text></g>
+    <line x1="340" y1="224" x2="340" y2="258" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#a3)" opacity="0.4"/>
+    <g class="node c-purple"><rect x="100" y="258" width="480" height="52" rx="8" stroke-width="0.5"/><text class="th" x="340" y="278" text-anchor="middle" dominant-baseline="central">PostgreSQL — events table</text><text class="ts" x="340" y="296" text-anchor="middle" dominant-baseline="central">Every normalized event persisted · queryable · searchable</text></g>
+    <line x1="340" y1="310" x2="340" y2="344" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#a3)" opacity="0.4"/>
+    <g class="node c-purple"><rect x="100" y="344" width="480" height="52" rx="8" stroke-width="0.5"/><text class="th" x="340" y="364" text-anchor="middle" dominant-baseline="central">Correlation engine — runs every 30 seconds</text><text class="ts" x="340" y="382" text-anchor="middle" dominant-baseline="central">SQL window queries · evaluates 8 rules against recent events</text></g>
+    <line x1="260" y1="396" x2="200" y2="432" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#a3)" opacity="0.3"/>
+    <line x1="420" y1="396" x2="480" y2="432" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#a3)" opacity="0.3"/>
+    <line x1="340" y1="396" x2="340" y2="432" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#a3)" opacity="0.3"/>
+    <g class="node c-purple"><rect x="40" y="432" width="155" height="44" rx="6" stroke-width="0.5"/><text class="th" x="117" y="450" text-anchor="middle" dominant-baseline="central">No match</text><text class="ts" x="117" y="466" text-anchor="middle" dominant-baseline="central">event stored, no alert</text></g>
+    <g class="node c-coral"><rect x="260" y="432" width="160" height="44" rx="6" stroke-width="0.5"/><text class="th" x="340" y="450" text-anchor="middle" dominant-baseline="central">Rule matched</text><text class="ts" x="340" y="466" text-anchor="middle" dominant-baseline="central">alert created + enriched</text></g>
+    <g class="node c-coral"><rect x="480" y="432" width="160" height="44" rx="6" stroke-width="0.5"/><text class="th" x="560" y="450" text-anchor="middle" dominant-baseline="central">Auto-enrich IOC</text><text class="ts" x="560" y="466" text-anchor="middle" dominant-baseline="central">src IP → threat intel APIs</text></g>
+    <line x1="340" y1="476" x2="340" y2="510" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#a3)" opacity="0.4"/>
+    <g class="node c-coral"><rect x="140" y="510" width="400" height="52" rx="8" stroke-width="0.5"/><text class="th" x="340" y="530" text-anchor="middle" dominant-baseline="central">WebSocket push → React dashboard</text><text class="ts" x="340" y="548" text-anchor="middle" dominant-baseline="central">Alert card appears instantly with full enrichment</text></g>
+    </svg>
+    <div class="diagram-caption">Figure 3 — SIEM data flow: log line to dashboard alert end-to-end</div>
+  </div>
+
+  <h3>Threat intelligence module flow</h3>
+  <div class="diagram-wrap">
+    <svg width="100%" viewBox="0 0 680 420">
+    <defs><marker id="a4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+    <g class="node c-gray"><rect x="200" y="16" width="280" height="52" rx="8" stroke-width="0.5"/><text class="th" x="340" y="36" text-anchor="middle" dominant-baseline="central">IOC submitted</text><text class="ts" x="340" y="54" text-anchor="middle" dominant-baseline="central">IP address · domain · file hash · CVE ID</text></g>
+    <line x1="340" y1="68" x2="340" y2="100" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#a4)" opacity="0.4"/>
+    <g class="node c-amber"><rect x="160" y="100" width="360" height="44" rx="8" stroke-width="0.5"/><text class="th" x="340" y="120" text-anchor="middle" dominant-baseline="central">Spring Boot — async parallel lookup</text><text class="ts" x="340" y="136" text-anchor="middle" dominant-baseline="central">All 5 API calls fired simultaneously via CompletableFuture</text></g>
+    <line x1="120" y1="144" x2="80" y2="190" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#a4)" opacity="0.3"/>
+    <line x1="220" y1="144" x2="200" y2="190" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#a4)" opacity="0.3"/>
+    <line x1="340" y1="144" x2="340" y2="190" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#a4)" opacity="0.3"/>
+    <line x1="460" y1="144" x2="480" y2="190" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#a4)" opacity="0.3"/>
+    <line x1="560" y1="144" x2="600" y2="190" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#a4)" opacity="0.3"/>
+    <g class="node c-amber"><rect x="20" y="190" width="110" height="52" rx="6" stroke-width="0.5"/><text class="th" x="75" y="210" text-anchor="middle" dominant-baseline="central">VirusTotal</text><text class="ts" x="75" y="226" text-anchor="middle" dominant-baseline="central">malware score</text></g>
+    <g class="node c-amber"><rect x="145" y="190" width="110" height="52" rx="6" stroke-width="0.5"/><text class="th" x="200" y="210" text-anchor="middle" dominant-baseline="central">AbuseIPDB</text><text class="ts" x="200" y="226" text-anchor="middle" dominant-baseline="central">abuse reports</text></g>
+    <g class="node c-amber"><rect x="285" y="190" width="110" height="52" rx="6" stroke-width="0.5"/><text class="th" x="340" y="210" text-anchor="middle" dominant-baseline="central">Shodan</text><text class="ts" x="340" y="226" text-anchor="middle" dominant-baseline="central">ports · banners</text></g>
+    <g class="node c-amber"><rect x="425" y="190" width="110" height="52" rx="6" stroke-width="0.5"/><text class="th" x="480" y="210" text-anchor="middle" dominant-baseline="central">NVD / NIST</text><text class="ts" x="480" y="226" text-anchor="middle" dominant-baseline="central">CVE · CVSS</text></g>
+    <g class="node c-amber"><rect x="550" y="190" width="110" height="52" rx="6" stroke-width="0.5"/><text class="th" x="605" y="210" text-anchor="middle" dominant-baseline="central">OTX</text><text class="ts" x="605" y="226" text-anchor="middle" dominant-baseline="central">threat pulses</text></g>
+    <line x1="75" y1="242" x2="240" y2="298" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#a4)" opacity="0.25"/>
+    <line x1="200" y1="242" x2="270" y2="298" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#a4)" opacity="0.25"/>
+    <line x1="340" y1="242" x2="340" y2="298" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#a4)" opacity="0.25"/>
+    <line x1="480" y1="242" x2="410" y2="298" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#a4)" opacity="0.25"/>
+    <line x1="605" y1="242" x2="440" y2="298" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#a4)" opacity="0.25"/>
+    <g class="node c-teal"><rect x="120" y="298" width="440" height="52" rx="8" stroke-width="0.5"/><text class="th" x="340" y="318" text-anchor="middle" dominant-baseline="central">Unified threat profile</text><text class="ts" x="340" y="336" text-anchor="middle" dominant-baseline="central">Merged JSON · cached in PostgreSQL · served to React</text></g>
+    <line x1="340" y1="350" x2="340" y2="382" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#a4)" opacity="0.4"/>
+    <g class="node c-coral"><rect x="160" y="382" width="360" height="30" rx="6" stroke-width="0.5"/><text class="ts" x="340" y="397" text-anchor="middle" dominant-baseline="central">IOC investigator page — full profile in one view</text></g>
+    </svg>
+    <div class="diagram-caption">Figure 4 — Threat intelligence module: five APIs called in parallel, merged into one unified profile</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ S4 -->
+<div class="section" id="s4">
+  <div class="section-num">Section 4</div>
+  <h2 class="section-title">SIEM correlation engine — all 8 rules specified</h2>
+  <p>This is the intellectual core of the project. Each rule is a SQL window query evaluated every 30 seconds by a Spring Boot <code>@Scheduled</code> task. Rules are stored in the <code>detection_rules</code> table and fully configurable via the Rule Manager UI without code changes or redeployment.</p>
+
+  <div class="diagram-wrap">
+    <svg width="100%" viewBox="0 0 680 620">
+    <text class="th" x="34" y="20" dominant-baseline="central">Rule</text>
+    <text class="th" x="164" y="20" dominant-baseline="central">MITRE</text>
+    <text class="th" x="244" y="20" dominant-baseline="central">Severity</text>
+    <text class="th" x="340" y="20" dominant-baseline="central">Trigger condition</text>
+    <line x1="20" y1="32" x2="660" y2="32" stroke="#D3D1C7" stroke-width="0.5"/>
+    <g class="c-purple"><rect x="20" y="38" width="134" height="56" rx="4" stroke-width="0.5"/><text class="th" x="87" y="58" text-anchor="middle" dominant-baseline="central">Brute force</text><text class="ts" x="87" y="76" text-anchor="middle" dominant-baseline="central">SSH</text></g>
+    <text class="ts" x="164" y="66" dominant-baseline="central">T1110</text>
+    <g class="c-red"><rect x="234" y="46" width="64" height="26" rx="10" stroke-width="0.5"/><text class="ts" x="266" y="59" text-anchor="middle" dominant-baseline="central">CRITICAL</text></g>
+    <text class="ts" x="320" y="58" dominant-baseline="central">5+ failed SSH logins from</text>
+    <text class="ts" x="320" y="74" dominant-baseline="central">same src_ip within 60 seconds</text>
+    <line x1="20" y1="98" x2="660" y2="98" stroke="#D3D1C7" stroke-width="0.3"/>
+    <g class="c-purple"><rect x="20" y="104" width="134" height="56" rx="4" stroke-width="0.5"/><text class="th" x="87" y="124" text-anchor="middle" dominant-baseline="central">Login after</text><text class="ts" x="87" y="142" text-anchor="middle" dominant-baseline="central">failures</text></g>
+    <text class="ts" x="164" y="132" dominant-baseline="central">T1078</text>
+    <g class="c-red"><rect x="234" y="112" width="64" height="26" rx="10" stroke-width="0.5"/><text class="ts" x="266" y="125" text-anchor="middle" dominant-baseline="central">CRITICAL</text></g>
+    <text class="ts" x="320" y="124" dominant-baseline="central">Successful login within 5 min</text>
+    <text class="ts" x="320" y="140" dominant-baseline="central">after 3+ failures, same src_ip</text>
+    <line x1="20" y1="164" x2="660" y2="164" stroke="#D3D1C7" stroke-width="0.3"/>
+    <g class="c-purple"><rect x="20" y="170" width="134" height="56" rx="4" stroke-width="0.5"/><text class="th" x="87" y="190" text-anchor="middle" dominant-baseline="central">Port sweep</text><text class="ts" x="87" y="208" text-anchor="middle" dominant-baseline="central">firewall recon</text></g>
+    <text class="ts" x="164" y="198" dominant-baseline="central">T1046</text>
+    <g class="c-amber"><rect x="234" y="178" width="54" height="26" rx="10" stroke-width="0.5"/><text class="ts" x="261" y="191" text-anchor="middle" dominant-baseline="central">HIGH</text></g>
+    <text class="ts" x="320" y="190" dominant-baseline="central">DENY events to 20+ distinct ports</text>
+    <text class="ts" x="320" y="206" dominant-baseline="central">from same src_ip within 30 seconds</text>
+    <line x1="20" y1="230" x2="660" y2="230" stroke="#D3D1C7" stroke-width="0.3"/>
+    <g class="c-purple"><rect x="20" y="236" width="134" height="56" rx="4" stroke-width="0.5"/><text class="th" x="87" y="256" text-anchor="middle" dominant-baseline="central">After-hours</text><text class="ts" x="87" y="274" text-anchor="middle" dominant-baseline="central">authentication</text></g>
+    <text class="ts" x="164" y="264" dominant-baseline="central">T1133</text>
+    <g class="c-amber"><rect x="234" y="244" width="54" height="26" rx="10" stroke-width="0.5"/><text class="ts" x="261" y="257" text-anchor="middle" dominant-baseline="central">HIGH</text></g>
+    <text class="ts" x="320" y="256" dominant-baseline="central">Successful auth event with</text>
+    <text class="ts" x="320" y="272" dominant-baseline="central">hour outside 08:00–20:00</text>
+    <line x1="20" y1="296" x2="660" y2="296" stroke="#D3D1C7" stroke-width="0.3"/>
+    <g class="c-purple"><rect x="20" y="302" width="134" height="56" rx="4" stroke-width="0.5"/><text class="th" x="87" y="322" text-anchor="middle" dominant-baseline="central">New admin</text><text class="ts" x="87" y="340" text-anchor="middle" dominant-baseline="central">account created</text></g>
+    <text class="ts" x="164" y="330" dominant-baseline="central">T1136</text>
+    <g class="c-red"><rect x="234" y="310" width="64" height="26" rx="10" stroke-width="0.5"/><text class="ts" x="266" y="323" text-anchor="middle" dominant-baseline="central">CRITICAL</text></g>
+    <text class="ts" x="320" y="322" dominant-baseline="central">Windows event 4720 — user</text>
+    <text class="ts" x="320" y="338" dominant-baseline="central">creation detected in any log</text>
+    <line x1="20" y1="362" x2="660" y2="362" stroke="#D3D1C7" stroke-width="0.3"/>
+    <g class="c-purple"><rect x="20" y="368" width="134" height="56" rx="4" stroke-width="0.5"/><text class="th" x="87" y="388" text-anchor="middle" dominant-baseline="central">Privilege</text><text class="ts" x="87" y="406" text-anchor="middle" dominant-baseline="central">escalation</text></g>
+    <text class="ts" x="164" y="396" dominant-baseline="central">T1548</text>
+    <g class="c-red"><rect x="234" y="376" width="64" height="26" rx="10" stroke-width="0.5"/><text class="ts" x="266" y="389" text-anchor="middle" dominant-baseline="central">CRITICAL</text></g>
+    <text class="ts" x="320" y="388" dominant-baseline="central">Windows event 4648 (explicit</text>
+    <text class="ts" x="320" y="404" dominant-baseline="central">credentials used) after 4625</text>
+    <line x1="20" y1="428" x2="660" y2="428" stroke="#D3D1C7" stroke-width="0.3"/>
+    <g class="c-purple"><rect x="20" y="434" width="134" height="56" rx="4" stroke-width="0.5"/><text class="th" x="87" y="454" text-anchor="middle" dominant-baseline="central">HTTP flood</text><text class="ts" x="87" y="472" text-anchor="middle" dominant-baseline="central">web DDoS</text></g>
+    <text class="ts" x="164" y="462" dominant-baseline="central">T1499</text>
+    <g class="c-amber"><rect x="234" y="442" width="54" height="26" rx="10" stroke-width="0.5"/><text class="ts" x="261" y="455" text-anchor="middle" dominant-baseline="central">HIGH</text></g>
+    <text class="ts" x="320" y="454" dominant-baseline="central">500+ HTTP requests from same</text>
+    <text class="ts" x="320" y="470" dominant-baseline="central">src_ip within 60 seconds</text>
+    <line x1="20" y1="494" x2="660" y2="494" stroke="#D3D1C7" stroke-width="0.3"/>
+    <g class="c-purple"><rect x="20" y="500" width="134" height="56" rx="4" stroke-width="0.5"/><text class="th" x="87" y="520" text-anchor="middle" dominant-baseline="central">Firewall</text><text class="ts" x="87" y="538" text-anchor="middle" dominant-baseline="central">evasion</text></g>
+    <text class="ts" x="164" y="528" dominant-baseline="central">T1562</text>
+    <g class="c-amber"><rect x="234" y="508" width="54" height="26" rx="10" stroke-width="0.5"/><text class="ts" x="261" y="521" text-anchor="middle" dominant-baseline="central">HIGH</text></g>
+    <text class="ts" x="320" y="520" dominant-baseline="central">DENY count drops by 80%+ within</text>
+    <text class="ts" x="320" y="536" dominant-baseline="central">5 min after a port sweep alert</text>
+    <line x1="20" y1="560" x2="660" y2="560" stroke="#D3D1C7" stroke-width="0.3"/>
+    <text class="ts" x="340" y="584" text-anchor="middle" dominant-baseline="central" opacity="0.5">All rules stored in detection_rules table · configurable via Rule Manager UI · evaluated every 30s</text>
+    <text class="ts" x="340" y="602" text-anchor="middle" dominant-baseline="central" opacity="0.5">Thresholds and time windows are editable without code changes or redeployment</text>
+    </svg>
+    <div class="diagram-caption">Figure 5 — All 8 MITRE ATT&amp;CK-aligned detection rules with exact trigger conditions</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ S5 -->
+<div class="section" id="s5">
+  <div class="section-num">Section 5</div>
+  <h2 class="section-title">Database schema — all 6 tables</h2>
+
+  <h3>events</h3>
+  <p>The source of truth for all raw log data. Every single normalized event goes here regardless of whether it triggers an alert. This makes event search and threat hunting possible — analysts query events directly, not just alerts.</p>
+  <table class="db-table">
+    <thead><tr><th>Column</th><th>Type</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>id</code></td><td>UUID PK</td><td>Unique event identifier</td></tr>
+      <tr><td><code>source_type</code></td><td>VARCHAR</td><td>SSH_AUTH / FIREWALL / APACHE / WINDOWS</td></tr>
+      <tr><td><code>event_type</code></td><td>VARCHAR</td><td>Specific type: LOGIN_FAILED, PORT_DENY, HTTP_REQUEST, EVENT_4625…</td></tr>
+      <tr><td><code>src_ip</code></td><td>VARCHAR</td><td>Source IP address</td></tr>
+      <tr><td><code>dst_ip</code></td><td>VARCHAR</td><td>Destination IP address</td></tr>
+      <tr><td><code>src_port</code></td><td>INTEGER</td><td>Source port number</td></tr>
+      <tr><td><code>dst_port</code></td><td>INTEGER</td><td>Destination port number</td></tr>
+      <tr><td><code>username</code></td><td>VARCHAR</td><td>Username involved in event if applicable</td></tr>
+      <tr><td><code>action</code></td><td>VARCHAR</td><td>Action taken: ALLOW, DENY, DROP, ACCEPT, REJECT</td></tr>
+      <tr><td><code>result</code></td><td>VARCHAR</td><td>Outcome: SUCCESS, FAILURE</td></tr>
+      <tr><td><code>raw_log</code></td><td>TEXT</td><td>Full original log line for full-text search</td></tr>
+      <tr><td><code>severity</code></td><td>VARCHAR</td><td>LOW / MEDIUM / HIGH / CRITICAL</td></tr>
+      <tr><td><code>occurred_at</code></td><td>TIMESTAMP</td><td>When the event actually happened (used for MTTD)</td></tr>
+      <tr><td><code>ingested_at</code></td><td>TIMESTAMP</td><td>When the event was stored in the database</td></tr>
+    </tbody>
+  </table>
+
+  <h3>alerts</h3>
+  <p>Stores the output of the correlation engine. The <code>ai_summary</code> and <code>ai_recommendation</code> columns store Mistral's response. <code>ioc_enrichment</code> is JSONB storing the merged response from all five threat intel APIs. <code>mttr_ms</code> is populated when the analyst marks the alert resolved.</p>
+  <table class="db-table">
+    <thead><tr><th>Column</th><th>Type</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>id</code></td><td>UUID PK</td><td>Unique alert identifier</td></tr>
+      <tr><td><code>rule_id</code></td><td>UUID FK</td><td>References detection_rules.id</td></tr>
+      <tr><td><code>primary_event_id</code></td><td>UUID FK</td><td>The triggering event</td></tr>
+      <tr><td><code>assigned_to</code></td><td>UUID FK</td><td>References users.id — assigned analyst</td></tr>
+      <tr><td><code>mitre_id</code></td><td>VARCHAR</td><td>MITRE ATT&amp;CK technique ID e.g. T1110</td></tr>
+      <tr><td><code>mitre_name</code></td><td>VARCHAR</td><td>Full technique name</td></tr>
+      <tr><td><code>mitre_tactic</code></td><td>VARCHAR</td><td>ATT&amp;CK tactic category</td></tr>
+      <tr><td><code>severity</code></td><td>VARCHAR</td><td>LOW / MEDIUM / HIGH / CRITICAL</td></tr>
+      <tr><td><code>status</code></td><td>VARCHAR</td><td>NEW / INVESTIGATING / RESOLVED / FALSE_POSITIVE</td></tr>
+      <tr><td><code>src_ip</code></td><td>VARCHAR</td><td>Source IP that triggered the alert</td></tr>
+      <tr><td><code>event_count</code></td><td>INTEGER</td><td>Number of matching events that triggered the rule</td></tr>
+      <tr><td><code>mttd_ms</code></td><td>BIGINT</td><td>Mean Time To Detect in milliseconds</td></tr>
+      <tr><td><code>mttr_ms</code></td><td>BIGINT</td><td>Mean Time To Respond — populated on resolution</td></tr>
+      <tr><td><code>ai_summary</code></td><td>TEXT</td><td>Mistral-generated plain-language incident summary</td></tr>
+      <tr><td><code>ai_recommendation</code></td><td>JSONB</td><td>Mistral-generated recommended analyst actions (array)</td></tr>
+      <tr><td><code>ioc_enrichment</code></td><td>JSONB</td><td>Merged threat intel from all 5 APIs</td></tr>
+      <tr><td><code>analyst_notes</code></td><td>TEXT</td><td>Analyst investigation notes</td></tr>
+      <tr><td><code>created_at</code></td><td>TIMESTAMP</td><td>Alert creation timestamp</td></tr>
+      <tr><td><code>resolved_at</code></td><td>TIMESTAMP</td><td>Resolution timestamp — used to compute MTTR</td></tr>
+    </tbody>
+  </table>
+
+  <h3>detection_rules</h3>
+  <p>Fully dynamic — rules live in the database, not in Java code. The rule manager UI does CRUD on this table. Analysts can create new rules, adjust thresholds, and toggle rules on and off without touching code or redeploying.</p>
+  <table class="db-table">
+    <thead><tr><th>Column</th><th>Type</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>id</code></td><td>UUID PK</td><td>Unique rule identifier</td></tr>
+      <tr><td><code>name</code></td><td>VARCHAR</td><td>Human-readable rule name</td></tr>
+      <tr><td><code>description</code></td><td>TEXT</td><td>What this rule detects and why it matters</td></tr>
+      <tr><td><code>mitre_id</code></td><td>VARCHAR</td><td>MITRE ATT&amp;CK technique ID</td></tr>
+      <tr><td><code>mitre_tactic</code></td><td>VARCHAR</td><td>ATT&amp;CK tactic category</td></tr>
+      <tr><td><code>source_type</code></td><td>VARCHAR</td><td>Which log source this rule applies to</td></tr>
+      <tr><td><code>event_type_filter</code></td><td>VARCHAR</td><td>Which event types to count</td></tr>
+      <tr><td><code>condition_field</code></td><td>VARCHAR</td><td>Field to group by (e.g. src_ip)</td></tr>
+      <tr><td><code>threshold</code></td><td>INTEGER</td><td>Minimum count to trigger the rule</td></tr>
+      <tr><td><code>time_window_seconds</code></td><td>INTEGER</td><td>Sliding window duration in seconds</td></tr>
+      <tr><td><code>severity</code></td><td>VARCHAR</td><td>Alert severity when this rule fires</td></tr>
+      <tr><td><code>enabled</code></td><td>BOOLEAN</td><td>Whether the rule is currently active</td></tr>
+      <tr><td><code>times_triggered</code></td><td>INTEGER</td><td>Cumulative trigger count for analytics</td></tr>
+      <tr><td><code>created_at</code></td><td>TIMESTAMP</td><td>Rule creation timestamp</td></tr>
+      <tr><td><code>updated_at</code></td><td>TIMESTAMP</td><td>Last modification timestamp</td></tr>
+    </tbody>
+  </table>
+
+  <h3>ioc_cache</h3>
+  <p>Prevents redundant API calls. <code>expires_at</code> is set to 24 hours after <code>cached_at</code>. When the same IP is investigated within 24 hours, Spring Boot serves the cached result instantly without calling any external API.</p>
+  <table class="db-table">
+    <thead><tr><th>Column</th><th>Type</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>id</code></td><td>UUID PK</td><td>Unique cache entry identifier</td></tr>
+      <tr><td><code>ioc_value</code></td><td>VARCHAR</td><td>The IOC being cached (IP, domain, hash, CVE ID)</td></tr>
+      <tr><td><code>ioc_type</code></td><td>VARCHAR</td><td>IP / DOMAIN / FILE_HASH / CVE</td></tr>
+      <tr><td><code>overall_risk_score</code></td><td>INTEGER</td><td>Weighted composite score 0–100 from all APIs</td></tr>
+      <tr><td><code>virustotal_result</code></td><td>JSONB</td><td>Full VirusTotal API response</td></tr>
+      <tr><td><code>abuseipdb_result</code></td><td>JSONB</td><td>Full AbuseIPDB API response</td></tr>
+      <tr><td><code>shodan_result</code></td><td>JSONB</td><td>Full Shodan API response</td></tr>
+      <tr><td><code>nvd_result</code></td><td>JSONB</td><td>Full NVD CVE API response</td></tr>
+      <tr><td><code>otx_result</code></td><td>JSONB</td><td>Full AlienVault OTX API response</td></tr>
+      <tr><td><code>cache_status</code></td><td>VARCHAR</td><td>PENDING / COMPLETE / PARTIAL / FAILED</td></tr>
+      <tr><td><code>cached_at</code></td><td>TIMESTAMP</td><td>When the result was cached</td></tr>
+      <tr><td><code>expires_at</code></td><td>TIMESTAMP</td><td>Cache expiry — 24h after cached_at</td></tr>
+    </tbody>
+  </table>
+
+  <h3>users</h3>
+  <table class="db-table">
+    <thead><tr><th>Column</th><th>Type</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>id</code></td><td>UUID PK</td><td>Unique user identifier</td></tr>
+      <tr><td><code>username</code></td><td>VARCHAR UNIQUE</td><td>Login username</td></tr>
+      <tr><td><code>email</code></td><td>VARCHAR UNIQUE</td><td>Analyst email address</td></tr>
+      <tr><td><code>password_hash</code></td><td>VARCHAR</td><td>bcrypt hash — never store plaintext</td></tr>
+      <tr><td><code>role</code></td><td>VARCHAR</td><td>ANALYST or ADMIN</td></tr>
+      <tr><td><code>active</code></td><td>BOOLEAN</td><td>Whether account is active</td></tr>
+      <tr><td><code>created_at</code></td><td>TIMESTAMP</td><td>Account creation timestamp</td></tr>
+      <tr><td><code>last_login</code></td><td>TIMESTAMP</td><td>Last successful login timestamp</td></tr>
+    </tbody>
+  </table>
+
+  <h3>audit_log</h3>
+  <p>Tracks every significant analyst action — alert status changes, rule modifications, IOC lookups, report downloads. This is the governance layer SOC managers need.</p>
+  <table class="db-table">
+    <thead><tr><th>Column</th><th>Type</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>id</code></td><td>UUID PK</td><td>Unique log entry identifier</td></tr>
+      <tr><td><code>user_id</code></td><td>UUID FK</td><td>References users.id</td></tr>
+      <tr><td><code>action</code></td><td>VARCHAR</td><td>Action performed: ALERT_TRIAGED, RULE_UPDATED, IOC_INVESTIGATED…</td></tr>
+      <tr><td><code>entity_type</code></td><td>VARCHAR</td><td>Type of entity acted upon: ALERT / RULE / IOC</td></tr>
+      <tr><td><code>entity_id</code></td><td>VARCHAR</td><td>ID of the entity acted upon</td></tr>
+      <tr><td><code>details</code></td><td>TEXT</td><td>Additional context about the action</td></tr>
+      <tr><td><code>created_at</code></td><td>TIMESTAMP</td><td>When the action was performed</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ S6 -->
+<div class="section" id="s6">
+  <div class="section-num">Section 6</div>
+  <h2 class="section-title">Complete API contract</h2>
+
+  <h3>Authentication</h3>
+  <table class="api-table">
+    <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>POST</td><td><code>/api/auth/login</code></td><td>Accepts username + password, returns JWT access token</td></tr>
+      <tr><td>POST</td><td><code>/api/auth/refresh</code></td><td>Refreshes expired JWT token</td></tr>
+      <tr><td>GET</td><td><code>/api/auth/me</code></td><td>Returns current user profile and role</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Events</h3>
+  <table class="api-table">
+    <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>GET</td><td><code>/api/events</code></td><td>Paginated event list — filters: source, type, src_ip, severity, from, to</td></tr>
+      <tr><td>GET</td><td><code>/api/events/{id}</code></td><td>Single event detail</td></tr>
+      <tr><td>GET</td><td><code>/api/events/search</code></td><td>Full-text search across raw_log field</td></tr>
+      <tr><td>GET</td><td><code>/api/events/stats</code></td><td>Event counts grouped by source and type for analytics</td></tr>
+      <tr><td>POST</td><td><code>/api/events/simulate</code></td><td>ADMIN only — triggers an attack scenario burst</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Alerts</h3>
+  <table class="api-table">
+    <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>GET</td><td><code>/api/alerts</code></td><td>Paginated alert list — filters: status, severity, mitre_id, src_ip, from, to</td></tr>
+      <tr><td>GET</td><td><code>/api/alerts/{id}</code></td><td>Full alert detail including AI summary and IOC enrichment</td></tr>
+      <tr><td>PATCH</td><td><code>/api/alerts/{id}/status</code></td><td>Update status: NEW / INVESTIGATING / RESOLVED / FALSE_POSITIVE</td></tr>
+      <tr><td>PATCH</td><td><code>/api/alerts/{id}/assign</code></td><td>Assign alert to an analyst</td></tr>
+      <tr><td>POST</td><td><code>/api/alerts/{id}/notes</code></td><td>Append analyst investigation note</td></tr>
+      <tr><td>GET</td><td><code>/api/alerts/{id}/report</code></td><td>Generate and return PDF incident report</td></tr>
+      <tr><td>GET</td><td><code>/api/alerts/stats</code></td><td>Aggregate metrics: counts by severity, MTTD avg, MTTR avg, FP rate</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Detection rules</h3>
+  <table class="api-table">
+    <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>GET</td><td><code>/api/rules</code></td><td>All rules with enabled status and trigger counts</td></tr>
+      <tr><td>POST</td><td><code>/api/rules</code></td><td>Create new rule — ADMIN only</td></tr>
+      <tr><td>PUT</td><td><code>/api/rules/{id}</code></td><td>Update all rule parameters — ADMIN only</td></tr>
+      <tr><td>PATCH</td><td><code>/api/rules/{id}/toggle</code></td><td>Enable or disable rule — ADMIN only</td></tr>
+      <tr><td>DELETE</td><td><code>/api/rules/{id}</code></td><td>Delete rule — ADMIN only</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Threat intelligence</h3>
+  <table class="api-table">
+    <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>POST</td><td><code>/api/ioc/investigate</code></td><td>Submit IOC, returns unified threat profile (with 24h caching)</td></tr>
+      <tr><td>GET</td><td><code>/api/ioc/history</code></td><td>Past IOC investigations for the current user</td></tr>
+      <tr><td>GET</td><td><code>/api/ioc/cache/{value}</code></td><td>Check cache status for a specific IOC</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Threat hunting</h3>
+  <table class="api-table">
+    <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>POST</td><td><code>/api/hunt</code></td><td>Execute a structured hunt query against events table</td></tr>
+      <tr><td>GET</td><td><code>/api/hunt/templates</code></td><td>Returns preset hunting query templates</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Analytics</h3>
+  <table class="api-table">
+    <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>GET</td><td><code>/api/analytics/overview</code></td><td>KPI cards: total events, alerts today, MTTD avg, MTTR avg, open incidents</td></tr>
+      <tr><td>GET</td><td><code>/api/analytics/mitre-heatmap</code></td><td>MITRE technique firing frequency for heatmap</td></tr>
+      <tr><td>GET</td><td><code>/api/analytics/timeline</code></td><td>Alert volume per hour for last 24 hours</td></tr>
+      <tr><td>GET</td><td><code>/api/analytics/top-sources</code></td><td>Top attacking IPs ranked by alert count</td></tr>
+    </tbody>
+  </table>
+
+  <h3>WebSocket</h3>
+  <div class="info-box">
+    <strong>Topic:</strong> <code>/topic/alerts</code><br>
+    <strong>Protocol:</strong> STOMP over WebSocket<br>
+    <strong>Payload:</strong> Full alert object including AI summary, IOC enrichment, MITRE data, and severity — pushed to all connected clients the instant a new alert is stored.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ S7 -->
+<div class="section" id="s7">
+  <div class="section-num">Section 7</div>
+  <h2 class="section-title">The 7 React pages — every component specified</h2>
+
+  <div class="diagram-wrap">
+    <svg width="100%" viewBox="0 0 680 660">
+    <g class="c-coral"><rect x="20" y="16" width="300" height="120" rx="8" stroke-width="0.5"/><text class="th" x="170" y="36" text-anchor="middle" dominant-baseline="central">P1 — Live alert feed</text><text class="ts" x="170" y="54" text-anchor="middle" dominant-baseline="central">WebSocket · instant push</text></g>
+    <text class="ts" x="36" y="76" dominant-baseline="central">Alert cards: severity badge · MITRE ID</text>
+    <text class="ts" x="36" y="94" dominant-baseline="central">AI summary preview · AbuseIPDB score</text>
+    <text class="ts" x="36" y="112" dominant-baseline="central">Inline triage buttons · filter bar</text>
+    <g class="c-coral"><rect x="360" y="16" width="300" height="120" rx="8" stroke-width="0.5"/><text class="th" x="510" y="36" text-anchor="middle" dominant-baseline="central">P2 — Alert detail</text><text class="ts" x="510" y="54" text-anchor="middle" dominant-baseline="central">Full investigation view</text></g>
+    <text class="ts" x="376" y="76" dominant-baseline="central">Full AI analysis + recommendations</text>
+    <text class="ts" x="376" y="94" dominant-baseline="central">IOC enrichment breakdown per API</text>
+    <text class="ts" x="376" y="112" dominant-baseline="central">Event timeline · notes · PDF button</text>
+    <g class="c-purple"><rect x="20" y="160" width="300" height="120" rx="8" stroke-width="0.5"/><text class="th" x="170" y="180" text-anchor="middle" dominant-baseline="central">P3 — Event search</text><text class="ts" x="170" y="198" text-anchor="middle" dominant-baseline="central">Raw log query interface</text></g>
+    <text class="ts" x="36" y="220" dominant-baseline="central">Filter: source · type · IP · time range</text>
+    <text class="ts" x="36" y="238" dominant-baseline="central">Full-text search across raw_log</text>
+    <text class="ts" x="36" y="256" dominant-baseline="central">Results table · click to view event</text>
+    <g class="c-purple"><rect x="360" y="160" width="300" height="120" rx="8" stroke-width="0.5"/><text class="th" x="510" y="180" text-anchor="middle" dominant-baseline="central">P4 — Threat hunting</text><text class="ts" x="510" y="198" text-anchor="middle" dominant-baseline="central">Proactive query builder</text></g>
+    <text class="ts" x="376" y="220" dominant-baseline="central">Preset templates · custom filters</text>
+    <text class="ts" x="376" y="238" dominant-baseline="central">Results on interactive timeline</text>
+    <text class="ts" x="376" y="256" dominant-baseline="central">Create manual alert from results</text>
+    <g class="c-amber"><rect x="20" y="304" width="300" height="120" rx="8" stroke-width="0.5"/><text class="th" x="170" y="324" text-anchor="middle" dominant-baseline="central">P5 — IOC investigator</text><text class="ts" x="170" y="342" text-anchor="middle" dominant-baseline="central">Threat intel hub</text></g>
+    <text class="ts" x="36" y="364" dominant-baseline="central">Input: IP · domain · hash · CVE</text>
+    <text class="ts" x="36" y="382" dominant-baseline="central">5 API results side by side</text>
+    <text class="ts" x="36" y="400" dominant-baseline="central">Risk score · investigation history</text>
+    <g class="c-teal"><rect x="360" y="304" width="300" height="120" rx="8" stroke-width="0.5"/><text class="th" x="510" y="324" text-anchor="middle" dominant-baseline="central">P6 — Analytics</text><text class="ts" x="510" y="342" text-anchor="middle" dominant-baseline="central">SOC metrics dashboard</text></g>
+    <text class="ts" x="376" y="364" dominant-baseline="central">KPI cards: MTTD · MTTR · FP rate</text>
+    <text class="ts" x="376" y="382" dominant-baseline="central">Alert volume chart · MITRE heatmap</text>
+    <text class="ts" x="376" y="400" dominant-baseline="central">Top attacking IPs table</text>
+    <g class="c-gray"><rect x="190" y="448" width="300" height="120" rx="8" stroke-width="0.5"/><text class="th" x="340" y="468" text-anchor="middle" dominant-baseline="central">P7 — Rule manager</text><text class="ts" x="340" y="486" text-anchor="middle" dominant-baseline="central">ADMIN only · detection rules CRUD</text></g>
+    <text class="ts" x="206" y="508" dominant-baseline="central">Rule list with enabled toggle</text>
+    <text class="ts" x="206" y="526" dominant-baseline="central">Create rule form: name · MITRE</text>
+    <text class="ts" x="206" y="544" dominant-baseline="central">threshold · window · source type</text>
+    <rect x="20" y="590" width="640" height="60" rx="8" fill="none" stroke="#D3D1C7" stroke-dasharray="4 3" stroke-width="0.5"/>
+    <text class="th" x="340" y="612" text-anchor="middle" dominant-baseline="central">Shared layout — all pages</text>
+    <text class="ts" x="340" y="634" text-anchor="middle" dominant-baseline="central">Left sidebar nav · top bar with user info · real-time alert count badge · WebSocket connection indicator</text>
+    </svg>
+    <div class="diagram-caption">Figure 6 — All 7 React pages with component specifications</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ S8 -->
+<div class="section" id="s8">
+  <div class="section-num">Section 8</div>
+  <h2 class="section-title">Mistral AI integration — exact prompt design</h2>
+  <p>When an alert fires, Spring Boot makes one async call to Mistral's <code>mistral-small-latest</code> model. The call does not block the alert from being stored and pushed via WebSocket — the AI fields populate on the alert card within 3–8 seconds after the alert appears. The response is parsed as JSON and stored in <code>ai_summary</code> and <code>ai_recommendation</code> columns.</p>
+  <p>Mistral is the deliberate choice over OpenAI: Mistral is a French AI company, Sekoia.io and CyberNext both operate in the French-speaking security ecosystem, and OCP Group has a formal partnership with Mistral AI. This is a signal, not just a technical choice.</p>
+
+  <h3>Exact prompt template</h3>
+  <pre>You are a concise SOC analyst assistant. Given the following security alert,
+respond ONLY with a valid JSON object containing exactly these fields:
+{
+  "summary": "2-3 sentence plain-language explanation of what happened",
+  "intent": "likely attacker objective based on the MITRE technique",
+  "recommendations": ["action 1", "action 2", "action 3"],
+  "verdict": "TRUE_POSITIVE or LIKELY_FALSE_POSITIVE",
+  "verdict_reason": "one sentence explaining the verdict"
+}
+
+Alert context:
+- Rule: {rule_name} ({mitre_id} — {mitre_tactic})
+- Source IP: {src_ip}
+- Events: {event_count} matching events in {time_window}s
+- Time: {alert_time} ({is_business_hours})
+- AbuseIPDB score: {abuse_score}/100
+- Shodan: {shodan_summary}
+- VirusTotal: {vt_summary}</pre>
+
+  <h3>Example output for a brute force alert</h3>
+  <pre>{
+  "summary": "Between 14:32 and 14:35, IP 185.220.101.3 attempted 47 failed SSH logins
+              against your server from a known Tor exit node. This pattern is consistent
+              with an automated credential stuffing attack targeting common usernames.",
+  "intent": "Gain unauthorized access to the system via valid credentials (T1110 — Brute Force)",
+  "recommendations": [
+    "Block IP 185.220.101.3 at the firewall immediately",
+    "Review all successful SSH authentications from this subnet in the last 24 hours",
+    "Enable SSH rate limiting and consider moving SSH to a non-standard port"
+  ],
+  "verdict": "TRUE_POSITIVE",
+  "verdict_reason": "AbuseIPDB score of 98/100 and Tor exit node classification confirm
+                     malicious origin with high confidence."
+}</pre>
+
+  <div class="warn-box">If JSON parsing fails, a fallback message is stored: "AI analysis unavailable — please review alert context manually." The alert is never blocked by an AI service failure.</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ S9 -->
+<div class="section" id="s9">
+  <div class="section-num">Section 9</div>
+  <h2 class="section-title">Log simulator — four source types</h2>
+  <p>The simulator is a Spring Boot <code>@Scheduled(fixedRate = 200)</code> task generating one event every 200ms in normal mode, and 50 events per second during attack simulation mode. Each source has its own generator class with realistic statistical distributions.</p>
+
+  <h3>SSH auth generator</h3>
+  <p>Produces events with realistic usernames (admin, root, ubuntu, oracle, pi), source IPs from known attack ranges, and a 95/5 split between failed and successful logins during normal mode. During attack simulation it produces 40+ failures from one IP within 60 seconds followed by one success — triggering rules T1110 and T1078 in sequence.</p>
+
+  <h3>Firewall generator</h3>
+  <p>Produces ALLOW and DENY events across a realistic port distribution. Normal mode is 70% ALLOW traffic. Attack simulation produces rapid DENY events across 600+ distinct destination ports from one IP within 30 seconds — triggering T1046 (port sweep). After the sweep, DENY count drops sharply — triggering T1562 (firewall evasion detection).</p>
+
+  <h3>Apache web server generator</h3>
+  <p>Produces realistic HTTP log lines including method, path, status code, response size, and user agent string. Normal mode is 90% 200 responses, 8% 404, 2% 5xx. Attack simulation produces 600+ requests per minute from one IP — triggering T1499 (HTTP flood). Paths include realistic web application endpoints.</p>
+
+  <h3>Windows event generator</h3>
+  <p>Produces Windows Security Event IDs: 4624 (successful login), 4625 (failed login), 4648 (explicit credential use), and 4720 (user account created). Normal mode produces mostly 4624 events. Attack simulation generates a sequence of 4625 events followed by 4648 — triggering T1548 — and optionally 4720 — triggering T1136.</p>
+
+  <h3>Pre-seeded data — DataSeeder component</h3>
+  <p>On first boot in demo mode, a <code>DataSeeder</code> Spring component inserts 7 days of realistic synthetic events. This includes a brute force campaign from IP <code>185.220.101.3</code> (AbuseIPDB score 98, Tor exit node), a port sweep from <code>192.168.1.100</code>, after-hours authentication events, and a day of normal baseline traffic. When a recruiter opens the deployed URL they see a populated SOC dashboard immediately.</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ S10 -->
+<div class="section" id="s10">
+  <div class="section-num">Section 10</div>
+  <h2 class="section-title">Deployment architecture</h2>
+
+  <div class="diagram-wrap">
+    <svg width="100%" viewBox="0 0 680 320">
+    <defs><marker id="a5" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+    <g class="c-gray"><rect x="20" y="20" width="190" height="200" rx="10" stroke-width="0.5"/><text class="th" x="115" y="44" text-anchor="middle" dominant-baseline="central">GitHub</text><text class="ts" x="115" y="62" text-anchor="middle" dominant-baseline="central">source of truth</text></g>
+    <text class="ts" x="115" y="90" text-anchor="middle" dominant-baseline="central">monorepo</text>
+    <text class="ts" x="115" y="110" text-anchor="middle" dominant-baseline="central">/backend (Spring Boot)</text>
+    <text class="ts" x="115" y="130" text-anchor="middle" dominant-baseline="central">/frontend (React)</text>
+    <text class="ts" x="115" y="150" text-anchor="middle" dominant-baseline="central">push to main</text>
+    <text class="ts" x="115" y="170" text-anchor="middle" dominant-baseline="central">triggers auto-deploy</text>
+    <line x1="210" y1="120" x2="248" y2="90" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#a5)" opacity="0.4"/>
+    <line x1="210" y1="120" x2="248" y2="150" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#a5)" opacity="0.4"/>
+    <g class="c-teal"><rect x="248" y="50" width="180" height="100" rx="10" stroke-width="0.5"/><text class="th" x="338" y="74" text-anchor="middle" dominant-baseline="central">Railway</text><text class="ts" x="338" y="92" text-anchor="middle" dominant-baseline="central">Spring Boot service</text><text class="ts" x="338" y="110" text-anchor="middle" dominant-baseline="central">PostgreSQL managed</text><text class="ts" x="338" y="128" text-anchor="middle" dominant-baseline="central">auto-deploys on push</text></g>
+    <g class="c-coral"><rect x="248" y="170" width="180" height="80" rx="10" stroke-width="0.5"/><text class="th" x="338" y="194" text-anchor="middle" dominant-baseline="central">Vercel</text><text class="ts" x="338" y="212" text-anchor="middle" dominant-baseline="central">React static build</text><text class="ts" x="338" y="230" text-anchor="middle" dominant-baseline="central">CDN · instant deploy</text></g>
+    <line x1="428" y1="100" x2="466" y2="120" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#a5)" opacity="0.4"/>
+    <line x1="428" y1="210" x2="466" y2="190" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#a5)" opacity="0.4"/>
+    <g class="c-blue"><rect x="466" y="80" width="190" height="100" rx="10" stroke-width="0.5"/><text class="th" x="561" y="104" text-anchor="middle" dominant-baseline="central">securelens.app</text><text class="ts" x="561" y="122" text-anchor="middle" dominant-baseline="central">Vercel → React</text><text class="ts" x="561" y="140" text-anchor="middle" dominant-baseline="central">api.securelens.app</text><text class="ts" x="561" y="158" text-anchor="middle" dominant-baseline="central">Railway → Spring Boot</text></g>
+    <rect x="20" y="250" width="640" height="50" rx="8" fill="none" stroke="#D3D1C7" stroke-dasharray="4 3" stroke-width="0.5"/>
+    <text class="th" x="340" y="268" text-anchor="middle" dominant-baseline="central">Environment variables — never commit to git</text>
+    <text class="ts" x="340" y="286" text-anchor="middle" dominant-baseline="central">MISTRAL_API_KEY · VT_API_KEY · ABUSEIPDB_KEY · SHODAN_KEY · OTX_KEY · JWT_SECRET · DB_URL</text>
+    </svg>
+    <div class="diagram-caption">Figure 7 — Deployment architecture: monorepo → Railway (backend) + Vercel (frontend)</div>
+  </div>
+
+  <div class="warn-box">All API keys and secrets must be set via Railway and Vercel environment variable dashboards. Never commit a <code>.env</code> file containing real keys to the repository. Use <code>.env.example</code> with placeholder values for documentation.</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ S11 -->
+<div class="section" id="s11">
+  <div class="section-num">Section 11</div>
+  <h2 class="section-title">Team split and sprint plan</h2>
+
+  <div class="diagram-wrap">
+    <svg width="100%" viewBox="0 0 680 580">
+    <g class="c-purple"><rect x="20" y="16" width="195" height="44" rx="8" stroke-width="0.5"/><text class="th" x="117" y="34" text-anchor="middle" dominant-baseline="central">Dev 1 — Spring Boot</text><text class="ts" x="117" y="50" text-anchor="middle" dominant-baseline="central">backend + engine</text></g>
+    <g class="c-teal"><rect x="243" y="16" width="195" height="44" rx="8" stroke-width="0.5"/><text class="th" x="340" y="34" text-anchor="middle" dominant-baseline="central">Dev 2 — Data + Infra</text><text class="ts" x="340" y="50" text-anchor="middle" dominant-baseline="central">simulator + deployment</text></g>
+    <g class="c-coral"><rect x="466" y="16" width="194" height="44" rx="8" stroke-width="0.5"/><text class="th" x="563" y="34" text-anchor="middle" dominant-baseline="central">Dev 3 — React</text><text class="ts" x="563" y="50" text-anchor="middle" dominant-baseline="central">all 7 pages</text></g>
+    <line x1="340" y1="60" x2="340" y2="80" stroke="#D3D1C7" stroke-width="0.5"/>
+    <rect x="20" y="80" width="640" height="30" rx="4" stroke-width="0.5" fill="none" stroke="#D3D1C7" stroke-dasharray="4 3"/>
+    <text class="ts" x="60" y="95" dominant-baseline="central" opacity="0.6">Days</text>
+    <text class="th" x="117" y="95" text-anchor="middle" dominant-baseline="central">Dev 1</text>
+    <text class="th" x="340" y="95" text-anchor="middle" dominant-baseline="central">Dev 2</text>
+    <text class="th" x="563" y="95" text-anchor="middle" dominant-baseline="central">Dev 3</text>
+    <rect x="20" y="116" width="640" height="52" rx="4" fill="none" stroke="#D3D1C7" stroke-width="0.3"/>
+    <text class="ts" x="48" y="142" text-anchor="middle" opacity="0.6">1–2</text>
+    <text class="ts" x="70" y="130" dominant-baseline="central">DB schema · JWT · entities</text>
+    <text class="ts" x="70" y="148" dominant-baseline="central">REST scaffold · WebSocket</text>
+    <text class="ts" x="293" y="130" dominant-baseline="central">Log simulators · normalizer</text>
+    <text class="ts" x="293" y="148" dominant-baseline="central">DataSeeder · Railway setup</text>
+    <text class="ts" x="516" y="130" dominant-baseline="central">React scaffold · routing</text>
+    <text class="ts" x="516" y="148" dominant-baseline="central">Auth pages · layout shell</text>
+    <g class="c-teal"><rect x="20" y="172" width="640" height="30" rx="4" stroke-width="0.5"/><text class="th" x="340" y="187" text-anchor="middle" dominant-baseline="central">Day 3 — Integration checkpoint: full vertical slice working end-to-end</text></g>
+    <rect x="20" y="206" width="640" height="52" rx="4" fill="none" stroke="#D3D1C7" stroke-width="0.3"/>
+    <text class="ts" x="48" y="232" text-anchor="middle" opacity="0.6">4–5</text>
+    <text class="ts" x="70" y="220" dominant-baseline="central">Correlation engine · 8 rules</text>
+    <text class="ts" x="70" y="238" dominant-baseline="central">Mistral service · IOC enrichment</text>
+    <text class="ts" x="293" y="220" dominant-baseline="central">Attack sim endpoint · PDF gen</text>
+    <text class="ts" x="293" y="238" dominant-baseline="central">MTTD/MTTR tracking</text>
+    <text class="ts" x="516" y="220" dominant-baseline="central">P1 live feed · P2 detail</text>
+    <text class="ts" x="516" y="238" dominant-baseline="central">P3 event search</text>
+    <g class="c-teal"><rect x="20" y="262" width="640" height="30" rx="4" stroke-width="0.5"/><text class="th" x="340" y="277" text-anchor="middle" dominant-baseline="central">Day 6 — Demo checkpoint: attack simulation must trigger alerts end-to-end</text></g>
+    <rect x="20" y="296" width="640" height="52" rx="4" fill="none" stroke="#D3D1C7" stroke-width="0.3"/>
+    <text class="ts" x="48" y="322" text-anchor="middle" opacity="0.6">7–8</text>
+    <text class="ts" x="70" y="310" dominant-baseline="central">Rule manager API · audit log</text>
+    <text class="ts" x="70" y="328" dominant-baseline="central">Hunt query endpoint · user mgmt</text>
+    <text class="ts" x="293" y="310" dominant-baseline="central">7-day seed data · Vercel deploy</text>
+    <text class="ts" x="293" y="328" dominant-baseline="central">Domain config · env vars</text>
+    <text class="ts" x="516" y="310" dominant-baseline="central">P4 threat hunting · P5 IOC</text>
+    <text class="ts" x="516" y="328" dominant-baseline="central">P6 analytics · P7 rule manager</text>
+    <g class="c-amber"><rect x="20" y="352" width="640" height="30" rx="4" stroke-width="0.5"/><text class="th" x="340" y="367" text-anchor="middle" dominant-baseline="central">Days 9–10 — Buffer: integration bugs, edge cases, UI polish</text></g>
+    <rect x="20" y="386" width="640" height="36" rx="4" fill="none" stroke="#D3D1C7" stroke-width="0.3"/>
+    <text class="ts" x="48" y="404" text-anchor="middle" opacity="0.6">11–12</text>
+    <text class="ts" x="340" y="400" text-anchor="middle" dominant-baseline="central">PDF report generation · AI summary display · analytics polish</text>
+    <text class="ts" x="340" y="416" text-anchor="middle" dominant-baseline="central">All three developers converge on finishing and testing</text>
+    <rect x="20" y="426" width="640" height="36" rx="4" fill="none" stroke="#D3D1C7" stroke-width="0.3"/>
+    <text class="ts" x="48" y="444" text-anchor="middle" opacity="0.6">13–14</text>
+    <text class="ts" x="340" y="440" text-anchor="middle" dominant-baseline="central">Final testing on deployed URL · demo script practice</text>
+    <text class="ts" x="340" y="456" text-anchor="middle" dominant-baseline="central">README · architecture diagram · seed data verification</text>
+    <rect x="20" y="490" width="640" height="70" rx="8" fill="none" stroke="#D3D1C7" stroke-dasharray="4 3" stroke-width="0.5"/>
+    <text class="th" x="340" y="512" text-anchor="middle" dominant-baseline="central">The non-negotiable rule</text>
+    <text class="ts" x="340" y="532" text-anchor="middle" dominant-baseline="central">Day 3: a log event must flow from simulator → DB → alert → dashboard in one unbroken chain.</text>
+    <text class="ts" x="340" y="550" text-anchor="middle" dominant-baseline="central">If this does not work by day 3, everything else is at risk. Cut features before cutting this.</text>
+    </svg>
+    <div class="diagram-caption">Figure 8 — 14-day sprint plan with team responsibilities and integration checkpoints</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ S12 -->
+<div class="section" id="s12">
+  <div class="section-num">Section 12</div>
+  <h2 class="section-title">Complete feature inventory</h2>
+
+  <h3>SIEM module</h3>
+  <ul>
+    <li>Log simulator generating 4 source types at 200ms intervals with 5 attack scenario presets triggerable via API</li>
+    <li>Normalization engine converting all log formats to a unified event schema stored in PostgreSQL</li>
+    <li>Correlation engine evaluating 8 MITRE-aligned rules every 30 seconds using SQL window queries</li>
+    <li>Automatic alert creation with severity scoring, MITRE technique and tactic tagging, and MTTD computation in milliseconds</li>
+    <li>Automatic IOC enrichment on alert creation — source IP sent to all 5 threat intel APIs asynchronously</li>
+    <li>Mistral AI alert analysis — summary, intent, recommendations, and true/false positive verdict — stored and displayed on alert cards</li>
+    <li>WebSocket real-time push via STOMP protocol to all connected clients</li>
+    <li>Analyst triage workflow with four status states: NEW, INVESTIGATING, RESOLVED, FALSE_POSITIVE</li>
+    <li>Analyst notes with append-only history per alert</li>
+    <li>MTTR tracking computed on alert resolution</li>
+    <li>PDF incident report generation on demand containing full timeline, IOC data, AI summary, analyst notes, MTTD, and MTTR</li>
+  </ul>
+
+  <h3>Threat intelligence module</h3>
+  <ul>
+    <li>IOC investigation accepting IP addresses, domains, file hashes, and CVE IDs</li>
+    <li>Parallel async lookup across VirusTotal, AbuseIPDB, Shodan, NVD, and AlienVault OTX using Java CompletableFuture.allOf()</li>
+    <li>Unified risk score computed as weighted average across all API results (0–100)</li>
+    <li>24-hour result caching in ioc_cache table — repeat lookups are instant</li>
+    <li>Investigation history per analyst with full result detail</li>
+    <li>Auto-enrichment triggered automatically for every new alert's source IP</li>
+  </ul>
+
+  <h3>Threat hunting module</h3>
+  <ul>
+    <li>Structured query builder with filters for event source, event type, IP address, and time range</li>
+    <li>Five preset hunting templates covering the most common analyst investigation patterns</li>
+    <li>Results returned chronologically and plotted on a Recharts timeline visualization</li>
+    <li>One-click manual alert creation from any hunting result</li>
+  </ul>
+
+  <h3>Analytics module</h3>
+  <ul>
+    <li>KPI cards: total events today, active alerts, average MTTD, average MTTR, false positive rate</li>
+    <li>Alert volume time-series chart for the last 24 hours</li>
+    <li>MITRE ATT&amp;CK heatmap showing which techniques have fired and how many times</li>
+    <li>Top attacking IPs table ranked by alert count</li>
+    <li>All metrics computed server-side and cached for 60 seconds</li>
+  </ul>
+
+  <h3>Rule manager (ADMIN)</h3>
+  <ul>
+    <li>Full CRUD interface for detection rules — no code changes or redeployment required</li>
+    <li>Create new rules specifying: name, description, MITRE technique, source type, event type filter, condition field, threshold, time window, severity</li>
+    <li>Enable/disable rules instantly via toggle</li>
+    <li>Rule trigger count displayed per rule for effectiveness analysis</li>
+    <li>Edit all parameters of existing rules</li>
+  </ul>
+
+  <h3>AI investigation assistant (chatbot)</h3>
+  <ul>
+    <li>Persistent chat panel accessible from any page via a slide-in panel — analyst never loses context</li>
+    <li>Natural language queries against live PostgreSQL data — no SQL knowledge required</li>
+    <li>Six tool definitions exposed to Mistral: query_events, query_alerts, get_alert_detail, get_top_attackers, get_event_stats, investigate_ioc</li>
+    <li>Two-call Mistral pattern: first call decides which tool to use, Spring Boot executes the query, second call formulates the natural language answer</li>
+    <li>Mistral cannot hallucinate data — it only answers based on what the database actually returns</li>
+    <li>Multi-tool chaining: Mistral can call multiple tools in sequence for complex questions</li>
+    <li>Conversation history maintained in browser local state for the session</li>
+    <li>Fallback: if Mistral times out, raw query result returned as a formatted table</li>
+    <li>Typing indicator while query executes and Mistral responds</li>
+    <li>Markdown rendering for structured responses with bullet points and tables</li>
+  </ul>
+
+  <h3>Infrastructure and deployment</h3>
+  <ul>
+    <li>Spring Boot deployed on Railway with automatic redeploy on GitHub push to main</li>
+    <li>PostgreSQL managed instance on Railway</li>
+    <li>React deployed on Vercel with automatic redeploy on GitHub push</li>
+    <li>Environment variables managed via Railway and Vercel dashboards — never committed to git</li>
+    <li>DataSeeder component loads 7 days of realistic synthetic data on first boot in demo mode</li>
+    <li>JWT authentication on all endpoints with role-based access control</li>
+    <li>Audit log tracking all analyst actions for SOC governance</li>
+  </ul>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ S13 -->
+<div class="section" id="s13">
+  <div class="section-num">Section 13</div>
+  <h2 class="section-title">AI investigation assistant — chatbot layer</h2>
+
+  <p>The AI investigation assistant is an always-available chat panel inside the SecureLens dashboard. Analysts type questions in plain language. The chatbot reads the question, decides what data it needs, fetches it directly from the PostgreSQL database, and responds with a natural language answer grounded in real data.</p>
+
+  <p>This is what Microsoft Copilot for Security, Elastic AI Assistant, and Splunk AI do at their core. You are building a miniature but architecturally complete version of it from scratch.</p>
+
+  <p>The key property is that Mistral never touches the database directly and can never hallucinate data. It can only answer based on what your database actually contains, returned through controlled tool calls that Spring Boot executes.</p>
+
+  <h3>The two-call Mistral pattern</h3>
+
+  <div class="diagram-wrap">
+    <svg width="100%" viewBox="0 0 680 560">
+    <defs><marker id="achat" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+
+    <g class="node c-coral">
+      <rect x="200" y="16" width="280" height="44" rx="8" stroke-width="0.5"/>
+      <text class="th" x="340" y="34" text-anchor="middle" dominant-baseline="central">Analyst types a question</text>
+      <text class="ts" x="340" y="50" text-anchor="middle" dominant-baseline="central">"Show me failed logins from the last hour"</text>
+    </g>
+    <line x1="340" y1="60" x2="340" y2="90" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#achat)" opacity="0.4"/>
+
+    <g class="node c-purple">
+      <rect x="160" y="90" width="360" height="52" rx="8" stroke-width="0.5"/>
+      <text class="th" x="340" y="110" text-anchor="middle" dominant-baseline="central">Spring Boot — ChatController</text>
+      <text class="ts" x="340" y="128" text-anchor="middle" dominant-baseline="central">Builds prompt with schema context + 6 tool definitions</text>
+    </g>
+    <line x1="340" y1="142" x2="340" y2="172" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#achat)" opacity="0.4"/>
+
+    <g class="node c-amber">
+      <rect x="160" y="172" width="360" height="52" rx="8" stroke-width="0.5"/>
+      <text class="th" x="340" y="192" text-anchor="middle" dominant-baseline="central">Mistral — call 1 (tool selection)</text>
+      <text class="ts" x="340" y="210" text-anchor="middle" dominant-baseline="central">Reads question + tool list → decides which tool to call</text>
+    </g>
+    <line x1="340" y1="224" x2="340" y2="254" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#achat)" opacity="0.4"/>
+
+    <g class="node c-amber">
+      <rect x="160" y="254" width="360" height="52" rx="8" stroke-width="0.5"/>
+      <text class="th" x="340" y="274" text-anchor="middle" dominant-baseline="central">Mistral responds: use query_events</text>
+      <text class="ts" x="340" y="292" text-anchor="middle" dominant-baseline="central">{ type: LOGIN_FAILED, from: now-1h, limit: 100 }</text>
+    </g>
+    <line x1="340" y1="306" x2="340" y2="336" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#achat)" opacity="0.4"/>
+
+    <g class="node c-blue">
+      <rect x="160" y="336" width="360" height="52" rx="8" stroke-width="0.5"/>
+      <text class="th" x="340" y="356" text-anchor="middle" dominant-baseline="central">Spring Boot executes the query</text>
+      <text class="ts" x="340" y="374" text-anchor="middle" dominant-baseline="central">SELECT … FROM events WHERE … → 47 rows as JSON</text>
+    </g>
+    <line x1="340" y1="388" x2="340" y2="418" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#achat)" opacity="0.4"/>
+
+    <g class="node c-amber">
+      <rect x="160" y="418" width="360" height="52" rx="8" stroke-width="0.5"/>
+      <text class="th" x="340" y="438" text-anchor="middle" dominant-baseline="central">Mistral — call 2 (answer generation)</text>
+      <text class="ts" x="340" y="456" text-anchor="middle" dominant-baseline="central">Receives real data → formulates natural language answer</text>
+    </g>
+    <line x1="340" y1="470" x2="340" y2="500" stroke="#888780" stroke-width="1" fill="none" marker-end="url(#achat)" opacity="0.4"/>
+
+    <g class="node c-coral">
+      <rect x="160" y="500" width="360" height="44" rx="8" stroke-width="0.5"/>
+      <text class="th" x="340" y="518" text-anchor="middle" dominant-baseline="central">Analyst reads the answer</text>
+      <text class="ts" x="340" y="534" text-anchor="middle" dominant-baseline="central">"47 failed logins in the last hour. Top source: 185.220.101.3 (31 attempts)…"</text>
+    </g>
+    </svg>
+    <div class="diagram-caption">Figure 9 — Two-call Mistral pattern: tool selection then answer generation with real database data</div>
+  </div>
+
+  <h3>The 6 tools exposed to Mistral</h3>
+  <p>Spring Boot describes these tools to Mistral at the start of every conversation. Mistral reads the descriptions and decides which one to call. Spring Boot executes only the chosen tool — never arbitrary SQL, never anything outside this defined set. This makes the chatbot safe by design.</p>
+
+  <table class="api-table">
+    <thead><tr><th>Tool name</th><th>What it queries</th><th>Key parameters</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code>query_events</code></td>
+        <td>events table — raw log lines</td>
+        <td>source_type, event_type, src_ip, from_time, to_time, limit (max 100)</td>
+      </tr>
+      <tr>
+        <td><code>query_alerts</code></td>
+        <td>alerts table — detected incidents</td>
+        <td>status, severity, mitre_id, src_ip, from_time, limit (max 50)</td>
+      </tr>
+      <tr>
+        <td><code>get_alert_detail</code></td>
+        <td>Single alert — full detail including AI summary and IOC data</td>
+        <td>alert_id (UUID)</td>
+      </tr>
+      <tr>
+        <td><code>get_top_attackers</code></td>
+        <td>Ranked list of most active source IPs</td>
+        <td>metric (events | alerts), from_time, limit (max 20)</td>
+      </tr>
+      <tr>
+        <td><code>get_event_stats</code></td>
+        <td>Aggregated counts grouped by a field</td>
+        <td>group_by (src_ip | source_type | event_type | hour), from_time, to_time</td>
+      </tr>
+      <tr>
+        <td><code>investigate_ioc</code></td>
+        <td>Threat intelligence for an IP, domain, or hash — uses ioc_cache</td>
+        <td>ioc_value, ioc_type (IP | DOMAIN | FILE_HASH)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Example questions and tool chains</h3>
+  <table>
+    <thead><tr><th>Analyst question</th><th>Tool(s) called</th><th>Answer shape</th></tr></thead>
+    <tbody>
+      <tr><td>"Show failed logins from the last hour"</td><td>query_events</td><td>List of events with IPs and timestamps</td></tr>
+      <tr><td>"What are the top attacking IPs today?"</td><td>get_top_attackers</td><td>Ranked table of IPs with counts</td></tr>
+      <tr><td>"Are there any critical open alerts?"</td><td>query_alerts</td><td>List of CRITICAL + NEW alerts</td></tr>
+      <tr><td>"Tell me about alert abc-123"</td><td>get_alert_detail</td><td>Full alert summary including AI analysis</td></tr>
+      <tr><td>"How many events per source type today?"</td><td>get_event_stats</td><td>Grouped counts: SSH 4,210 · Firewall 12,800…</td></tr>
+      <tr><td>"Is 185.220.101.3 known malicious?"</td><td>investigate_ioc</td><td>Unified threat profile from 5 APIs</td></tr>
+      <tr><td>"What happened between 2am and 4am?"</td><td>query_events → query_alerts</td><td>Events then alerts in that window</td></tr>
+      <tr><td>"Summarize the current threat landscape"</td><td>query_alerts → get_top_attackers</td><td>Open incidents + most active attackers</td></tr>
+    </tbody>
+  </table>
+
+  <h3>The system prompt sent to Mistral</h3>
+  <p>At the start of every conversation, Spring Boot sends Mistral a system prompt that establishes context. This prompt is what enables Mistral to understand your specific data schema and answer questions accurately:</p>
+
+  <pre>You are a cybersecurity analyst assistant for the SecureLens SOC platform.
+You have access to the following real-time data through tool calls:
+
+DATABASE SCHEMA CONTEXT:
+- events table: raw log lines from SSH_AUTH, FIREWALL, APACHE, WINDOWS sources
+- alerts table: detected security incidents with MITRE ATT&CK tags and severity
+- ioc_cache table: threat intelligence results from VirusTotal, AbuseIPDB, Shodan, NVD, OTX
+
+BEHAVIOR:
+- Always use tool calls to fetch real data before answering questions about logs or alerts
+- Never invent or estimate data — only state what the database returns
+- Be concise and actionable — analysts need fast answers
+- When listing IPs or events, always include counts and timestamps
+- If a question requires multiple data sources, make multiple tool calls
+- Current time context: {current_timestamp}
+
+Respond in clear plain language. Use bullet points for lists. Bold important values.</pre>
+
+  <h3>The system prompt per conversation turn</h3>
+  <p>After the system prompt, each conversation turn follows this structure. Spring Boot manages this loop automatically in <code>ChatService</code>:</p>
+  <pre>1. Append analyst message to conversation history
+2. Send history + tool definitions to Mistral (call 1)
+3. If Mistral returns a tool_call:
+     a. Parse tool name and parameters
+     b. Execute the corresponding repository query
+     c. Append tool result to conversation history
+     d. Send updated history to Mistral (call 2)
+4. Return Mistral's final text response to the React chat panel</pre>
+
+  <h3>Integration into the existing architecture</h3>
+  <p>The chatbot adds exactly two new components to the backend and one to the frontend. Nothing existing is modified:</p>
+
+  <table class="db-table">
+    <thead><tr><th>New component</th><th>Owner</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td><code>ChatController.java</code></td><td>Dev 2</td><td>POST /api/chat — receives message + history, returns answer</td></tr>
+      <tr><td><code>ChatService.java</code></td><td>Dev 2</td><td>Manages two-call Mistral pattern, tool execution, history</td></tr>
+      <tr><td><code>ChatPanel.tsx</code></td><td>Dev 2</td><td>Slide-in chat UI, message history, markdown rendering</td></tr>
+    </tbody>
+  </table>
+
+  <p>The <code>ChatService</code> calls existing repositories directly — <code>EventRepository</code>, <code>AlertRepository</code>, and <code>IocCacheRepository</code>. It reuses the existing <code>MistralService</code> HTTP client already built for alert triage. No new tables, no new dependencies beyond a markdown renderer on the frontend.</p>
+
+  <div class="info-box">
+    <strong>Why this is architecturally significant:</strong> The chatbot transforms SecureLens from a dashboard that presents data to an interface that understands intent. The same data is now accessible in two modes — structured (pages and tables) and conversational (natural language). This is the architectural pattern behind Microsoft Copilot for Security, Elastic AI Assistant, and Splunk AI. You build it from first principles in two components.
+  </div>
+
+  <div class="warn-box">
+    <strong>Fallback behavior:</strong> If Mistral's API takes longer than 10 seconds, <code>ChatService</code> executes the most likely tool directly based on keywords in the analyst's message and returns the raw query result as a formatted table. The chatbot is never blocked by API latency.
+  </div>
+
+  <h3>New API endpoint</h3>
+  <table class="api-table">
+    <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>POST</td>
+        <td><code>/api/chat</code></td>
+        <td>Body: { message: string, history: Message[] } — Returns: { answer: string, toolCalled: string, dataSnapshot: object }</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>The <code>history</code> array contains the previous messages of the current session. The frontend maintains this array in React state and sends it with every new message. This gives Mistral full conversation context — the analyst can ask follow-up questions that reference earlier messages.</p>
+
+  <p>The <code>dataSnapshot</code> in the response contains the raw data that was fetched from the database, so the frontend can optionally render it as a table alongside the natural language answer.</p>
+</div>
+
+<!-- Footer -->
+<div style="margin-top:64px;padding-top:24px;border-top:1px solid var(--border);text-align:center;color:var(--text-l);font-size:12px;">
+  SecureLens — Architecture Reference Document · Digital Culture Final Project · UM6P College of Computing
+</div>
+
+</div>
+</body>
+</html>
