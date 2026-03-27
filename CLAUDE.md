@@ -25,6 +25,7 @@ securelens/
 │       ├── repository/         # Spring Data JPA repos + Specifications
 │       ├── detection/          # Detection rules (R-001 to R-008)
 │       ├── intel/              # Threat intel providers (VT, AbuseIPDB, Shodan, NVD, OTX)
+│       ├── ai/                 # Mistral AI integration (triage, chatbot)
 │       ├── service/            # Business logic (Auth, Log, LogSimulator, DetectionEngine, Alert, ThreatIntelAggregator)
 │       ├── dto/                # Request/Response DTOs
 │       ├── exception/          # Custom exceptions + GlobalExceptionHandler
@@ -58,7 +59,7 @@ incidents, audit_trail, saved_hunts
 - Every feature must have both backend AND frontend working together
 
 ## Current Phase
-Phase 7 — Threat Intelligence Hub (completed)
+Phase 8 — Mistral AI Alert Triage (completed)
 
 ## Completed Phases
 - Phase 1: Project skeleton — Spring Boot backend + React frontend with Vite, Tailwind, health endpoint
@@ -68,6 +69,7 @@ Phase 7 — Threat Intelligence Hub (completed)
 - Phase 5: Complete SIEM detection engine with 8 MITRE ATT&CK rules — Brute Force (R-001), Impossible Travel (R-002), Privilege Escalation (R-003), Data Exfiltration (R-004), Port Scan (R-005), Lateral Movement (R-006), Malware Beacon (R-007), Off-Hours Access (R-008). @Scheduled engine runs every 60s with deduplication.
 - Phase 6: Alert management dashboard — filtered/paginated alert list with stats cards, detail page with evidence logs, status updates (Investigating/Resolved/False Positive), Navbar alert count badge, AI Triage placeholder ready for Phase 8
 - Phase 7: Threat Intelligence Hub — 5 providers (VirusTotal, AbuseIPDB, Shodan, NVD, AlienVault OTX), 1-hour caching in threat_intel_cache table, parallel async lookups via CompletableFuture, risk score normalization 0-100, alert enrichment, search page for IPs/hashes/CVEs, graceful degradation for missing/down providers
+- Phase 8: Mistral AI Alert Triage — mistral-small-latest integration for structured alert analysis. JSON response with severity assessment, attack context, recommended actions, false positive likelihood, reasoning, and related indicators. Results persisted in alerts.ai_triage_result column. MistralService is reusable for Phase 9 (chatbot).
 
 ## Detection Rules Quick Reference
 | Rule ID | Name | Severity | MITRE Tactic | MITRE Technique | Detection Window |

@@ -24,6 +24,8 @@ export default function AlertDetailPage() {
   const [updating, setUpdating] = useState(false);
   const [intelResult, setIntelResult] = useState(null);
   const [enriching, setEnriching] = useState(false);
+  const [triage, setTriage] = useState(null);
+  const [triaging, setTriaging] = useState(false);
 
   useEffect(() => {
     api.get(`/api/v1/alerts/${id}`)
@@ -203,13 +205,94 @@ export default function AlertDetailPage() {
         )}
       </div>
 
-      {/* AI Triage Placeholder */}
+      {/* AI Triage */}
       <div className="bg-white border border-gray-200 rounded p-4">
-        <h2 className="text-sm font-semibold text-gray-500 uppercase mb-2">AI Triage</h2>
-        <p className="text-gray-400 text-sm mb-3">{alert.aiTriageResult || 'Not yet analyzed'}</p>
-        <button disabled className="px-3 py-1.5 text-sm rounded border border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed">
-          Run AI Triage
-        </button>
+        <h2 className="text-sm font-semibold text-gray-500 uppercase mb-2">AI Triage (Mistral)</h2>
+
+        {!triage && !alert.aiTriageResult && !triaging && (
+          <div>
+            <p className="text-gray-400 text-sm mb-3">Not yet analyzed</p>
+            <button
+              onClick={async () => {
+                setTriaging(true);
+                try {
+                  const res = await api.post(`/api/v1/alerts/${id}/triage`);
+                  setTriage(res.data);
+                } catch (err) { console.error(err); }
+                finally { setTriaging(false); }
+              }}
+              className="px-3 py-1.5 text-sm rounded border border-purple-300 bg-purple-50 text-purple-800 hover:bg-purple-100"
+            >
+              Run AI Triage
+            </button>
+          </div>
+        )}
+
+        {triaging && (
+          <div className="text-center py-4">
+            <p className="text-purple-600 text-sm">Analyzing alert with Mistral AI...</p>
+          </div>
+        )}
+
+        {(triage || alert.aiTriageResult) && !triaging && (() => {
+          let data = triage;
+          if (!data && alert.aiTriageResult) {
+            try { data = JSON.parse(alert.aiTriageResult); } catch { data = null; }
+          }
+          if (!data) return <p className="text-gray-400 text-sm">{alert.aiTriageResult}</p>;
+
+          const fpColor = { LOW: 'bg-green-100 text-green-700', MEDIUM: 'bg-yellow-100 text-yellow-800', HIGH: 'bg-red-100 text-red-700' };
+
+          return (
+            <div className="space-y-4">
+              <div>
+                <span className="text-xs font-medium text-gray-500 uppercase">Severity Assessment</span>
+                <p className="text-sm mt-1">{data.severityAssessment}</p>
+              </div>
+              <div>
+                <span className="text-xs font-medium text-gray-500 uppercase">Attack Context</span>
+                <p className="text-sm mt-1">{data.attackContext}</p>
+              </div>
+              <div>
+                <span className="text-xs font-medium text-gray-500 uppercase">Recommended Actions</span>
+                <ol className="list-decimal list-inside text-sm mt-1 space-y-1">
+                  {(data.recommendedActions || []).map((a, i) => <li key={i}>{a}</li>)}
+                </ol>
+              </div>
+              <div>
+                <span className="text-xs font-medium text-gray-500 uppercase">False Positive Likelihood: </span>
+                <span className={`text-xs font-medium px-2 py-0.5 rounded ${fpColor[data.falsePositiveLikelihood] || 'bg-gray-200 text-gray-600'}`}>
+                  {data.falsePositiveLikelihood}
+                </span>
+              </div>
+              <div>
+                <span className="text-xs font-medium text-gray-500 uppercase">Reasoning</span>
+                <p className="text-sm mt-1">{data.reasoning}</p>
+              </div>
+              {data.relatedIndicators && data.relatedIndicators.length > 0 && (
+                <div>
+                  <span className="text-xs font-medium text-gray-500 uppercase">Related Indicators</span>
+                  <ul className="list-disc list-inside text-sm mt-1">
+                    {data.relatedIndicators.map((ind, i) => <li key={i} className="font-mono text-xs">{ind}</li>)}
+                  </ul>
+                </div>
+              )}
+              <button
+                onClick={async () => {
+                  setTriaging(true); setTriage(null);
+                  try {
+                    const res = await api.post(`/api/v1/alerts/${id}/triage`);
+                    setTriage(res.data);
+                  } catch (err) { console.error(err); }
+                  finally { setTriaging(false); }
+                }}
+                className="px-3 py-1.5 text-sm rounded border border-purple-300 bg-purple-50 text-purple-800 hover:bg-purple-100"
+              >
+                Re-triage
+              </button>
+            </div>
+          );
+        })()}
       </div>
     </div>
   );

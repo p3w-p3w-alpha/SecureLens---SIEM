@@ -15,10 +15,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import com.securelens.ai.MistralService;
 import com.securelens.dto.AlertDetailResponse;
 import com.securelens.dto.AlertResponse;
 import com.securelens.dto.AlertStatsResponse;
 import com.securelens.dto.AlertStatusUpdateRequest;
+import com.securelens.dto.TriageResult;
 import com.securelens.model.AlertStatus;
 import com.securelens.service.AlertService;
 
@@ -31,6 +36,7 @@ import lombok.RequiredArgsConstructor;
 public class AlertController {
 
     private final AlertService alertService;
+    private final MistralService mistralService;
 
     @GetMapping
     public ResponseEntity<Page<AlertResponse>> findAll(
@@ -68,5 +74,18 @@ public class AlertController {
     public ResponseEntity<AlertStatsResponse> getStats() {
         AlertStatsResponse stats = alertService.getStats();
         return ResponseEntity.ok(stats);
+    }
+
+    @PostMapping("/{id}/triage")
+    public ResponseEntity<TriageResult> triageAlert(@PathVariable Long id) {
+        try {
+            TriageResult result = mistralService.triageAlert(id);
+            return ResponseEntity.ok(result);
+        } catch (RuntimeException e) {
+            if (e.getMessage() != null && e.getMessage().contains("not configured")) {
+                return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).build();
+            }
+            throw e;
+        }
     }
 }

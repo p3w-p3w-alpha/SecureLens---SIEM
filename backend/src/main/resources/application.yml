@@ -25,3 +25,4 @@ securelens:
     abuseipdb: ${ABUSEIPDB_API_KEY:}
     shodan: ${SHODAN_API_KEY:}
     otx: ${OTX_API_KEY:}
+    mistral: ${MISTRAL_API_KEY:}
