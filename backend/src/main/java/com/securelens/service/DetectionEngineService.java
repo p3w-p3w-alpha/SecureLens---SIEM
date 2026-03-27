@@ -21,10 +21,14 @@ public class DetectionEngineService {
     private final List<DetectionRule> rules;
     private final AlertRepository alertRepository;
 
-    // Deduplication windows per rule
-    private static final long DEDUP_WINDOW_DEFAULT = 600; // 10 minutes
-    private static final long DEDUP_WINDOW_IMPOSSIBLE_TRAVEL = 1800; // 30 minutes
-    private static final long DEDUP_WINDOW_DATA_EXFILTRATION = 900; // 15 minutes
+    // Deduplication windows per rule (seconds)
+    private static final long DEDUP_WINDOW_DEFAULT = 600;        // 10 min (R-001, R-003)
+    private static final long DEDUP_WINDOW_PORT_SCAN = 300;      // 5 min (R-005)
+    private static final long DEDUP_WINDOW_DATA_EXFIL = 900;     // 15 min (R-004)
+    private static final long DEDUP_WINDOW_LATERAL = 900;        // 15 min (R-006)
+    private static final long DEDUP_WINDOW_TRAVEL = 1800;        // 30 min (R-002)
+    private static final long DEDUP_WINDOW_BEACON = 1800;        // 30 min (R-007)
+    private static final long DEDUP_WINDOW_OFF_HOURS = 3600;     // 60 min (R-008)
 
     @Scheduled(fixedRate = 60000)
     public void runDetectionCycle() {
@@ -49,8 +53,12 @@ public class DetectionEngineService {
 
     private boolean isDuplicate(Alert alert) {
         long dedupSeconds = switch (alert.getRuleId()) {
-            case "R-002" -> DEDUP_WINDOW_IMPOSSIBLE_TRAVEL;
-            case "R-004" -> DEDUP_WINDOW_DATA_EXFILTRATION;
+            case "R-002" -> DEDUP_WINDOW_TRAVEL;
+            case "R-004" -> DEDUP_WINDOW_DATA_EXFIL;
+            case "R-005" -> DEDUP_WINDOW_PORT_SCAN;
+            case "R-006" -> DEDUP_WINDOW_LATERAL;
+            case "R-007" -> DEDUP_WINDOW_BEACON;
+            case "R-008" -> DEDUP_WINDOW_OFF_HOURS;
             default -> DEDUP_WINDOW_DEFAULT;
         };
         Instant dedupStart = Instant.now().minusSeconds(dedupSeconds);

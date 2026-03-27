@@ -23,7 +23,7 @@ securelens/
 │       ├── controller/         # REST controllers (Auth, Health, Log, Simulator)
 │       ├── model/              # JPA entities (User, Log, Alert, Role, Severity, AlertStatus)
 │       ├── repository/         # Spring Data JPA repos + Specifications
-│       ├── detection/          # Detection rules (R-001 to R-004)
+│       ├── detection/          # Detection rules (R-001 to R-008)
 │       ├── service/            # Business logic (Auth, Log, LogSimulator, DetectionEngine)
 │       ├── dto/                # Request/Response DTOs
 │       ├── exception/          # Custom exceptions + GlobalExceptionHandler
@@ -57,14 +57,26 @@ incidents, audit_trail, saved_hunts
 - Every feature must have both backend AND frontend working together
 
 ## Current Phase
-Phase 5A — Detection Engine + Rules R-001 to R-004 (completed)
+Phase 5 — SIEM Detection Engine (completed)
 
 ## Completed Phases
 - Phase 1: Project skeleton — Spring Boot backend + React frontend with Vite, Tailwind, health endpoint
 - Phase 2: JWT Authentication — User entity, register/login with BCrypt + JWT, protected routes, AuthContext
 - Phase 3: Log Ingestion — Log entity with Specification-based dynamic filtering, batch ingestion API, paginated log viewer with color-coded severity badges and expandable rows
 - Phase 4: Log Simulator — 9 scenarios (8 attack patterns + normal traffic), each precisely matching Phase 5 detection rule triggers
-- Phase 5A: Detection Engine — @Scheduled 60s cycle with deduplication, 4 rules: Brute Force (R-001), Impossible Travel (R-002), Privilege Escalation (R-003), Data Exfiltration (R-004). Detection rules R-005 to R-008 will be added in Phase 5B.
+- Phase 5: Complete SIEM detection engine with 8 MITRE ATT&CK rules — Brute Force (R-001), Impossible Travel (R-002), Privilege Escalation (R-003), Data Exfiltration (R-004), Port Scan (R-005), Lateral Movement (R-006), Malware Beacon (R-007), Off-Hours Access (R-008). @Scheduled engine runs every 60s with deduplication.
+
+## Detection Rules Quick Reference
+| Rule ID | Name | Severity | MITRE Tactic | MITRE Technique | Detection Window |
+|---------|------|----------|-------------|-----------------|-----------------|
+| R-001 | Brute Force Login | HIGH | TA0006 | T1110 | 10 min |
+| R-002 | Impossible Travel | CRITICAL | TA0001 | T1078 | 30 min |
+| R-003 | Privilege Escalation | HIGH | TA0004 | T1548 | 10 min |
+| R-004 | Data Exfiltration | CRITICAL | TA0010 | T1041 | 15 min |
+| R-005 | Port Scan | MEDIUM | TA0007 | T1046 | 5 min |
+| R-006 | Lateral Movement | HIGH | TA0008 | T1021 | 15 min |
+| R-007 | Malware Beacon (C2) | CRITICAL | TA0011 | T1071 | 30 min |
+| R-008 | Off-Hours Access | LOW | TA0001 | T1078 | 60 min |
 
 ## Important Notes
 - IMPORTANT: Simulator scenarios are designed to exactly trigger the 8 detection rules in Phase 5. Do not modify the simulator's timing, counts, or patterns without also updating the corresponding detection rule thresholds.
