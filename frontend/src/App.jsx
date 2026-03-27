@@ -8,6 +8,8 @@ import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import LogsPage from './pages/LogsPage';
 import SimulatorPage from './pages/SimulatorPage';
+import AlertsPage from './pages/AlertsPage';
+import AlertDetailPage from './pages/AlertDetailPage';
 
 export default function App() {
   return (
@@ -23,6 +25,22 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <LogsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/alerts"
+            element={
+              <ProtectedRoute>
+                <AlertsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/alerts/:id"
+            element={
+              <ProtectedRoute>
+                <AlertDetailPage />
               </ProtectedRoute>
             }
           />

@@ -20,11 +20,11 @@ securelens/
 │   └── src/main/java/com/securelens/
 │       ├── SecureLensApplication.java
 │       ├── config/             # Security config, CORS, API keys
-│       ├── controller/         # REST controllers (Auth, Health, Log, Simulator)
+│       ├── controller/         # REST controllers (Auth, Health, Log, Simulator, Alert)
 │       ├── model/              # JPA entities (User, Log, Alert, Role, Severity, AlertStatus)
 │       ├── repository/         # Spring Data JPA repos + Specifications
 │       ├── detection/          # Detection rules (R-001 to R-008)
-│       ├── service/            # Business logic (Auth, Log, LogSimulator, DetectionEngine)
+│       ├── service/            # Business logic (Auth, Log, LogSimulator, DetectionEngine, Alert)
 │       ├── dto/                # Request/Response DTOs
 │       ├── exception/          # Custom exceptions + GlobalExceptionHandler
 │       ├── scheduler/          # Scheduled detection jobs
@@ -34,7 +34,7 @@ securelens/
 │   └── src/
 │       ├── App.jsx
 │       ├── components/         # Reusable components (Navbar, ProtectedRoute)
-│       ├── pages/              # Page-level components (Home, Login, Register, Dashboard, Logs, Simulator)
+│       ├── pages/              # Page-level components (Home, Login, Register, Dashboard, Logs, Simulator, Alerts, AlertDetail)
 │       ├── services/           # API call functions (axios)
 │       ├── context/            # Auth context
 │       └── utils/              # Helpers
@@ -57,7 +57,7 @@ incidents, audit_trail, saved_hunts
 - Every feature must have both backend AND frontend working together
 
 ## Current Phase
-Phase 5 — SIEM Detection Engine (completed)
+Phase 6 — Alert Management Dashboard (completed)
 
 ## Completed Phases
 - Phase 1: Project skeleton — Spring Boot backend + React frontend with Vite, Tailwind, health endpoint
@@ -65,6 +65,7 @@ Phase 5 — SIEM Detection Engine (completed)
 - Phase 3: Log Ingestion — Log entity with Specification-based dynamic filtering, batch ingestion API, paginated log viewer with color-coded severity badges and expandable rows
 - Phase 4: Log Simulator — 9 scenarios (8 attack patterns + normal traffic), each precisely matching Phase 5 detection rule triggers
 - Phase 5: Complete SIEM detection engine with 8 MITRE ATT&CK rules — Brute Force (R-001), Impossible Travel (R-002), Privilege Escalation (R-003), Data Exfiltration (R-004), Port Scan (R-005), Lateral Movement (R-006), Malware Beacon (R-007), Off-Hours Access (R-008). @Scheduled engine runs every 60s with deduplication.
+- Phase 6: Alert management dashboard — filtered/paginated alert list with stats cards, detail page with evidence logs, status updates (Investigating/Resolved/False Positive), Navbar alert count badge, AI Triage placeholder ready for Phase 8
 
 ## Detection Rules Quick Reference
 | Rule ID | Name | Severity | MITRE Tactic | MITRE Technique | Detection Window |
