@@ -20,10 +20,10 @@ securelens/
 │   └── src/main/java/com/securelens/
 │       ├── SecureLensApplication.java
 │       ├── config/             # Security config, CORS, API keys
-│       ├── controller/         # REST controllers (Auth, Health, Log)
+│       ├── controller/         # REST controllers (Auth, Health, Log, Simulator)
 │       ├── model/              # JPA entities (User, Log, Role, Severity)
 │       ├── repository/         # Spring Data JPA repos + Specifications
-│       ├── service/            # Business logic (Auth, Log)
+│       ├── service/            # Business logic (Auth, Log, LogSimulator)
 │       ├── dto/                # Request/Response DTOs
 │       ├── exception/          # Custom exceptions + GlobalExceptionHandler
 │       ├── scheduler/          # Scheduled detection jobs
@@ -33,7 +33,7 @@ securelens/
 │   └── src/
 │       ├── App.jsx
 │       ├── components/         # Reusable components (Navbar, ProtectedRoute)
-│       ├── pages/              # Page-level components (Home, Login, Register, Dashboard, Logs)
+│       ├── pages/              # Page-level components (Home, Login, Register, Dashboard, Logs, Simulator)
 │       ├── services/           # API call functions (axios)
 │       ├── context/            # Auth context
 │       └── utils/              # Helpers
@@ -56,14 +56,16 @@ incidents, audit_trail, saved_hunts
 - Every feature must have both backend AND frontend working together
 
 ## Current Phase
-Phase 3 — Log Ingestion (completed)
+Phase 4 — Log Simulator (completed)
 
 ## Completed Phases
 - Phase 1: Project skeleton — Spring Boot backend + React frontend with Vite, Tailwind, health endpoint
 - Phase 2: JWT Authentication — User entity, register/login with BCrypt + JWT, protected routes, AuthContext
 - Phase 3: Log Ingestion — Log entity with Specification-based dynamic filtering, batch ingestion API, paginated log viewer with color-coded severity badges and expandable rows
+- Phase 4: Log Simulator — 9 scenarios (8 attack patterns + normal traffic), each precisely matching Phase 5 detection rule triggers
 
 ## Important Notes
+- IMPORTANT: Simulator scenarios are designed to exactly trigger the 8 detection rules in Phase 5. Do not modify the simulator's timing, counts, or patterns without also updating the corresponding detection rule thresholds.
 - This is an MVP — functional correctness over visual polish
 - All 8 MITRE ATT&CK detection rules must work correctly
 - Log simulator must generate realistic test data
