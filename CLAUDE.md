@@ -21,9 +21,10 @@ securelens/
 │       ├── SecureLensApplication.java
 │       ├── config/             # Security config, CORS, API keys
 │       ├── controller/         # REST controllers (Auth, Health, Log, Simulator)
-│       ├── model/              # JPA entities (User, Log, Role, Severity)
+│       ├── model/              # JPA entities (User, Log, Alert, Role, Severity, AlertStatus)
 │       ├── repository/         # Spring Data JPA repos + Specifications
-│       ├── service/            # Business logic (Auth, Log, LogSimulator)
+│       ├── detection/          # Detection rules (R-001 to R-004)
+│       ├── service/            # Business logic (Auth, Log, LogSimulator, DetectionEngine)
 │       ├── dto/                # Request/Response DTOs
 │       ├── exception/          # Custom exceptions + GlobalExceptionHandler
 │       ├── scheduler/          # Scheduled detection jobs
@@ -56,13 +57,14 @@ incidents, audit_trail, saved_hunts
 - Every feature must have both backend AND frontend working together
 
 ## Current Phase
-Phase 4 — Log Simulator (completed)
+Phase 5A — Detection Engine + Rules R-001 to R-004 (completed)
 
 ## Completed Phases
 - Phase 1: Project skeleton — Spring Boot backend + React frontend with Vite, Tailwind, health endpoint
 - Phase 2: JWT Authentication — User entity, register/login with BCrypt + JWT, protected routes, AuthContext
 - Phase 3: Log Ingestion — Log entity with Specification-based dynamic filtering, batch ingestion API, paginated log viewer with color-coded severity badges and expandable rows
 - Phase 4: Log Simulator — 9 scenarios (8 attack patterns + normal traffic), each precisely matching Phase 5 detection rule triggers
+- Phase 5A: Detection Engine — @Scheduled 60s cycle with deduplication, 4 rules: Brute Force (R-001), Impossible Travel (R-002), Privilege Escalation (R-003), Data Exfiltration (R-004). Detection rules R-005 to R-008 will be added in Phase 5B.
 
 ## Important Notes
 - IMPORTANT: Simulator scenarios are designed to exactly trigger the 8 detection rules in Phase 5. Do not modify the simulator's timing, counts, or patterns without also updating the corresponding detection rule thresholds.
