@@ -18,3 +18,10 @@ server:
 
 jwt:
   secret: ${JWT_SECRET:dGhpc0lzQVZlcnlMb25nU2VjcmV0S2V5Rm9yU2VjdXJlTGVuc0RldmVsb3BtZW50T25seQ==}
+
+securelens:
+  api-keys:
+    virustotal: ${VT_API_KEY:}
+    abuseipdb: ${ABUSEIPDB_API_KEY:}
+    shodan: ${SHODAN_API_KEY:}
+    otx: ${OTX_API_KEY:}

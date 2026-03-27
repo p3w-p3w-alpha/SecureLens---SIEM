@@ -37,7 +37,7 @@ public class PortScanRule implements DetectionRule {
 
     @Override
     public List<Alert> evaluate() {
-        Instant windowStart = Instant.now().minusSeconds(300); // 5 minutes
+        Instant windowStart = Instant.now().minusSeconds(360); // 6 minutes
         List<Log> portScans = logRepository.findByEventTypeAndTimestampAfter("port_scan", windowStart);
 
         var grouped = portScans.stream()

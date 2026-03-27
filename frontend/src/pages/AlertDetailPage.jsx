@@ -22,6 +22,8 @@ export default function AlertDetailPage() {
   const [alert, setAlert] = useState(null);
   const [expandedLogId, setExpandedLogId] = useState(null);
   const [updating, setUpdating] = useState(false);
+  const [intelResult, setIntelResult] = useState(null);
+  const [enriching, setEnriching] = useState(false);
 
   useEffect(() => {
     api.get(`/api/v1/alerts/${id}`)
@@ -96,6 +98,55 @@ export default function AlertDetailPage() {
             Mark False Positive
           </button>
         </div>
+      </div>
+
+      {/* Threat Intel Enrichment */}
+      <div className="bg-white border border-gray-200 rounded p-4 mb-4">
+        <h2 className="text-sm font-semibold text-gray-500 uppercase mb-2">Threat Intelligence</h2>
+        {!intelResult && (
+          <button
+            onClick={async () => {
+              setEnriching(true);
+              try {
+                const res = await api.post(`/api/v1/intel/enrich-alert/${id}`);
+                setIntelResult(res.data);
+              } catch (err) { console.error(err); }
+              finally { setEnriching(false); }
+            }}
+            disabled={enriching || !alert.sourceIp}
+            className="px-3 py-1.5 text-sm rounded border border-blue-300 bg-blue-50 text-blue-800 hover:bg-blue-100 disabled:opacity-40"
+          >
+            {enriching ? 'Enriching...' : !alert.sourceIp ? 'No source IP to enrich' : 'Enrich with Threat Intel'}
+          </button>
+        )}
+        {intelResult && (
+          <div>
+            <div className={`inline-block rounded px-3 py-1 mb-3 ${intelResult.overallRiskScore <= 30 ? 'bg-green-100 text-green-700' : intelResult.overallRiskScore <= 70 ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'}`}>
+              Overall Risk: <span className="font-bold">{intelResult.overallRiskScore}/100</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {intelResult.providers.map((p, i) => (
+                <div key={i} className="border border-gray-100 rounded p-3">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm font-medium">{p.provider}</span>
+                    {!p.available && <span className="text-xs bg-gray-200 text-gray-500 px-1.5 py-0.5 rounded">Unavailable</span>}
+                  </div>
+                  {p.available ? (
+                    <>
+                      <div className="w-full bg-gray-200 rounded-full h-1.5 mb-1">
+                        <div className={`h-1.5 rounded-full ${p.riskScore <= 30 ? 'bg-green-500' : p.riskScore <= 70 ? 'bg-yellow-500' : 'bg-red-500'}`}
+                          style={{ width: `${p.riskScore}%` }} />
+                      </div>
+                      <p className="text-xs text-gray-600">{p.summary}</p>
+                    </>
+                  ) : (
+                    <p className="text-xs text-gray-400">{p.summary}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Evidence Logs */}

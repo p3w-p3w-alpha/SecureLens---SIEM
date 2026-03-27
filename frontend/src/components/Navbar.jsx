@@ -44,6 +44,7 @@ export default function Navbar() {
                 </span>
               )}
             </Link>
+            <Link to="/intel" className="hover:text-gray-300">Threat Intel</Link>
             <Link to="/simulator" className="hover:text-gray-300">Simulator</Link>
             <span className="text-sm text-gray-300">{user?.username}</span>
             <span className="bg-gray-600 text-xs px-2 py-0.5 rounded">{user?.role}</span>

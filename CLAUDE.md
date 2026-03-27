@@ -24,7 +24,8 @@ securelens/
 │       ├── model/              # JPA entities (User, Log, Alert, Role, Severity, AlertStatus)
 │       ├── repository/         # Spring Data JPA repos + Specifications
 │       ├── detection/          # Detection rules (R-001 to R-008)
-│       ├── service/            # Business logic (Auth, Log, LogSimulator, DetectionEngine, Alert)
+│       ├── intel/              # Threat intel providers (VT, AbuseIPDB, Shodan, NVD, OTX)
+│       ├── service/            # Business logic (Auth, Log, LogSimulator, DetectionEngine, Alert, ThreatIntelAggregator)
 │       ├── dto/                # Request/Response DTOs
 │       ├── exception/          # Custom exceptions + GlobalExceptionHandler
 │       ├── scheduler/          # Scheduled detection jobs
@@ -34,7 +35,7 @@ securelens/
 │   └── src/
 │       ├── App.jsx
 │       ├── components/         # Reusable components (Navbar, ProtectedRoute)
-│       ├── pages/              # Page-level components (Home, Login, Register, Dashboard, Logs, Simulator, Alerts, AlertDetail)
+│       ├── pages/              # Page-level components (Home, Login, Register, Dashboard, Logs, Simulator, Alerts, AlertDetail, Intel)
 │       ├── services/           # API call functions (axios)
 │       ├── context/            # Auth context
 │       └── utils/              # Helpers
@@ -57,7 +58,7 @@ incidents, audit_trail, saved_hunts
 - Every feature must have both backend AND frontend working together
 
 ## Current Phase
-Phase 6 — Alert Management Dashboard (completed)
+Phase 7 — Threat Intelligence Hub (completed)
 
 ## Completed Phases
 - Phase 1: Project skeleton — Spring Boot backend + React frontend with Vite, Tailwind, health endpoint
@@ -66,6 +67,7 @@ Phase 6 — Alert Management Dashboard (completed)
 - Phase 4: Log Simulator — 9 scenarios (8 attack patterns + normal traffic), each precisely matching Phase 5 detection rule triggers
 - Phase 5: Complete SIEM detection engine with 8 MITRE ATT&CK rules — Brute Force (R-001), Impossible Travel (R-002), Privilege Escalation (R-003), Data Exfiltration (R-004), Port Scan (R-005), Lateral Movement (R-006), Malware Beacon (R-007), Off-Hours Access (R-008). @Scheduled engine runs every 60s with deduplication.
 - Phase 6: Alert management dashboard — filtered/paginated alert list with stats cards, detail page with evidence logs, status updates (Investigating/Resolved/False Positive), Navbar alert count badge, AI Triage placeholder ready for Phase 8
+- Phase 7: Threat Intelligence Hub — 5 providers (VirusTotal, AbuseIPDB, Shodan, NVD, AlienVault OTX), 1-hour caching in threat_intel_cache table, parallel async lookups via CompletableFuture, risk score normalization 0-100, alert enrichment, search page for IPs/hashes/CVEs, graceful degradation for missing/down providers
 
 ## Detection Rules Quick Reference
 | Rule ID | Name | Severity | MITRE Tactic | MITRE Technique | Detection Window |
@@ -78,6 +80,13 @@ Phase 6 — Alert Management Dashboard (completed)
 | R-006 | Lateral Movement | HIGH | TA0008 | T1021 | 15 min |
 | R-007 | Malware Beacon (C2) | CRITICAL | TA0011 | T1071 | 30 min |
 | R-008 | Off-Hours Access | LOW | TA0001 | T1078 | 60 min |
+
+## API Key Environment Variables
+- VT_API_KEY — VirusTotal API key
+- ABUSEIPDB_API_KEY — AbuseIPDB API key
+- SHODAN_API_KEY — Shodan API key
+- OTX_API_KEY — AlienVault OTX API key
+- MISTRAL_API_KEY — Mistral AI API key (Phase 8)
 
 ## Important Notes
 - IMPORTANT: Simulator scenarios are designed to exactly trigger the 8 detection rules in Phase 5. Do not modify the simulator's timing, counts, or patterns without also updating the corresponding detection rule thresholds.

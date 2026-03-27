@@ -1,0 +1,29 @@
+[    6042ms] [ERROR] In HTML, %s cannot be a child of <%s>.%s
+This will cause a hydration error.%s <tbody> tbody  
+
+  ...
+    <App>
+      <BrowserRouter>
+        <Router basename={undefined} location={{pathname:"...", ...}} navigationType="PUSH" ...>
+          <AuthProvider>
+            <Navbar>
+            <Routes>
+              <RenderedRoute match={{...}} routeContext={{outlet:null, ...}}>
+                <ProtectedRoute>
+                  <AlertDetailPage>
+                    <div className="p-6 max-w-...">
+                      <LinkWithRef>
+                      <div>
+                      <div>
+                      <div>
+                      <div>
+                      <div>
+                      <div className="bg-white b...">
+                        <h2>
+                        <table className="w-full tex...">
+                          <thead>
+>                         <tbody>
+>                           <tbody>
+                            ...
+                      ...
+ @ http://localhost:5173/@vite/client:509

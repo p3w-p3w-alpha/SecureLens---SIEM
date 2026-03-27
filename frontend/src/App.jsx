@@ -10,6 +10,7 @@ import LogsPage from './pages/LogsPage';
 import SimulatorPage from './pages/SimulatorPage';
 import AlertsPage from './pages/AlertsPage';
 import AlertDetailPage from './pages/AlertDetailPage';
+import IntelPage from './pages/IntelPage';
 
 export default function App() {
   return (
@@ -41,6 +42,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <AlertDetailPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/intel"
+            element={
+              <ProtectedRoute>
+                <IntelPage />
               </ProtectedRoute>
             }
           />
