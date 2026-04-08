@@ -4,6 +4,7 @@ import java.time.Instant;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -14,6 +15,7 @@ import com.securelens.model.QueryType;
 import com.securelens.model.ThreatIntelCache;
 import com.securelens.repository.ThreatIntelCacheRepository;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,6 +30,13 @@ public class ShodanService implements ThreatIntelProviderService {
 
     @Value("${securelens.api-keys.shodan:}")
     private String apiKey;
+
+    @PostConstruct
+    public void init() {
+        boolean configured = apiKey != null && !apiKey.isBlank();
+        log.info("Shodan API key configured: {}", configured);
+        if (!configured) log.warn("WARNING: Shodan API key not configured — provider will be unavailable");
+    }
 
     @Override
     public IntelProvider getProviderName() { return IntelProvider.SHODAN; }
@@ -45,7 +54,7 @@ public class ShodanService implements ThreatIntelProviderService {
                     .summary(extractSummary(c.getResponseData())).rawData(c.getResponseData()).available(true).build();
         }
 
-        if (apiKey == null || apiKey.isEmpty()) {
+        if (apiKey == null || apiKey.isBlank()) {
             return unavailable("API key not configured");
         }
 
@@ -64,9 +73,26 @@ public class ShodanService implements ThreatIntelProviderService {
             cacheResult(query, body, score);
             return ThreatIntelResult.builder().provider("Shodan").riskScore(score)
                     .summary(summary).rawData(body).available(true).build();
+        } catch (HttpClientErrorException e) {
+            int status = e.getStatusCode().value();
+            if (status == 404) {
+                // IP not indexed in Shodan — this is normal, not an error
+                String summary = "IP not found in Shodan database";
+                cacheResult(query, "{\"info\":\"not found\"}", 0);
+                return ThreatIntelResult.builder().provider("Shodan").riskScore(0)
+                        .summary(summary).rawData("{\"info\":\"IP not indexed\"}").available(true).build();
+            }
+            String reason = switch (status) {
+                case 401 -> "Invalid API key (401)";
+                case 403 -> "Access denied — upgrade plan required (403)";
+                case 429 -> "Rate limited (429)";
+                default -> "HTTP " + status + ": " + e.getStatusText();
+            };
+            log.error("Shodan failed for {}: HTTP {} - {}", query, status, e.getMessage());
+            return unavailable(reason);
         } catch (Exception e) {
-            log.warn("Shodan lookup failed for {}: {}", query, e.getMessage());
-            return unavailable("Provider unavailable");
+            log.error("Shodan failed for {}: {}", query, e.getMessage());
+            return unavailable("Connection error: " + e.getClass().getSimpleName());
         }
     }
 
@@ -80,6 +106,7 @@ public class ShodanService implements ThreatIntelProviderService {
     private String extractSummary(String data) {
         try {
             JsonNode root = objectMapper.readTree(data);
+            if (root.has("info")) return "IP not found in Shodan database";
             return root.path("ports").size() + " open ports, OS: " + root.path("os").asText("Unknown")
                     + ", org: " + root.path("org").asText("Unknown");
         } catch (Exception e) { return "Cached result"; }

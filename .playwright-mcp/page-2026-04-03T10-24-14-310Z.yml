@@ -1,0 +1,161 @@
+- generic [ref=e3]:
+  - generic [ref=e5]:
+    - img [ref=e7]
+    - link [ref=e11] [cursor=pointer]:
+      - /url: /dashboard
+      - img [ref=e13]
+    - link "9+" [ref=e69] [cursor=pointer]:
+      - /url: /alerts
+      - img [ref=e21]
+      - generic [ref=e70]: 9+
+    - link [ref=e26] [cursor=pointer]:
+      - /url: /logs
+      - img [ref=e28]
+    - link [ref=e32] [cursor=pointer]:
+      - /url: /intel
+      - img [ref=e34]
+    - link [ref=e38] [cursor=pointer]:
+      - /url: /hunt
+      - img [ref=e40]
+    - link [ref=e43] [cursor=pointer]:
+      - /url: /incidents
+      - img [ref=e45]
+    - link [ref=e48] [cursor=pointer]:
+      - /url: /simulator
+      - img [ref=e50]
+    - link [ref=e53] [cursor=pointer]:
+      - /url: /ingest
+      - img [ref=e55]
+    - generic [ref=e59]:
+      - generic [ref=e60] [cursor=pointer]: V
+      - generic: LOGOUT
+  - main [ref=e61]:
+    - generic [ref=e64]:
+      - link "Back to Alerts" [ref=e71] [cursor=pointer]:
+        - /url: /alerts
+        - img [ref=e72]
+        - text: Back to Alerts
+      - generic [ref=e74]:
+        - heading "Data Exfiltration" [level=1] [ref=e75]
+        - generic [ref=e76]: CRITICAL
+        - generic [ref=e77]: NEW
+      - generic [ref=e78]:
+        - generic [ref=e79]: TA0010
+        - generic [ref=e80]: T1041
+        - generic [ref=e81]: R-004
+      - generic [ref=e82]:
+        - generic [ref=e83]:
+          - generic [ref=e84]:
+            - heading "Description" [level=2] [ref=e85]
+            - paragraph [ref=e86]: "Data exfiltration detected: 12 transfers totaling 142MB from 10.0.1.100 to 198.51.100.7"
+            - generic [ref=e87]:
+              - generic [ref=e88]: "Source IP: 10.0.1.100"
+              - generic [ref=e89]: "User: -"
+              - generic [ref=e90]: "Created: 4/2/2026, 3:45:03 PM"
+              - generic [ref=e91]: "Updated: 4/2/2026, 3:45:03 PM"
+          - generic [ref=e92]:
+            - heading "Evidence Logs (12)" [level=2] [ref=e93]
+            - generic [ref=e94]:
+              - generic [ref=e96] [cursor=pointer]:
+                - img [ref=e97]
+                - generic [ref=e99]: 3:32:39 PM
+                - generic [ref=e100]: data_transfer
+                - generic [ref=e101]: 10.0.1.100
+                - generic [ref=e102]: MEDIUM
+                - generic [ref=e103]: Data transfer of 9MB from 10.0.1.100 to 198.51.100
+              - generic [ref=e105] [cursor=pointer]:
+                - img [ref=e106]
+                - generic [ref=e108]: 3:33:24 PM
+                - generic [ref=e109]: data_transfer
+                - generic [ref=e110]: 10.0.1.100
+                - generic [ref=e111]: MEDIUM
+                - generic [ref=e112]: Data transfer of 14MB from 10.0.1.100 to 198.51.10
+              - generic [ref=e114] [cursor=pointer]:
+                - img [ref=e115]
+                - generic [ref=e117]: 3:34:09 PM
+                - generic [ref=e118]: data_transfer
+                - generic [ref=e119]: 10.0.1.100
+                - generic [ref=e120]: MEDIUM
+                - generic [ref=e121]: Data transfer of 11MB from 10.0.1.100 to 198.51.10
+              - generic [ref=e123] [cursor=pointer]:
+                - img [ref=e124]
+                - generic [ref=e126]: 3:34:54 PM
+                - generic [ref=e127]: data_transfer
+                - generic [ref=e128]: 10.0.1.100
+                - generic [ref=e129]: MEDIUM
+                - generic [ref=e130]: Data transfer of 10MB from 10.0.1.100 to 198.51.10
+              - generic [ref=e132] [cursor=pointer]:
+                - img [ref=e133]
+                - generic [ref=e135]: 3:35:39 PM
+                - generic [ref=e136]: data_transfer
+                - generic [ref=e137]: 10.0.1.100
+                - generic [ref=e138]: MEDIUM
+                - generic [ref=e139]: Data transfer of 13MB from 10.0.1.100 to 198.51.10
+              - generic [ref=e141] [cursor=pointer]:
+                - img [ref=e142]
+                - generic [ref=e144]: 3:36:24 PM
+                - generic [ref=e145]: data_transfer
+                - generic [ref=e146]: 10.0.1.100
+                - generic [ref=e147]: MEDIUM
+                - generic [ref=e148]: Data transfer of 15MB from 10.0.1.100 to 198.51.10
+              - generic [ref=e150] [cursor=pointer]:
+                - img [ref=e151]
+                - generic [ref=e153]: 3:37:09 PM
+                - generic [ref=e154]: data_transfer
+                - generic [ref=e155]: 10.0.1.100
+                - generic [ref=e156]: MEDIUM
+                - generic [ref=e157]: Data transfer of 10MB from 10.0.1.100 to 198.51.10
+              - generic [ref=e159] [cursor=pointer]:
+                - img [ref=e160]
+                - generic [ref=e162]: 3:37:54 PM
+                - generic [ref=e163]: data_transfer
+                - generic [ref=e164]: 10.0.1.100
+                - generic [ref=e165]: MEDIUM
+                - generic [ref=e166]: Data transfer of 13MB from 10.0.1.100 to 198.51.10
+              - generic [ref=e168] [cursor=pointer]:
+                - img [ref=e169]
+                - generic [ref=e171]: 3:38:39 PM
+                - generic [ref=e172]: data_transfer
+                - generic [ref=e173]: 10.0.1.100
+                - generic [ref=e174]: MEDIUM
+                - generic [ref=e175]: Data transfer of 11MB from 10.0.1.100 to 198.51.10
+              - generic [ref=e177] [cursor=pointer]:
+                - img [ref=e178]
+                - generic [ref=e180]: 3:39:24 PM
+                - generic [ref=e181]: data_transfer
+                - generic [ref=e182]: 10.0.1.100
+                - generic [ref=e183]: MEDIUM
+                - generic [ref=e184]: Data transfer of 8MB from 10.0.1.100 to 198.51.100
+              - generic [ref=e186] [cursor=pointer]:
+                - img [ref=e187]
+                - generic [ref=e189]: 3:40:09 PM
+                - generic [ref=e190]: data_transfer
+                - generic [ref=e191]: 10.0.1.100
+                - generic [ref=e192]: MEDIUM
+                - generic [ref=e193]: Data transfer of 13MB from 10.0.1.100 to 198.51.10
+              - generic [ref=e195] [cursor=pointer]:
+                - img [ref=e196]
+                - generic [ref=e198]: 3:40:54 PM
+                - generic [ref=e199]: data_transfer
+                - generic [ref=e200]: 10.0.1.100
+                - generic [ref=e201]: MEDIUM
+                - generic [ref=e202]: Data transfer of 15MB from 10.0.1.100 to 198.51.10
+        - generic [ref=e203]:
+          - generic [ref=e204]:
+            - heading "Status" [level=2] [ref=e205]
+            - generic [ref=e206]:
+              - button "Investigate" [ref=e207] [cursor=pointer]
+              - button "Resolve" [ref=e208] [cursor=pointer]
+              - button "False Positive" [ref=e209] [cursor=pointer]
+          - generic [ref=e211]:
+            - heading "Threat Intel" [level=2] [ref=e212]
+            - button "Enrich" [ref=e213] [cursor=pointer]:
+              - img [ref=e214]
+              - text: Enrich
+          - generic [ref=e217]:
+            - heading "AI Triage" [level=2] [ref=e218]
+            - button "Run AI Triage" [ref=e219] [cursor=pointer]:
+              - img [ref=e220]
+              - text: Run AI Triage
+  - button "AI Assistant" [ref=e65] [cursor=pointer]:
+    - img [ref=e66]

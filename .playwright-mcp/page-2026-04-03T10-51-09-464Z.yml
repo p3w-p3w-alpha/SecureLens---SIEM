@@ -1,0 +1,54 @@
+- generic [ref=e3]:
+  - generic [ref=e5]:
+    - img [ref=e7]
+    - link [ref=e11] [cursor=pointer]:
+      - /url: /dashboard
+      - img [ref=e13]
+    - link "9+" [ref=e95] [cursor=pointer]:
+      - /url: /alerts
+      - img [ref=e21]
+      - generic [ref=e96]: 9+
+    - link [ref=e25] [cursor=pointer]:
+      - /url: /logs
+      - img [ref=e27]
+    - link [ref=e31] [cursor=pointer]:
+      - /url: /intel
+      - img [ref=e33]
+    - link [ref=e38] [cursor=pointer]:
+      - /url: /hunt
+      - img [ref=e40]
+    - link [ref=e43] [cursor=pointer]:
+      - /url: /incidents
+      - img [ref=e45]
+    - link [ref=e48] [cursor=pointer]:
+      - /url: /simulator
+      - img [ref=e50]
+    - link [ref=e53] [cursor=pointer]:
+      - /url: /ingest
+      - img [ref=e55]
+    - generic [ref=e59]:
+      - generic [ref=e60] [cursor=pointer]: V
+      - generic: LOGOUT
+  - main [ref=e61]:
+    - generic [ref=e64]:
+      - generic [ref=e65]:
+        - generic [ref=e66]:
+          - heading "THREAT INTEL" [level=1] [ref=e67]
+          - paragraph [ref=e68]: Multi-provider intelligence lookup
+        - generic [ref=e70]:
+          - img [ref=e71]
+          - textbox "IP, hash, or CVE..." [ref=e74]
+          - button "SEARCH" [ref=e75] [cursor=pointer]
+        - generic [ref=e76]:
+          - button "8.8.8.8" [ref=e77] [cursor=pointer]
+          - button "CVE-2021-44228" [ref=e78] [cursor=pointer]
+          - button "185.220.101.3" [ref=e79] [cursor=pointer]
+      - generic [ref=e80]:
+        - generic [ref=e81]:
+          - generic:
+            - generic: Live Threat Map
+        - generic [ref=e86]:
+          - img [ref=e88]
+          - paragraph [ref=e90]: Awaiting query
+  - button "AI Assistant" [ref=e91] [cursor=pointer]:
+    - img [ref=e92]

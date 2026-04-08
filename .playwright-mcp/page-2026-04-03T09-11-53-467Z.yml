@@ -1,0 +1,75 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - img [ref=e6]
+      - generic [ref=e8]: SecureLens
+    - navigation [ref=e10]:
+      - paragraph [ref=e11]: Navigation
+      - link "Dashboard" [ref=e12] [cursor=pointer]:
+        - /url: /dashboard
+        - generic [ref=e13]:
+          - img [ref=e15]
+          - generic [ref=e20]: Dashboard
+      - link "9+ Alerts" [ref=e21] [cursor=pointer]:
+        - /url: /alerts
+        - generic [ref=e22]:
+          - generic [ref=e23]:
+            - img [ref=e24]
+            - generic [ref=e27]: 9+
+          - generic [ref=e28]: Alerts
+      - link "Logs" [ref=e29] [cursor=pointer]:
+        - /url: /logs
+        - generic [ref=e30]:
+          - img [ref=e32]
+          - generic [ref=e35]: Logs
+      - link "Threat Intel" [ref=e36] [cursor=pointer]:
+        - /url: /intel
+        - generic [ref=e37]:
+          - img [ref=e40]
+          - generic [ref=e43]: Threat Intel
+      - link "Hunt" [ref=e44] [cursor=pointer]:
+        - /url: /hunt
+        - generic [ref=e45]:
+          - img [ref=e47]
+          - generic [ref=e49]: Hunt
+      - link "Incidents" [ref=e50] [cursor=pointer]:
+        - /url: /incidents
+        - generic [ref=e51]:
+          - img [ref=e53]
+          - generic [ref=e55]: Incidents
+      - link "Simulator" [ref=e56] [cursor=pointer]:
+        - /url: /simulator
+        - generic [ref=e57]:
+          - img [ref=e59]
+          - generic [ref=e61]: Simulator
+      - link "Ingest" [ref=e62] [cursor=pointer]:
+        - /url: /ingest
+        - generic [ref=e63]:
+          - img [ref=e65]
+          - generic [ref=e68]: Ingest
+    - generic [ref=e72]: V
+  - main [ref=e73]:
+    - generic [ref=e77]:
+      - generic [ref=e78]:
+        - generic:
+          - paragraph: Interactive Threat Map
+        - generic:
+          - generic: LIVE
+      - generic [ref=e83]:
+        - heading "THREAT INTELLIGENCE" [level=1] [ref=e84]
+        - paragraph [ref=e85]: Query IPs, file hashes, and CVE IDs — click points on the globe to investigate
+        - generic [ref=e86]:
+          - generic [ref=e87]:
+            - img [ref=e88]
+            - textbox "Threat intelligence search" [ref=e91]:
+              - /placeholder: Enter IP, file hash, or CVE ID...
+            - button "SEARCH" [ref=e92] [cursor=pointer]
+          - generic [ref=e93]:
+            - button "8.8.8.8" [ref=e94] [cursor=pointer]
+            - button "CVE-2021-44228" [ref=e95] [cursor=pointer]
+            - button "185.220.101.3" [ref=e96] [cursor=pointer]
+      - generic [ref=e97]:
+        - img [ref=e99]
+        - paragraph [ref=e101]: Enter an IP, hash, or CVE to begin investigation
+  - button "AI Assistant" [ref=e102] [cursor=pointer]:
+    - img [ref=e103]

@@ -1,0 +1,263 @@
+- generic:
+  - generic:
+    - generic:
+      - complementary:
+        - generic:
+          - img
+        - navigation:
+          - paragraph: Navigation
+          - link:
+            - /url: /dashboard
+            - generic:
+              - generic:
+                - img
+          - link:
+            - /url: /alerts
+            - generic:
+              - generic:
+                - img
+                - generic: 9+
+          - link:
+            - /url: /logs
+            - generic:
+              - generic:
+                - img
+          - link:
+            - /url: /intel
+            - generic:
+              - generic:
+                - img
+          - link:
+            - /url: /hunt
+            - generic:
+              - generic:
+                - img
+          - link:
+            - /url: /incidents
+            - generic:
+              - generic:
+                - img
+          - link:
+            - /url: /simulator
+            - generic:
+              - generic:
+                - img
+          - link:
+            - /url: /ingest
+            - generic:
+              - generic:
+                - img
+        - generic:
+          - generic:
+            - generic:
+              - generic: V
+      - main:
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - paragraph: Interactive Threat Map
+                  - generic:
+                    - generic: LIVE
+                  - generic:
+                    - generic: 2 sources tracked
+                - generic:
+                  - generic:
+                    - heading [level=1]: THREAT INTELLIGENCE
+                    - paragraph: Query IPs, file hashes, and CVE IDs — click points on the globe to investigate
+                    - generic:
+                      - generic:
+                        - img
+                        - textbox:
+                          - /placeholder: Enter IP, file hash, or CVE ID...
+                          - text: 8.8.8.8
+                        - generic: IPv4
+                        - button: SEARCH
+                      - generic:
+                        - button: 8.8.8.8
+                        - button: CVE-2021-44228
+                        - button: 185.220.101.3
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic:
+                        - paragraph: Providers
+                        - paragraph: "4"
+                      - generic:
+                        - img
+                        - generic:
+                          - generic: "7"
+                          - generic: /100
+                      - generic:
+                        - paragraph: Query
+                        - text: IP
+                    - generic: LOW RISK
+                  - generic:
+                    - generic:
+                      - generic: INTEL REPORT
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - img
+                            - generic: AbuseIPDB
+                          - img:
+                            - generic: "0"
+                        - paragraph: "Abuse confidence: 0%, reported 28 times, from US"
+                        - generic:
+                          - button:
+                            - img
+                            - text: Expand Intel
+                          - button:
+                            - img
+                            - text: Copy Raw
+                    - generic:
+                      - generic: INTEL REPORT
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - img
+                            - generic: AlienVault OTX
+                          - img:
+                            - generic: "0"
+                        - paragraph: Referenced in 0 threat pulses
+                        - generic:
+                          - button:
+                            - img
+                            - text: Expand Intel
+                          - button:
+                            - img
+                            - text: Copy Raw
+                    - generic:
+                      - generic: INTEL REPORT
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - img
+                            - generic: Shodan
+                          - img:
+                            - generic: "30"
+                        - paragraph: "2 open ports, OS: Unknown, org: Google LLC"
+                        - generic:
+                          - button:
+                            - img
+                            - text: Expand Intel
+                          - button:
+                            - img
+                            - text: Copy Raw
+                    - generic:
+                      - generic: INTEL REPORT
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - img
+                            - generic: VirusTotal
+                          - img:
+                            - generic: "0"
+                        - paragraph: 0/94 engines flagged this as malicious
+                        - generic:
+                          - button:
+                            - img
+                            - text: Expand Intel
+                          - button:
+                            - img
+                            - text: Copy Raw
+                - generic:
+                  - heading [level=3]: Investigation Log
+                  - generic:
+                    - generic:
+                      - generic: 10:13:03
+                      - generic: 8.8.8.8
+                      - generic: IP
+                      - generic: "7"
+      - button:
+        - img
+  - dialog "AbuseIPDB" [ref=e245]:
+    - heading "AbuseIPDB" [level=2] [ref=e247]:
+      - img [ref=e248]
+      - text: AbuseIPDB
+    - generic [ref=e250]:
+      - generic [ref=e252]:
+        - img [ref=e257]
+        - generic [ref=e261]:
+          - generic [ref=e262]: "0"
+          - generic [ref=e263]: /100
+      - generic [ref=e264]:
+        - paragraph [ref=e265]: Summary
+        - paragraph [ref=e266]: "Abuse confidence: 0%, reported 28 times, from US"
+      - generic [ref=e267]:
+        - generic [ref=e268]:
+          - paragraph [ref=e269]: Raw Intelligence
+          - button "Copy" [active] [ref=e270] [cursor=pointer]:
+            - img [ref=e271]
+            - text: Copy
+        - generic [ref=e274]:
+          - generic [ref=e275]: "{"
+          - generic [ref=e276]:
+            - generic [ref=e277]: "\"data\""
+            - text: ": {"
+          - generic [ref=e278]:
+            - generic [ref=e279]: "\"ipAddress\""
+            - text: ":"
+            - generic [ref=e280]: "\"8.8.8.8\""
+            - text: ","
+          - generic [ref=e281]:
+            - generic [ref=e282]: "\"isPublic\""
+            - text: ": true,"
+          - generic [ref=e283]:
+            - generic [ref=e284]: "\"ipVersion\""
+            - text: ": 4,"
+          - generic [ref=e285]:
+            - generic [ref=e286]: "\"isWhitelisted\""
+            - text: ": true,"
+          - generic [ref=e287]:
+            - generic [ref=e288]: "\"abuseConfidenceScore\""
+            - text: ": 0,"
+          - generic [ref=e289]:
+            - generic [ref=e290]: "\"countryCode\""
+            - text: ":"
+            - generic [ref=e291]: "\"US\""
+            - text: ","
+          - generic [ref=e292]:
+            - generic [ref=e293]: "\"usageType\""
+            - text: ":"
+            - generic [ref=e294]: "\"Content Delivery Network\""
+            - text: ","
+          - generic [ref=e295]:
+            - generic [ref=e296]: "\"isp\""
+            - text: ":"
+            - generic [ref=e297]: "\"Google LLC\""
+            - text: ","
+          - generic [ref=e298]:
+            - generic [ref=e299]: "\"domain\""
+            - text: ":"
+            - generic [ref=e300]: "\"google.com\""
+            - text: ","
+          - generic [ref=e301]:
+            - generic [ref=e302]: "\"hostnames\""
+            - text: ": ["
+          - generic [ref=e304]: "\"dns.google\""
+          - generic [ref=e305]: "],"
+          - generic [ref=e306]:
+            - generic [ref=e307]: "\"isTor\""
+            - text: ": false,"
+          - generic [ref=e308]:
+            - generic [ref=e309]: "\"totalReports\""
+            - text: ": 28,"
+          - generic [ref=e310]:
+            - generic [ref=e311]: "\"numDistinctUsers\""
+            - text: ": 21,"
+          - generic [ref=e312]:
+            - generic [ref=e313]: "\"lastReportedAt\""
+            - text: ":"
+            - generic [ref=e314]: "\"2026-04-01T20:10:59+00:00\""
+          - generic [ref=e315]: "}"
+          - generic [ref=e316]: "}"
+    - button "Close" [ref=e317] [cursor=pointer]:
+      - img
+      - generic [ref=e318]: Close

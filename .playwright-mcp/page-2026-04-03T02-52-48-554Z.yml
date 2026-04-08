@@ -1,0 +1,99 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - img [ref=e6]
+      - generic [ref=e8]: SecureLens
+    - navigation [ref=e10]:
+      - paragraph [ref=e11]: Navigation
+      - link "Dashboard" [ref=e12] [cursor=pointer]:
+        - /url: /dashboard
+        - generic [ref=e13]:
+          - img [ref=e15]
+          - generic [ref=e20]: Dashboard
+      - link "Alerts" [ref=e21] [cursor=pointer]:
+        - /url: /alerts
+        - generic [ref=e22]:
+          - img [ref=e25]
+          - generic [ref=e28]: Alerts
+      - link "Logs" [ref=e29] [cursor=pointer]:
+        - /url: /logs
+        - generic [ref=e30]:
+          - img [ref=e32]
+          - generic [ref=e35]: Logs
+      - link "Threat Intel" [ref=e36] [cursor=pointer]:
+        - /url: /intel
+        - generic [ref=e37]:
+          - img [ref=e39]
+          - generic [ref=e42]: Threat Intel
+      - link "Hunt" [ref=e43] [cursor=pointer]:
+        - /url: /hunt
+        - generic [ref=e44]:
+          - img [ref=e46]
+          - generic [ref=e48]: Hunt
+      - link "Incidents" [ref=e49] [cursor=pointer]:
+        - /url: /incidents
+        - generic [ref=e50]:
+          - img [ref=e52]
+          - generic [ref=e54]: Incidents
+      - link "Simulator" [ref=e55] [cursor=pointer]:
+        - /url: /simulator
+        - generic [ref=e56]:
+          - img [ref=e58]
+          - generic [ref=e60]: Simulator
+      - link "Ingest" [ref=e61] [cursor=pointer]:
+        - /url: /ingest
+        - generic [ref=e62]:
+          - img [ref=e64]
+          - generic [ref=e67]: Ingest
+    - generic [ref=e71]: V
+  - main [ref=e72]:
+    - generic [ref=e74]:
+      - heading "Alerts" [level=1] [ref=e75]
+      - generic [ref=e76]:
+        - generic [ref=e77]:
+          - generic [ref=e78]: Severity
+          - combobox [ref=e79]:
+            - option "All" [selected]
+            - option "INFO"
+            - option "LOW"
+            - option "MEDIUM"
+            - option "HIGH"
+            - option "CRITICAL"
+        - generic [ref=e80]:
+          - generic [ref=e81]: Status
+          - combobox [ref=e82]:
+            - option "All" [selected]
+            - option "NEW"
+            - option "INVESTIGATING"
+            - option "RESOLVED"
+            - option "FALSE_POSITIVE"
+        - generic [ref=e83]:
+          - generic [ref=e84]: Rule ID
+          - textbox "R-001" [ref=e85]
+        - generic [ref=e86]:
+          - generic [ref=e87]: Source IP
+          - textbox "10.0.0.1" [ref=e88]
+        - button "Apply" [ref=e89] [cursor=pointer]
+        - button "Clear" [ref=e90] [cursor=pointer]
+      - table [ref=e92]:
+        - rowgroup [ref=e93]:
+          - row "Severity Rule MITRE Source / User Status Time" [ref=e94]:
+            - columnheader "Severity" [ref=e95]
+            - columnheader "Rule" [ref=e96]
+            - columnheader "MITRE" [ref=e97]
+            - columnheader "Source / User" [ref=e98]
+            - columnheader "Status" [ref=e99]
+            - columnheader "Time" [ref=e100]
+            - columnheader [ref=e101]
+        - rowgroup [ref=e102]:
+          - row "No alerts found" [ref=e103]:
+            - cell "No alerts found" [ref=e104]:
+              - img [ref=e105]
+              - paragraph [ref=e108]: No alerts found
+      - generic [ref=e109]:
+        - generic [ref=e110]: 0 total — Page 1 of 1
+        - generic [ref=e111]:
+          - button "Previous" [disabled] [ref=e112]
+          - button "Next" [disabled] [ref=e113]
+  - button "AI Assistant" [ref=e114] [cursor=pointer]:
+    - img [ref=e115]

@@ -1,0 +1,141 @@
+/* SecureLens Intel — Scoped Dark Cyber Theme & Ambient Animations */
+
+/* Scanline CRT effect */
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+/* Shimmer on accent bars */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Sonar expanding rings */
+@keyframes sonar {
+  0% { transform: scale(0.5); opacity: 0.6; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+/* Orbiting dots around gauge */
+@keyframes orbit {
+  0% { transform: rotate(0deg) translateX(var(--orbit-r, 80px)) rotate(0deg); }
+  100% { transform: rotate(360deg) translateX(var(--orbit-r, 80px)) rotate(-360deg); }
+}
+
+/* Floating particles */
+@keyframes float-particle {
+  0%, 100% { transform: translate(0, 0); opacity: 0.08; }
+  25% { transform: translate(12px, -18px); opacity: 0.15; }
+  50% { transform: translate(-8px, -30px); opacity: 0.06; }
+  75% { transform: translate(15px, -12px); opacity: 0.12; }
+}
+
+/* Pulsing glow */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 8px var(--glow-color, rgba(0,212,255,0.1)); }
+  50% { box-shadow: 0 0 20px var(--glow-color, rgba(0,212,255,0.25)); }
+}
+
+/* Vertical scan for loading cards */
+@keyframes scan-vertical {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(200%); }
+}
+
+/* Dashed border march for unavailable providers */
+@keyframes dash-march {
+  0% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: 24; }
+}
+
+/* Breathing glow for chips */
+@keyframes breathe {
+  0%, 100% { box-shadow: 0 0 4px rgba(0,212,255,0.1); }
+  50% { box-shadow: 0 0 12px rgba(0,212,255,0.25); }
+}
+
+/* Inner ring rotation */
+@keyframes rotate-slow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Progress bar indeterminate */
+@keyframes progress-indeterminate {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+/* Scanline container pseudo */
+.intel-scanline::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(transparent 50%, rgba(0,212,255,0.015) 50%);
+  background-size: 100% 3px;
+  z-index: 1;
+}
+
+.intel-scanline::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,212,255,0.08), transparent);
+  animation: scanline 4s linear infinite;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Grid background */
+.intel-grid-bg {
+  background-image:
+    linear-gradient(rgba(0,212,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Shimmer accent bar */
+.shimmer-bar {
+  background: linear-gradient(
+    90deg,
+    var(--shimmer-color) 0%,
+    rgba(255,255,255,0.3) 50%,
+    var(--shimmer-color) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+/* Particle */
+.intel-particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: #00d4ff;
+  pointer-events: none;
+  animation: float-particle var(--duration, 8s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+  opacity: 0.08;
+}
+
+/* Scrollbar for intel pages */
+.intel-page::-webkit-scrollbar { width: 4px; }
+.intel-page::-webkit-scrollbar-track { background: transparent; }
+.intel-page::-webkit-scrollbar-thumb { background: #1e3a5f; border-radius: 10px; }
+.intel-page::-webkit-scrollbar-thumb:hover { background: #00d4ff40; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .intel-scanline::before,
+  .intel-scanline::after,
+  .intel-particle,
+  .shimmer-bar {
+    animation: none !important;
+  }
+}

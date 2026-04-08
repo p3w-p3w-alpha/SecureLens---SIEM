@@ -45,7 +45,11 @@ export default function Navbar() {
               )}
             </Link>
             <Link to="/intel" className="hover:text-gray-300">Threat Intel</Link>
+            <Link to="/incidents" className="hover:text-gray-300">Incidents</Link>
+            <Link to="/hunt" className="hover:text-gray-300">Hunt</Link>
+            <Link to="/ingest" className="hover:text-gray-300">Ingest</Link>
             <Link to="/simulator" className="hover:text-gray-300">Simulator</Link>
+            {user?.role === 'ADMIN' && <Link to="/admin" className="hover:text-gray-300">Admin</Link>}
             <span className="text-sm text-gray-300">{user?.username}</span>
             <span className="bg-gray-600 text-xs px-2 py-0.5 rounded">{user?.role}</span>
             <button

@@ -1,0 +1,144 @@
+- generic [ref=e3]:
+  - generic [ref=e5]:
+    - img [ref=e7]
+    - link [ref=e11] [cursor=pointer]:
+      - /url: /dashboard
+      - img [ref=e13]
+    - link "9+" [ref=e19] [cursor=pointer]:
+      - /url: /alerts
+      - img [ref=e21]
+      - generic [ref=e24]: 9+
+    - link [ref=e26] [cursor=pointer]:
+      - /url: /logs
+      - img [ref=e28]
+    - link [ref=e32] [cursor=pointer]:
+      - /url: /intel
+      - img [ref=e34]
+    - link [ref=e39] [cursor=pointer]:
+      - /url: /hunt
+      - img [ref=e41]
+    - link [ref=e44] [cursor=pointer]:
+      - /url: /incidents
+      - img [ref=e46]
+    - link [ref=e49] [cursor=pointer]:
+      - /url: /simulator
+      - img [ref=e51]
+    - link [ref=e54] [cursor=pointer]:
+      - /url: /ingest
+      - img [ref=e56]
+    - generic [ref=e60]:
+      - generic [ref=e61] [cursor=pointer]: V
+      - generic: LOGOUT
+  - main [ref=e62]:
+    - generic [ref=e66]:
+      - generic [ref=e94]:
+        - generic [ref=e95]:
+          - generic [ref=e98]:
+            - generic: HQ
+          - generic [ref=e99]:
+            - generic:
+              - generic: Mountain View
+        - generic:
+          - paragraph: Threat Origin Map
+        - generic:
+          - generic:
+            - generic: LIVE
+      - generic [ref=e71]:
+        - heading "THREAT INTELLIGENCE" [level=1] [ref=e72]
+        - paragraph [ref=e73]: Query IPs, file hashes, and CVE IDs across multiple threat intel providers
+        - generic [ref=e74]:
+          - generic [ref=e75]:
+            - img [ref=e76]
+            - textbox "Threat intelligence search" [ref=e79]:
+              - /placeholder: Enter IP, file hash, or CVE ID...
+              - text: 8.8.8.8
+            - generic [ref=e100]: IPv4
+            - button "SEARCH" [ref=e148] [cursor=pointer]
+          - generic [ref=e81]:
+            - button "8.8.8.8" [ref=e82] [cursor=pointer]
+            - button "CVE-2021-44228" [ref=e83] [cursor=pointer]
+            - button "185.220.101.3" [ref=e84] [cursor=pointer]
+      - generic [ref=e149]:
+        - generic [ref=e150]:
+          - generic [ref=e151]:
+            - generic [ref=e152]:
+              - paragraph [ref=e153]: Providers
+              - paragraph [ref=e154]: "3"
+            - generic [ref=e155]:
+              - img [ref=e160]
+              - generic [ref=e164]:
+                - generic [ref=e165]: "10"
+                - generic [ref=e166]: /100
+            - generic [ref=e167]:
+              - paragraph [ref=e168]: Query
+              - text: IP
+          - generic [ref=e169]: LOW RISK
+        - generic [ref=e170]:
+          - generic [ref=e171] [cursor=pointer]:
+            - generic: INTEL REPORT
+            - generic [ref=e173]:
+              - generic [ref=e174]:
+                - generic [ref=e175]:
+                  - img [ref=e177]
+                  - generic [ref=e180]: AbuseIPDB
+                - img [ref=e181]:
+                  - generic [ref=e184]: "0"
+              - paragraph [ref=e185]: "Abuse confidence: 0%, reported 28 times, from US"
+              - generic [ref=e186]:
+                - button "Expand Intel" [ref=e187]:
+                  - img [ref=e188]
+                  - text: Expand Intel
+                - button "Copy Raw" [ref=e192]:
+                  - img [ref=e193]
+                  - text: Copy Raw
+          - generic [ref=e196]:
+            - generic [ref=e197]:
+              - img [ref=e198]
+              - generic [ref=e200]: AlienVault OTX
+            - generic [ref=e201]:
+              - img [ref=e202]
+              - generic [ref=e209]: Signal Lost
+            - paragraph [ref=e210]: "Connection error: ResourceAccessException"
+          - generic [ref=e211] [cursor=pointer]:
+            - generic: INTEL REPORT
+            - generic [ref=e213]:
+              - generic [ref=e214]:
+                - generic [ref=e215]:
+                  - img [ref=e217]
+                  - generic [ref=e221]: Shodan
+                - img [ref=e222]:
+                  - generic [ref=e225]: "30"
+              - paragraph [ref=e226]: "2 open ports, OS: Unknown, org: Google LLC"
+              - generic [ref=e227]:
+                - button "Expand Intel" [ref=e228]:
+                  - img [ref=e229]
+                  - text: Expand Intel
+                - button "Copy Raw" [ref=e233]:
+                  - img [ref=e234]
+                  - text: Copy Raw
+          - generic [ref=e237] [cursor=pointer]:
+            - generic: INTEL REPORT
+            - generic [ref=e239]:
+              - generic [ref=e240]:
+                - generic [ref=e241]:
+                  - img [ref=e243]
+                  - generic [ref=e246]: VirusTotal
+                - img [ref=e247]:
+                  - generic [ref=e250]: "0"
+              - paragraph [ref=e251]: 0/94 engines flagged this as malicious
+              - generic [ref=e252]:
+                - button "Expand Intel" [ref=e253]:
+                  - img [ref=e254]
+                  - text: Expand Intel
+                - button "Copy Raw" [ref=e258]:
+                  - img [ref=e259]
+                  - text: Copy Raw
+      - generic [ref=e262]:
+        - heading "Investigation Log" [level=3] [ref=e263]: Investigation Log
+        - generic [ref=e266] [cursor=pointer]:
+          - generic [ref=e267]: 10:29:16
+          - generic [ref=e268]: 8.8.8.8
+          - generic [ref=e269]: IP
+          - generic [ref=e270]: "10"
+  - button "AI Assistant" [ref=e90] [cursor=pointer]:
+    - img [ref=e91]

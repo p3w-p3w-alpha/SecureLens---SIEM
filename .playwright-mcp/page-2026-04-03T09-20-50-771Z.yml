@@ -1,0 +1,230 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - img [ref=e6]
+      - generic: SecureLens
+    - navigation [ref=e10]:
+      - paragraph [ref=e11]: Navigation
+      - link "Dashboard" [ref=e12] [cursor=pointer]:
+        - /url: /dashboard
+        - generic [ref=e13]:
+          - img [ref=e15]
+          - generic: Dashboard
+      - link "9+ Alerts" [ref=e80] [cursor=pointer]:
+        - /url: /alerts
+        - generic [ref=e22]:
+          - generic [ref=e24]:
+            - img [ref=e25]
+            - generic [ref=e81]: 9+
+          - generic: Alerts
+      - link "Logs" [ref=e29] [cursor=pointer]:
+        - /url: /logs
+        - generic [ref=e30]:
+          - img [ref=e32]
+          - generic: Logs
+      - link "Threat Intel" [ref=e36] [cursor=pointer]:
+        - /url: /intel
+        - generic [ref=e37]:
+          - img [ref=e39]
+          - generic: Threat Intel
+      - link "Hunt" [ref=e43] [cursor=pointer]:
+        - /url: /hunt
+        - generic [ref=e44]:
+          - img [ref=e46]
+          - generic: Hunt
+      - link "Incidents" [ref=e49] [cursor=pointer]:
+        - /url: /incidents
+        - generic [ref=e50]:
+          - img [ref=e52]
+          - generic: Incidents
+      - link "Simulator" [ref=e55] [cursor=pointer]:
+        - /url: /simulator
+        - generic [ref=e56]:
+          - img [ref=e58]
+          - generic: Simulator
+      - link "Ingest" [ref=e61] [cursor=pointer]:
+        - /url: /ingest
+        - generic [ref=e62]:
+          - img [ref=e64]
+          - generic: Ingest
+    - generic [ref=e71]: V
+  - main [ref=e72]:
+    - generic [ref=e75]:
+      - link "Back to Alerts" [ref=e82] [cursor=pointer]:
+        - /url: /alerts
+        - img [ref=e83]
+        - text: Back to Alerts
+      - generic [ref=e85]:
+        - heading "Data Exfiltration" [level=1] [ref=e86]
+        - generic [ref=e87]: CRITICAL
+        - generic [ref=e88]: NEW
+      - generic [ref=e89]:
+        - generic [ref=e90]: TA0010
+        - generic [ref=e91]: T1041
+        - generic [ref=e92]: R-004
+      - generic [ref=e93]:
+        - generic [ref=e94]:
+          - generic [ref=e95]:
+            - heading "Description" [level=2] [ref=e96]
+            - paragraph [ref=e97]: "Data exfiltration detected: 12 transfers totaling 142MB from 10.0.1.100 to 198.51.100.7"
+            - generic [ref=e98]:
+              - generic [ref=e99]: "Source IP: 10.0.1.100"
+              - generic [ref=e100]: "User: -"
+              - generic [ref=e101]: "Created: 4/2/2026, 3:45:03 PM"
+              - generic [ref=e102]: "Updated: 4/2/2026, 3:45:03 PM"
+          - generic [ref=e103]:
+            - heading "Evidence Logs (12)" [level=2] [ref=e104]
+            - generic [ref=e105]:
+              - generic [ref=e107] [cursor=pointer]:
+                - img [ref=e108]
+                - generic [ref=e110]: 3:32:39 PM
+                - generic [ref=e111]: data_transfer
+                - generic [ref=e112]: 10.0.1.100
+                - generic [ref=e113]: MEDIUM
+                - generic [ref=e114]: Data transfer of 9MB from 10.0.1.100 to 198.51.100
+              - generic [ref=e116] [cursor=pointer]:
+                - img [ref=e117]
+                - generic [ref=e119]: 3:33:24 PM
+                - generic [ref=e120]: data_transfer
+                - generic [ref=e121]: 10.0.1.100
+                - generic [ref=e122]: MEDIUM
+                - generic [ref=e123]: Data transfer of 14MB from 10.0.1.100 to 198.51.10
+              - generic [ref=e125] [cursor=pointer]:
+                - img [ref=e126]
+                - generic [ref=e128]: 3:34:09 PM
+                - generic [ref=e129]: data_transfer
+                - generic [ref=e130]: 10.0.1.100
+                - generic [ref=e131]: MEDIUM
+                - generic [ref=e132]: Data transfer of 11MB from 10.0.1.100 to 198.51.10
+              - generic [ref=e134] [cursor=pointer]:
+                - img [ref=e135]
+                - generic [ref=e137]: 3:34:54 PM
+                - generic [ref=e138]: data_transfer
+                - generic [ref=e139]: 10.0.1.100
+                - generic [ref=e140]: MEDIUM
+                - generic [ref=e141]: Data transfer of 10MB from 10.0.1.100 to 198.51.10
+              - generic [ref=e143] [cursor=pointer]:
+                - img [ref=e144]
+                - generic [ref=e146]: 3:35:39 PM
+                - generic [ref=e147]: data_transfer
+                - generic [ref=e148]: 10.0.1.100
+                - generic [ref=e149]: MEDIUM
+                - generic [ref=e150]: Data transfer of 13MB from 10.0.1.100 to 198.51.10
+              - generic [ref=e152] [cursor=pointer]:
+                - img [ref=e153]
+                - generic [ref=e155]: 3:36:24 PM
+                - generic [ref=e156]: data_transfer
+                - generic [ref=e157]: 10.0.1.100
+                - generic [ref=e158]: MEDIUM
+                - generic [ref=e159]: Data transfer of 15MB from 10.0.1.100 to 198.51.10
+              - generic [ref=e161] [cursor=pointer]:
+                - img [ref=e162]
+                - generic [ref=e164]: 3:37:09 PM
+                - generic [ref=e165]: data_transfer
+                - generic [ref=e166]: 10.0.1.100
+                - generic [ref=e167]: MEDIUM
+                - generic [ref=e168]: Data transfer of 10MB from 10.0.1.100 to 198.51.10
+              - generic [ref=e170] [cursor=pointer]:
+                - img [ref=e171]
+                - generic [ref=e173]: 3:37:54 PM
+                - generic [ref=e174]: data_transfer
+                - generic [ref=e175]: 10.0.1.100
+                - generic [ref=e176]: MEDIUM
+                - generic [ref=e177]: Data transfer of 13MB from 10.0.1.100 to 198.51.10
+              - generic [ref=e179] [cursor=pointer]:
+                - img [ref=e180]
+                - generic [ref=e182]: 3:38:39 PM
+                - generic [ref=e183]: data_transfer
+                - generic [ref=e184]: 10.0.1.100
+                - generic [ref=e185]: MEDIUM
+                - generic [ref=e186]: Data transfer of 11MB from 10.0.1.100 to 198.51.10
+              - generic [ref=e188] [cursor=pointer]:
+                - img [ref=e189]
+                - generic [ref=e191]: 3:39:24 PM
+                - generic [ref=e192]: data_transfer
+                - generic [ref=e193]: 10.0.1.100
+                - generic [ref=e194]: MEDIUM
+                - generic [ref=e195]: Data transfer of 8MB from 10.0.1.100 to 198.51.100
+              - generic [ref=e197] [cursor=pointer]:
+                - img [ref=e198]
+                - generic [ref=e200]: 3:40:09 PM
+                - generic [ref=e201]: data_transfer
+                - generic [ref=e202]: 10.0.1.100
+                - generic [ref=e203]: MEDIUM
+                - generic [ref=e204]: Data transfer of 13MB from 10.0.1.100 to 198.51.10
+              - generic [ref=e206] [cursor=pointer]:
+                - img [ref=e207]
+                - generic [ref=e209]: 3:40:54 PM
+                - generic [ref=e210]: data_transfer
+                - generic [ref=e211]: 10.0.1.100
+                - generic [ref=e212]: MEDIUM
+                - generic [ref=e213]: Data transfer of 15MB from 10.0.1.100 to 198.51.10
+        - generic [ref=e214]:
+          - generic [ref=e215]:
+            - heading "Status" [level=2] [ref=e216]
+            - generic [ref=e217]:
+              - button "Investigate" [ref=e218] [cursor=pointer]
+              - button "Resolve" [ref=e219] [cursor=pointer]
+              - button "False Positive" [ref=e220] [cursor=pointer]
+          - generic [ref=e222]:
+            - heading "Threat Intel" [level=2] [ref=e223]
+            - generic [ref=e239]:
+              - generic [ref=e245]:
+                - img [ref=e250]
+                - generic [ref=e254]:
+                  - generic [ref=e255]: "0"
+                  - generic [ref=e256]: /100
+              - generic [ref=e257]:
+                - generic [ref=e260] [cursor=pointer]:
+                  - generic [ref=e261]:
+                    - generic [ref=e262]:
+                      - img [ref=e264]
+                      - generic [ref=e267]: AbuseIPDB
+                    - img [ref=e268]:
+                      - generic [ref=e271]: "0"
+                  - paragraph [ref=e272]: "Abuse confidence: 0%, reported 0 times, from ??"
+                  - generic [ref=e273]:
+                    - button "Expand Intel" [ref=e274]:
+                      - img [ref=e275]
+                      - text: Expand Intel
+                    - button "Copy Raw" [ref=e279]:
+                      - img [ref=e280]
+                      - text: Copy Raw
+                - generic [ref=e283]:
+                  - generic [ref=e284]:
+                    - img [ref=e285]
+                    - generic [ref=e287]: AlienVault OTX
+                  - generic [ref=e288]:
+                    - img [ref=e289]
+                    - generic [ref=e296]: Signal Lost
+                  - paragraph [ref=e297]: Invalid indicator format (400)
+                - generic [ref=e298]:
+                  - generic [ref=e299]:
+                    - img [ref=e300]
+                    - generic [ref=e303]: Shodan
+                  - generic [ref=e304]:
+                    - img [ref=e305]
+                    - generic [ref=e312]: Signal Lost
+                  - paragraph [ref=e313]: Access denied — upgrade plan required (403)
+                - generic [ref=e316] [cursor=pointer]:
+                  - generic [ref=e317]:
+                    - generic [ref=e318]:
+                      - img [ref=e320]
+                      - generic [ref=e323]: VirusTotal
+                    - img [ref=e324]:
+                      - generic [ref=e327]: "0"
+                  - paragraph [ref=e328]: 0/94 engines flagged this as malicious
+                  - generic [ref=e329]:
+                    - button "Expand Intel" [ref=e330]:
+                      - img [ref=e331]
+                      - text: Expand Intel
+                    - button "Copy Raw" [ref=e335]:
+                      - img [ref=e336]
+                      - text: Copy Raw
+          - generic [ref=e228]:
+            - heading "AI Triage" [level=2] [ref=e229]
+            - button "Run AI Triage" [ref=e230] [cursor=pointer]:
+              - img [ref=e231]
+              - text: Run AI Triage
+  - button "AI Assistant" [ref=e76] [cursor=pointer]:
+    - img [ref=e77]

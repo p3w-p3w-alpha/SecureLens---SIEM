@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -18,6 +19,7 @@ import com.securelens.model.QueryType;
 import com.securelens.model.ThreatIntelCache;
 import com.securelens.repository.ThreatIntelCacheRepository;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,6 +34,13 @@ public class OtxService implements ThreatIntelProviderService {
 
     @Value("${securelens.api-keys.otx:}")
     private String apiKey;
+
+    @PostConstruct
+    public void init() {
+        boolean configured = apiKey != null && !apiKey.isBlank();
+        log.info("AlienVault OTX API key configured: {}", configured);
+        if (!configured) log.warn("WARNING: AlienVault OTX API key not configured — provider will be unavailable");
+    }
 
     @Override
     public IntelProvider getProviderName() { return IntelProvider.OTX; }
@@ -49,7 +58,7 @@ public class OtxService implements ThreatIntelProviderService {
                     .summary(extractSummary(c.getResponseData())).rawData(c.getResponseData()).available(true).build();
         }
 
-        if (apiKey == null || apiKey.isEmpty()) {
+        if (apiKey == null || apiKey.isBlank()) {
             return unavailable("API key not configured");
         }
 
@@ -70,9 +79,20 @@ public class OtxService implements ThreatIntelProviderService {
             cacheResult(query, type, body, score);
             return ThreatIntelResult.builder().provider("AlienVault OTX").riskScore(score)
                     .summary(summary).rawData(body).available(true).build();
+        } catch (HttpClientErrorException e) {
+            int status = e.getStatusCode().value();
+            String reason = switch (status) {
+                case 400 -> "Invalid indicator format (400)";
+                case 401 -> "Invalid API key (401)";
+                case 404 -> "Indicator not found (404)";
+                case 429 -> "Rate limited (429)";
+                default -> "HTTP " + status + ": " + e.getStatusText();
+            };
+            log.error("OTX failed for {}: HTTP {} - {}", query, status, e.getMessage());
+            return unavailable(reason);
         } catch (Exception e) {
-            log.warn("OTX lookup failed for {}: {}", query, e.getMessage());
-            return unavailable("Provider unavailable");
+            log.error("OTX failed for {}: {}", query, e.getMessage());
+            return unavailable("Connection error: " + e.getClass().getSimpleName());
         }
     }
 

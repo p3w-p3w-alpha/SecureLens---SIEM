@@ -3,6 +3,7 @@ package com.securelens.intel;
 import java.time.Instant;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -13,6 +14,7 @@ import com.securelens.model.QueryType;
 import com.securelens.model.ThreatIntelCache;
 import com.securelens.repository.ThreatIntelCacheRepository;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,6 +26,11 @@ public class NvdService implements ThreatIntelProviderService {
     private final RestTemplate restTemplate;
     private final ThreatIntelCacheRepository cacheRepository;
     private final ObjectMapper objectMapper = new ObjectMapper();
+
+    @PostConstruct
+    public void init() {
+        log.info("NVD provider ready (public API, no key required). Rate limit: 5 req/30s without API key");
+    }
 
     @Override
     public IntelProvider getProviderName() { return IntelProvider.NVD; }
@@ -49,7 +56,7 @@ public class NvdService implements ThreatIntelProviderService {
             JsonNode vulns = root.path("vulnerabilities");
             if (vulns.isEmpty()) {
                 return ThreatIntelResult.builder().provider("NVD").riskScore(0)
-                        .summary("CVE not found").available(true).build();
+                        .summary("CVE not found in NVD database").available(true).build();
             }
 
             JsonNode cve = vulns.get(0).path("cve");
@@ -57,7 +64,6 @@ public class NvdService implements ThreatIntelProviderService {
             double cvssScore = 0;
             String severity = "UNKNOWN";
 
-            // Try CVSS v3.1 first, then v3.0, then v2.0
             for (String version : new String[]{"cvssMetricV31", "cvssMetricV30", "cvssMetricV2"}) {
                 JsonNode cvssArr = metrics.path(version);
                 if (!cvssArr.isEmpty()) {
@@ -70,16 +76,29 @@ public class NvdService implements ThreatIntelProviderService {
             }
 
             int score = Math.min((int) (cvssScore * 10), 100);
-            String desc = cve.path("descriptions").get(0).path("value").asText("");
+            String desc = "";
+            JsonNode descriptions = cve.path("descriptions");
+            if (descriptions.isArray() && !descriptions.isEmpty()) {
+                desc = descriptions.get(0).path("value").asText("");
+            }
             if (desc.length() > 200) desc = desc.substring(0, 200) + "...";
             String summary = "CVSS " + cvssScore + ", " + severity + ": " + desc;
 
             cacheResult(query, body, score);
             return ThreatIntelResult.builder().provider("NVD").riskScore(score)
                     .summary(summary).rawData(body).available(true).build();
+        } catch (HttpClientErrorException e) {
+            int status = e.getStatusCode().value();
+            String reason = switch (status) {
+                case 403 -> "NVD API rate limited — 5 req/30s without API key (403)";
+                case 404 -> "CVE not found (404)";
+                default -> "HTTP " + status + ": " + e.getStatusText();
+            };
+            log.error("NVD failed for {}: HTTP {} - {}", query, status, e.getMessage());
+            return unavailable(reason);
         } catch (Exception e) {
-            log.warn("NVD lookup failed for {}: {}", query, e.getMessage());
-            return unavailable("Provider unavailable");
+            log.error("NVD failed for {}: {}", query, e.getMessage());
+            return unavailable("Connection error: " + e.getClass().getSimpleName());
         }
     }
 
@@ -99,7 +118,11 @@ public class NvdService implements ThreatIntelProviderService {
                 if (!arr.isEmpty()) {
                     double s = arr.get(0).path("cvssData").path("baseScore").asDouble();
                     String sev = arr.get(0).path("cvssData").path("baseSeverity").asText("UNKNOWN");
-                    String desc = cve.path("descriptions").get(0).path("value").asText("");
+                    String desc = "";
+                    JsonNode descriptions = cve.path("descriptions");
+                    if (descriptions.isArray() && !descriptions.isEmpty()) {
+                        desc = descriptions.get(0).path("value").asText("");
+                    }
                     if (desc.length() > 200) desc = desc.substring(0, 200) + "...";
                     return "CVSS " + s + ", " + sev + ": " + desc;
                 }

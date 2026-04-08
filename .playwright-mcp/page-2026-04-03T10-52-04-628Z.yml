@@ -1,0 +1,34 @@
+- generic [ref=e3]:
+  - generic [ref=e5]:
+    - img [ref=e7]
+    - link [ref=e11] [cursor=pointer]:
+      - /url: /dashboard
+      - img [ref=e13]
+    - link [ref=e19] [cursor=pointer]:
+      - /url: /alerts
+      - img [ref=e21]
+    - link [ref=e26] [cursor=pointer]:
+      - /url: /logs
+      - img [ref=e28]
+    - link [ref=e32] [cursor=pointer]:
+      - /url: /intel
+      - img [ref=e34]
+    - link [ref=e38] [cursor=pointer]:
+      - /url: /hunt
+      - img [ref=e40]
+    - link [ref=e43] [cursor=pointer]:
+      - /url: /incidents
+      - img [ref=e45]
+    - link [ref=e48] [cursor=pointer]:
+      - /url: /simulator
+      - img [ref=e50]
+    - link [ref=e53] [cursor=pointer]:
+      - /url: /ingest
+      - img [ref=e55]
+    - generic [ref=e59]:
+      - generic [ref=e60] [cursor=pointer]: V
+      - generic: LOGOUT
+  - main [ref=e61]:
+    - generic [ref=e66]: LOADING ALERT
+  - button "AI Assistant" [ref=e67] [cursor=pointer]:
+    - img [ref=e68]

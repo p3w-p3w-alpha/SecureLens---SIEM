@@ -1,0 +1,109 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - img [ref=e6]
+      - generic [ref=e8]: SecureLens
+    - navigation [ref=e10]:
+      - paragraph [ref=e11]: Navigation
+      - link "Dashboard" [ref=e12] [cursor=pointer]:
+        - /url: /dashboard
+        - generic [ref=e13]:
+          - img [ref=e15]
+          - generic [ref=e20]: Dashboard
+      - link "Alerts" [ref=e21] [cursor=pointer]:
+        - /url: /alerts
+        - generic [ref=e22]:
+          - img [ref=e24]
+          - generic [ref=e27]: Alerts
+      - link "Logs" [ref=e28] [cursor=pointer]:
+        - /url: /logs
+        - generic [ref=e29]:
+          - img [ref=e32]
+          - generic [ref=e35]: Logs
+      - link "Threat Intel" [ref=e36] [cursor=pointer]:
+        - /url: /intel
+        - generic [ref=e37]:
+          - img [ref=e39]
+          - generic [ref=e42]: Threat Intel
+      - link "Hunt" [ref=e43] [cursor=pointer]:
+        - /url: /hunt
+        - generic [ref=e44]:
+          - img [ref=e46]
+          - generic [ref=e48]: Hunt
+      - link "Incidents" [ref=e49] [cursor=pointer]:
+        - /url: /incidents
+        - generic [ref=e50]:
+          - img [ref=e52]
+          - generic [ref=e54]: Incidents
+      - link "Simulator" [ref=e55] [cursor=pointer]:
+        - /url: /simulator
+        - generic [ref=e56]:
+          - img [ref=e58]
+          - generic [ref=e60]: Simulator
+      - link "Ingest" [ref=e61] [cursor=pointer]:
+        - /url: /ingest
+        - generic [ref=e62]:
+          - img [ref=e64]
+          - generic [ref=e67]: Ingest
+    - generic [ref=e71]: V
+  - main [ref=e72]:
+    - generic [ref=e75]:
+      - generic [ref=e76]:
+        - generic [ref=e77]:
+          - img [ref=e78]
+          - heading "EVENT LOG VIEWER" [level=1] [ref=e80]
+        - generic [ref=e83]: Live Feed
+      - generic [ref=e84]:
+        - generic [ref=e85]:
+          - img [ref=e86]
+          - generic [ref=e88]: Filters
+        - generic [ref=e89]:
+          - generic [ref=e90]:
+            - generic [ref=e91]: Event Type
+            - combobox [ref=e92] [cursor=pointer]:
+              - option "All" [selected]
+              - option "login_failed"
+              - option "login_success"
+              - option "file_access"
+              - option "permission_denied"
+              - option "permission_granted"
+              - option "port_scan"
+              - option "data_transfer"
+              - option "process_execution"
+              - option "config_change"
+              - option "network_connection"
+          - generic [ref=e93]:
+            - generic [ref=e94]: Severity
+            - combobox [ref=e95] [cursor=pointer]:
+              - option "All" [selected]
+              - option "INFO"
+              - option "LOW"
+              - option "MEDIUM"
+              - option "HIGH"
+              - option "CRITICAL"
+          - generic [ref=e96]:
+            - generic [ref=e97]: Source IP
+            - textbox "e.g. 192.168.1.1" [ref=e98]
+          - generic [ref=e99]:
+            - generic [ref=e100]: Start
+            - textbox [ref=e101]
+          - generic [ref=e102]:
+            - generic [ref=e103]: End
+            - textbox [ref=e104]
+          - button "Apply" [ref=e105] [cursor=pointer]
+          - button "Clear" [ref=e106] [cursor=pointer]
+      - generic [ref=e108]:
+        - generic [ref=e109]: Timestamp
+        - generic [ref=e110]: Source IP
+        - generic [ref=e111]: Dest IP
+        - generic [ref=e112]: Event Type
+        - generic [ref=e113]: Severity
+        - generic [ref=e114]: User
+        - generic [ref=e115]: Message
+      - generic [ref=e119]:
+        - generic [ref=e120]: 0 results — Page 1 of 1
+        - generic [ref=e121]:
+          - button "Previous" [disabled] [ref=e122]
+          - button "Next" [disabled] [ref=e123]
+  - button "AI Assistant" [ref=e124] [cursor=pointer]:
+    - img [ref=e125]

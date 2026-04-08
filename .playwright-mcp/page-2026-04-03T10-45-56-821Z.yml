@@ -1,0 +1,35 @@
+- generic [ref=e3]:
+  - generic [ref=e58]:
+    - img [ref=e60]
+    - link [ref=e64] [cursor=pointer]:
+      - /url: /dashboard
+      - img [ref=e66]
+    - link "9+" [ref=e73] [cursor=pointer]:
+      - /url: /alerts
+      - img [ref=e75]
+      - generic [ref=e78]: 9+
+    - link [ref=e80] [cursor=pointer]:
+      - /url: /logs
+      - img [ref=e82]
+    - link [ref=e86] [cursor=pointer]:
+      - /url: /intel
+      - img [ref=e88]
+    - link [ref=e92] [cursor=pointer]:
+      - /url: /hunt
+      - img [ref=e94]
+    - link [ref=e97] [cursor=pointer]:
+      - /url: /incidents
+      - img [ref=e99]
+    - link [ref=e102] [cursor=pointer]:
+      - /url: /simulator
+      - img [ref=e104]
+    - link [ref=e107] [cursor=pointer]:
+      - /url: /ingest
+      - img [ref=e109]
+    - generic [ref=e113]:
+      - generic [ref=e114] [cursor=pointer]: V
+      - generic: LOGOUT
+  - main [ref=e4]:
+    - generic [ref=e116]: Loading dashboard...
+  - button "AI Assistant" [ref=e117] [cursor=pointer]:
+    - img [ref=e118]

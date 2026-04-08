@@ -1,0 +1,54 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - img [ref=e6]
+      - generic [ref=e8]: SecureLens
+    - navigation [ref=e10]:
+      - paragraph [ref=e11]: Navigation
+      - link "Dashboard" [ref=e12] [cursor=pointer]:
+        - /url: /dashboard
+        - generic [ref=e13]:
+          - img [ref=e15]
+          - generic [ref=e20]: Dashboard
+      - link "Alerts" [ref=e21] [cursor=pointer]:
+        - /url: /alerts
+        - generic [ref=e22]:
+          - img [ref=e24]
+          - generic [ref=e27]: Alerts
+      - link "Logs" [ref=e28] [cursor=pointer]:
+        - /url: /logs
+        - generic [ref=e29]:
+          - img [ref=e31]
+          - generic [ref=e34]: Logs
+      - link "Threat Intel" [ref=e35] [cursor=pointer]:
+        - /url: /intel
+        - generic [ref=e36]:
+          - img [ref=e38]
+          - generic [ref=e41]: Threat Intel
+      - link "Hunt" [ref=e42] [cursor=pointer]:
+        - /url: /hunt
+        - generic [ref=e43]:
+          - img [ref=e45]
+          - generic [ref=e47]: Hunt
+      - link "Incidents" [ref=e48] [cursor=pointer]:
+        - /url: /incidents
+        - generic [ref=e49]:
+          - img [ref=e51]
+          - generic [ref=e53]: Incidents
+      - link "Simulator" [ref=e54] [cursor=pointer]:
+        - /url: /simulator
+        - generic [ref=e55]:
+          - img [ref=e57]
+          - generic [ref=e59]: Simulator
+      - link "Ingest" [ref=e60] [cursor=pointer]:
+        - /url: /ingest
+        - generic [ref=e61]:
+          - img [ref=e63]
+          - generic [ref=e66]: Ingest
+    - generic [ref=e70]: V
+  - main [ref=e71]:
+    - generic [ref=e73]:
+      - heading "Access Denied" [level=1] [ref=e74]
+      - paragraph [ref=e75]: You need ADMIN privileges to access this page.
+  - button "AI Assistant" [ref=e76] [cursor=pointer]:
+    - img [ref=e77]

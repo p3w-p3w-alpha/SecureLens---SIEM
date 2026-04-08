@@ -1,0 +1,337 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - img [ref=e6]
+      - generic [ref=e8]: SecureLens
+    - navigation [ref=e10]:
+      - paragraph [ref=e11]: Navigation
+      - link "Dashboard" [ref=e12] [cursor=pointer]:
+        - /url: /dashboard
+        - generic [ref=e13]:
+          - img [ref=e15]
+          - generic [ref=e20]: Dashboard
+      - link "9+ Alerts" [ref=e21] [cursor=pointer]:
+        - /url: /alerts
+        - generic [ref=e22]:
+          - generic [ref=e24]:
+            - img [ref=e25]
+            - generic [ref=e28]: 9+
+          - generic [ref=e29]: Alerts
+      - link "Logs" [ref=e30] [cursor=pointer]:
+        - /url: /logs
+        - generic [ref=e31]:
+          - img [ref=e33]
+          - generic [ref=e36]: Logs
+      - link "Threat Intel" [ref=e37] [cursor=pointer]:
+        - /url: /intel
+        - generic [ref=e38]:
+          - img [ref=e40]
+          - generic [ref=e43]: Threat Intel
+      - link "Hunt" [ref=e44] [cursor=pointer]:
+        - /url: /hunt
+        - generic [ref=e45]:
+          - img [ref=e47]
+          - generic [ref=e49]: Hunt
+      - link "Incidents" [ref=e50] [cursor=pointer]:
+        - /url: /incidents
+        - generic [ref=e51]:
+          - img [ref=e53]
+          - generic [ref=e55]: Incidents
+      - link "Simulator" [ref=e56] [cursor=pointer]:
+        - /url: /simulator
+        - generic [ref=e57]:
+          - img [ref=e59]
+          - generic [ref=e61]: Simulator
+      - link "Ingest" [ref=e62] [cursor=pointer]:
+        - /url: /ingest
+        - generic [ref=e63]:
+          - img [ref=e65]
+          - generic [ref=e68]: Ingest
+    - generic [ref=e72]: V
+  - main [ref=e73]:
+    - generic [ref=e75]:
+      - heading "Alerts" [level=1] [ref=e76]
+      - generic [ref=e77]:
+        - generic [ref=e78]:
+          - generic [ref=e79]: Severity
+          - combobox [ref=e80]:
+            - option "All" [selected]
+            - option "INFO"
+            - option "LOW"
+            - option "MEDIUM"
+            - option "HIGH"
+            - option "CRITICAL"
+        - generic [ref=e81]:
+          - generic [ref=e82]: Status
+          - combobox [ref=e83]:
+            - option "All" [selected]
+            - option "NEW"
+            - option "INVESTIGATING"
+            - option "RESOLVED"
+            - option "FALSE_POSITIVE"
+        - generic [ref=e84]:
+          - generic [ref=e85]: Rule ID
+          - textbox "R-001" [ref=e86]
+        - generic [ref=e87]:
+          - generic [ref=e88]: Source IP
+          - textbox "10.0.0.1" [ref=e89]
+        - button "Apply" [ref=e90] [cursor=pointer]
+        - button "Clear" [ref=e91] [cursor=pointer]
+      - table [ref=e93]:
+        - rowgroup [ref=e94]:
+          - row "Severity Rule MITRE Source / User Status Time" [ref=e95]:
+            - columnheader "Severity" [ref=e96]
+            - columnheader "Rule" [ref=e97]
+            - columnheader "MITRE" [ref=e98]
+            - columnheader "Source / User" [ref=e99]
+            - columnheader "Status" [ref=e100]
+            - columnheader "Time" [ref=e101]
+            - columnheader [ref=e102]
+        - rowgroup [ref=e103]:
+          - row "MEDIUM Manual Hunt Finding TA0043T0000 - FALSE_POSITIVE 2h ago View" [ref=e104]:
+            - cell "MEDIUM" [ref=e105]
+            - cell "Manual Hunt Finding" [ref=e106]
+            - cell "TA0043T0000" [ref=e107]
+            - cell "-" [ref=e108]
+            - cell "FALSE_POSITIVE" [ref=e109]
+            - cell "2h ago" [ref=e110]
+            - cell "View" [ref=e111]:
+              - link "View" [ref=e112] [cursor=pointer]:
+                - /url: /alerts/96
+                - img [ref=e113]
+                - text: View
+          - row "HIGH Privilege Escalation TA0004T1548 10.0.1.45 INVESTIGATING 11h ago View" [ref=e116]:
+            - cell "HIGH" [ref=e117]
+            - cell "Privilege Escalation" [ref=e118]
+            - cell "TA0004T1548" [ref=e119]
+            - cell "10.0.1.45" [ref=e120]
+            - cell "INVESTIGATING" [ref=e121]
+            - cell "11h ago" [ref=e122]
+            - cell "View" [ref=e123]:
+              - link "View" [ref=e124] [cursor=pointer]:
+                - /url: /alerts/95
+                - img [ref=e125]
+                - text: View
+          - row "MEDIUM Port Scan TA0007T1046 172.16.50.99 NEW 11h ago View" [ref=e128]:
+            - cell "MEDIUM" [ref=e129]
+            - cell "Port Scan" [ref=e130]
+            - cell "TA0007T1046" [ref=e131]
+            - cell "172.16.50.99" [ref=e132]
+            - cell "NEW" [ref=e133]
+            - cell "11h ago" [ref=e134]
+            - cell "View" [ref=e135]:
+              - link "View" [ref=e136] [cursor=pointer]:
+                - /url: /alerts/94
+                - img [ref=e137]
+                - text: View
+          - row "CRITICAL Malware Beacon (C2) TA0011T1071 10.0.0.77 NEW 11h ago View" [ref=e140]:
+            - cell "CRITICAL" [ref=e141]
+            - cell "Malware Beacon (C2)" [ref=e142]
+            - cell "TA0011T1071" [ref=e143]
+            - cell "10.0.0.77" [ref=e144]
+            - cell "NEW" [ref=e145]
+            - cell "11h ago" [ref=e146]
+            - cell "View" [ref=e147]:
+              - link "View" [ref=e148] [cursor=pointer]:
+                - /url: /alerts/93
+                - img [ref=e149]
+                - text: View
+          - row "HIGH Lateral Movement TA0008T1021 10.0.1.10 NEW 11h ago View" [ref=e152]:
+            - cell "HIGH" [ref=e153]
+            - cell "Lateral Movement" [ref=e154]
+            - cell "TA0008T1021" [ref=e155]
+            - cell "10.0.1.10" [ref=e156]
+            - cell "NEW" [ref=e157]
+            - cell "11h ago" [ref=e158]
+            - cell "View" [ref=e159]:
+              - link "View" [ref=e160] [cursor=pointer]:
+                - /url: /alerts/92
+                - img [ref=e161]
+                - text: View
+          - row "CRITICAL Impossible Travel TA0001T1078 91.198.174.1 NEW 11h ago View" [ref=e164]:
+            - cell "CRITICAL" [ref=e165]
+            - cell "Impossible Travel" [ref=e166]
+            - cell "TA0001T1078" [ref=e167]
+            - cell "91.198.174.1" [ref=e168]
+            - cell "NEW" [ref=e169]
+            - cell "11h ago" [ref=e170]
+            - cell "View" [ref=e171]:
+              - link "View" [ref=e172] [cursor=pointer]:
+                - /url: /alerts/91
+                - img [ref=e173]
+                - text: View
+          - row "CRITICAL Data Exfiltration TA0010T1041 10.0.1.100 NEW 11h ago View" [ref=e176]:
+            - cell "CRITICAL" [ref=e177]
+            - cell "Data Exfiltration" [ref=e178]
+            - cell "TA0010T1041" [ref=e179]
+            - cell "10.0.1.100" [ref=e180]
+            - cell "NEW" [ref=e181]
+            - cell "11h ago" [ref=e182]
+            - cell "View" [ref=e183]:
+              - link "View" [ref=e184] [cursor=pointer]:
+                - /url: /alerts/90
+                - img [ref=e185]
+                - text: View
+          - row "HIGH Brute Force Login TA0006T1110 185.220.101.3 NEW 11h ago View" [ref=e188]:
+            - cell "HIGH" [ref=e189]
+            - cell "Brute Force Login" [ref=e190]
+            - cell "TA0006T1110" [ref=e191]
+            - cell "185.220.101.3" [ref=e192]
+            - cell "NEW" [ref=e193]
+            - cell "11h ago" [ref=e194]
+            - cell "View" [ref=e195]:
+              - link "View" [ref=e196] [cursor=pointer]:
+                - /url: /alerts/89
+                - img [ref=e197]
+                - text: View
+          - row "HIGH Lateral Movement TA0008T1021 10.0.1.10 NEW 1d ago View" [ref=e200]:
+            - cell "HIGH" [ref=e201]
+            - cell "Lateral Movement" [ref=e202]
+            - cell "TA0008T1021" [ref=e203]
+            - cell "10.0.1.10" [ref=e204]
+            - cell "NEW" [ref=e205]
+            - cell "1d ago" [ref=e206]
+            - cell "View" [ref=e207]:
+              - link "View" [ref=e208] [cursor=pointer]:
+                - /url: /alerts/88
+                - img [ref=e209]
+                - text: View
+          - row "CRITICAL Data Exfiltration TA0010T1041 10.0.1.100 NEW 1d ago View" [ref=e212]:
+            - cell "CRITICAL" [ref=e213]
+            - cell "Data Exfiltration" [ref=e214]
+            - cell "TA0010T1041" [ref=e215]
+            - cell "10.0.1.100" [ref=e216]
+            - cell "NEW" [ref=e217]
+            - cell "1d ago" [ref=e218]
+            - cell "View" [ref=e219]:
+              - link "View" [ref=e220] [cursor=pointer]:
+                - /url: /alerts/87
+                - img [ref=e221]
+                - text: View
+          - row "HIGH Privilege Escalation TA0004T1548 10.0.1.45 INVESTIGATING 1d ago View" [ref=e224]:
+            - cell "HIGH" [ref=e225]
+            - cell "Privilege Escalation" [ref=e226]
+            - cell "TA0004T1548" [ref=e227]
+            - cell "10.0.1.45" [ref=e228]
+            - cell "INVESTIGATING" [ref=e229]
+            - cell "1d ago" [ref=e230]
+            - cell "View" [ref=e231]:
+              - link "View" [ref=e232] [cursor=pointer]:
+                - /url: /alerts/86
+                - img [ref=e233]
+                - text: View
+          - row "MEDIUM Port Scan TA0007T1046 172.16.50.99 INVESTIGATING 1d ago View" [ref=e236]:
+            - cell "MEDIUM" [ref=e237]
+            - cell "Port Scan" [ref=e238]
+            - cell "TA0007T1046" [ref=e239]
+            - cell "172.16.50.99" [ref=e240]
+            - cell "INVESTIGATING" [ref=e241]
+            - cell "1d ago" [ref=e242]
+            - cell "View" [ref=e243]:
+              - link "View" [ref=e244] [cursor=pointer]:
+                - /url: /alerts/85
+                - img [ref=e245]
+                - text: View
+          - row "CRITICAL Malware Beacon (C2) TA0011T1071 10.0.0.77 INVESTIGATING 1d ago View" [ref=e248]:
+            - cell "CRITICAL" [ref=e249]
+            - cell "Malware Beacon (C2)" [ref=e250]
+            - cell "TA0011T1071" [ref=e251]
+            - cell "10.0.0.77" [ref=e252]
+            - cell "INVESTIGATING" [ref=e253]
+            - cell "1d ago" [ref=e254]
+            - cell "View" [ref=e255]:
+              - link "View" [ref=e256] [cursor=pointer]:
+                - /url: /alerts/84
+                - img [ref=e257]
+                - text: View
+          - row "HIGH Lateral Movement TA0008T1021 10.0.1.10 NEW 1d ago View" [ref=e260]:
+            - cell "HIGH" [ref=e261]
+            - cell "Lateral Movement" [ref=e262]
+            - cell "TA0008T1021" [ref=e263]
+            - cell "10.0.1.10" [ref=e264]
+            - cell "NEW" [ref=e265]
+            - cell "1d ago" [ref=e266]
+            - cell "View" [ref=e267]:
+              - link "View" [ref=e268] [cursor=pointer]:
+                - /url: /alerts/83
+                - img [ref=e269]
+                - text: View
+          - row "CRITICAL Impossible Travel TA0001T1078 91.198.174.1 NEW 1d ago View" [ref=e272]:
+            - cell "CRITICAL" [ref=e273]
+            - cell "Impossible Travel" [ref=e274]
+            - cell "TA0001T1078" [ref=e275]
+            - cell "91.198.174.1" [ref=e276]
+            - cell "NEW" [ref=e277]
+            - cell "1d ago" [ref=e278]
+            - cell "View" [ref=e279]:
+              - link "View" [ref=e280] [cursor=pointer]:
+                - /url: /alerts/82
+                - img [ref=e281]
+                - text: View
+          - row "CRITICAL Data Exfiltration TA0010T1041 10.0.1.100 NEW 1d ago View" [ref=e284]:
+            - cell "CRITICAL" [ref=e285]
+            - cell "Data Exfiltration" [ref=e286]
+            - cell "TA0010T1041" [ref=e287]
+            - cell "10.0.1.100" [ref=e288]
+            - cell "NEW" [ref=e289]
+            - cell "1d ago" [ref=e290]
+            - cell "View" [ref=e291]:
+              - link "View" [ref=e292] [cursor=pointer]:
+                - /url: /alerts/81
+                - img [ref=e293]
+                - text: View
+          - row "HIGH Brute Force Login TA0006T1110 185.220.101.3 NEW 1d ago View" [ref=e296]:
+            - cell "HIGH" [ref=e297]
+            - cell "Brute Force Login" [ref=e298]
+            - cell "TA0006T1110" [ref=e299]
+            - cell "185.220.101.3" [ref=e300]
+            - cell "NEW" [ref=e301]
+            - cell "1d ago" [ref=e302]
+            - cell "View" [ref=e303]:
+              - link "View" [ref=e304] [cursor=pointer]:
+                - /url: /alerts/80
+                - img [ref=e305]
+                - text: View
+          - row "HIGH Privilege Escalation TA0004T1548 10.0.1.45 INVESTIGATING 2d ago View" [ref=e308]:
+            - cell "HIGH" [ref=e309]
+            - cell "Privilege Escalation" [ref=e310]
+            - cell "TA0004T1548" [ref=e311]
+            - cell "10.0.1.45" [ref=e312]
+            - cell "INVESTIGATING" [ref=e313]
+            - cell "2d ago" [ref=e314]
+            - cell "View" [ref=e315]:
+              - link "View" [ref=e316] [cursor=pointer]:
+                - /url: /alerts/79
+                - img [ref=e317]
+                - text: View
+          - row "MEDIUM Port Scan TA0007T1046 172.16.50.99 NEW 2d ago View" [ref=e320]:
+            - cell "MEDIUM" [ref=e321]
+            - cell "Port Scan" [ref=e322]
+            - cell "TA0007T1046" [ref=e323]
+            - cell "172.16.50.99" [ref=e324]
+            - cell "NEW" [ref=e325]
+            - cell "2d ago" [ref=e326]
+            - cell "View" [ref=e327]:
+              - link "View" [ref=e328] [cursor=pointer]:
+                - /url: /alerts/78
+                - img [ref=e329]
+                - text: View
+          - row "CRITICAL Malware Beacon (C2) TA0011T1071 10.0.0.77 NEW 2d ago View" [ref=e332]:
+            - cell "CRITICAL" [ref=e333]
+            - cell "Malware Beacon (C2)" [ref=e334]
+            - cell "TA0011T1071" [ref=e335]
+            - cell "10.0.0.77" [ref=e336]
+            - cell "NEW" [ref=e337]
+            - cell "2d ago" [ref=e338]
+            - cell "View" [ref=e339]:
+              - link "View" [ref=e340] [cursor=pointer]:
+                - /url: /alerts/77
+                - img [ref=e341]
+                - text: View
+      - generic [ref=e344]:
+        - generic [ref=e345]: 37 total — Page 1 of 2
+        - generic [ref=e346]:
+          - button "Previous" [disabled] [ref=e347]
+          - button "Next" [ref=e348] [cursor=pointer]
+  - button "AI Assistant" [ref=e349] [cursor=pointer]:
+    - img [ref=e350]

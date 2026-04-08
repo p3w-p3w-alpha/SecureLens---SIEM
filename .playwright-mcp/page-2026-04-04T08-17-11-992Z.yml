@@ -1,0 +1,59 @@
+- generic [ref=e3]:
+  - generic [ref=e5]:
+    - img [ref=e7]
+    - link [ref=e11] [cursor=pointer]:
+      - /url: /dashboard
+      - img [ref=e13]
+    - link [ref=e19] [cursor=pointer]:
+      - /url: /alerts
+      - img [ref=e21]
+    - link [ref=e25] [cursor=pointer]:
+      - /url: /logs
+      - img [ref=e27]
+    - link [ref=e31] [cursor=pointer]:
+      - /url: /intel
+      - img [ref=e33]
+    - link [ref=e37] [cursor=pointer]:
+      - /url: /hunt
+      - img [ref=e39]
+    - link [ref=e42] [cursor=pointer]:
+      - /url: /incidents
+      - img [ref=e44]
+    - link [ref=e47] [cursor=pointer]:
+      - /url: /simulator
+      - img [ref=e49]
+    - link [ref=e52] [cursor=pointer]:
+      - /url: /ingest
+      - img [ref=e54]
+    - generic [ref=e58]:
+      - generic [ref=e59] [cursor=pointer]: V
+      - generic: LOGOUT
+  - main [ref=e60]:
+    - generic [ref=e63]:
+      - paragraph [ref=e69]: GLOBAL THREAT MONITORING
+      - generic [ref=e74]:
+        - generic [ref=e75]:
+          - generic [ref=e76]:
+            - img [ref=e77]
+            - heading "SECURELENS" [level=1] [ref=e80]
+          - paragraph [ref=e82]: Security Operations Platform
+        - generic [ref=e85]:
+          - generic [ref=e86]:
+            - generic [ref=e87]: EMAIL
+            - generic [ref=e88]:
+              - img [ref=e89]
+              - textbox "analyst@securelens.io" [ref=e92]: verify@securelens.com
+          - generic [ref=e93]:
+            - generic [ref=e94]: PASSWORD
+            - generic [ref=e95]:
+              - img [ref=e96]
+              - textbox "Enter credentials" [ref=e99]: Verify123!
+          - button "AUTHENTICATE" [ref=e101] [cursor=pointer]:
+            - generic [ref=e102]: AUTHENTICATE
+        - paragraph [ref=e106]:
+          - text: No account?
+          - link "Request access" [ref=e107] [cursor=pointer]:
+            - /url: /register
+        - paragraph [ref=e109]: v2.0.0 // SECURELENS SIEM
+  - button "AI Assistant" [ref=e110] [cursor=pointer]:
+    - img [ref=e111]

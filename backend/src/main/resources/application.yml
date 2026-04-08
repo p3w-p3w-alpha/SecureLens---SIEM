@@ -12,6 +12,10 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
 
 server:
   port: 8080
@@ -21,8 +25,8 @@ jwt:
 
 securelens:
   api-keys:
-    virustotal: ${VT_API_KEY:}
-    abuseipdb: ${ABUSEIPDB_API_KEY:}
-    shodan: ${SHODAN_API_KEY:}
-    otx: ${OTX_API_KEY:}
-    mistral: ${MISTRAL_API_KEY:}
+    virustotal: ${env.VT_API_KEY:${VT_API_KEY:}}
+    abuseipdb: ${env.ABUSEIPDB_API_KEY:${ABUSEIPDB_API_KEY:}}
+    shodan: ${env.SHODAN_API_KEY:${SHODAN_API_KEY:}}
+    otx: ${env.OTX_API_KEY:${OTX_API_KEY:}}
+    mistral: ${env.MISTRAL_API_KEY:${MISTRAL_API_KEY:}}

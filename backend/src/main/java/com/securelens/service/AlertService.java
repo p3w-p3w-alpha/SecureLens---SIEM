@@ -33,6 +33,7 @@ public class AlertService {
 
     private final AlertRepository alertRepository;
     private final LogRepository logRepository;
+    private final AuditService auditService;
 
     public Page<AlertResponse> findAll(String severity, String status, String ruleId,
                                        String sourceIp, Instant startDate, Instant endDate,
@@ -93,6 +94,7 @@ public class AlertService {
             alert.setResolvedBy(resolvedBy);
         }
         alert = alertRepository.save(alert);
+        try { auditService.log("ALERT_STATUS_CHANGE", "ALERT", String.valueOf(id), resolvedBy != null ? resolvedBy : "analyst", "Alert " + id + " status → " + newStatus); } catch (Exception ignored) {}
         return toResponse(alert);
     }
 

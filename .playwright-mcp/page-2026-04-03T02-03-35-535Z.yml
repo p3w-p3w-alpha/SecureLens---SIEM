@@ -1,0 +1,112 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - img [ref=e6]
+      - generic [ref=e8]: SecureLens
+    - navigation [ref=e10]:
+      - paragraph [ref=e11]: Navigation
+      - link "Dashboard" [ref=e12] [cursor=pointer]:
+        - /url: /dashboard
+        - generic [ref=e13]:
+          - img [ref=e15]
+          - generic [ref=e20]: Dashboard
+      - link "9+ Alerts" [ref=e21] [cursor=pointer]:
+        - /url: /alerts
+        - generic [ref=e22]:
+          - generic [ref=e23]:
+            - img [ref=e24]
+            - generic [ref=e27]: 9+
+          - generic [ref=e28]: Alerts
+      - link "Logs" [ref=e29] [cursor=pointer]:
+        - /url: /logs
+        - generic [ref=e30]:
+          - img [ref=e32]
+          - generic [ref=e35]: Logs
+      - link "Threat Intel" [ref=e36] [cursor=pointer]:
+        - /url: /intel
+        - generic [ref=e37]:
+          - img [ref=e39]
+          - generic [ref=e42]: Threat Intel
+      - link "Hunt" [ref=e43] [cursor=pointer]:
+        - /url: /hunt
+        - generic [ref=e44]:
+          - img [ref=e47]
+          - generic [ref=e49]: Hunt
+      - link "Incidents" [ref=e50] [cursor=pointer]:
+        - /url: /incidents
+        - generic [ref=e51]:
+          - img [ref=e53]
+          - generic [ref=e55]: Incidents
+      - link "Simulator" [ref=e56] [cursor=pointer]:
+        - /url: /simulator
+        - generic [ref=e57]:
+          - img [ref=e59]
+          - generic [ref=e61]: Simulator
+      - link "Ingest" [ref=e62] [cursor=pointer]:
+        - /url: /ingest
+        - generic [ref=e63]:
+          - img [ref=e65]
+          - generic [ref=e68]: Ingest
+    - generic [ref=e72]: V
+  - main [ref=e73]:
+    - generic [ref=e76]:
+      - generic [ref=e77]:
+        - generic [ref=e78]:
+          - img [ref=e80]
+          - heading "THREAT HUNTING" [level=1] [ref=e82]
+        - generic [ref=e83]:
+          - heading "Query Builder" [level=2] [ref=e84]
+          - generic [ref=e85]:
+            - combobox [ref=e86] [cursor=pointer]:
+              - option "sourceIp" [selected]
+              - option "destinationIp"
+              - option "eventType"
+              - option "severity"
+              - option "userIdField"
+              - option "rawMessage"
+            - combobox [ref=e87] [cursor=pointer]:
+              - option "EQUALS" [selected]
+              - option "NOT_EQUALS"
+              - option "CONTAINS"
+              - option "STARTS_WITH"
+            - textbox "Value..." [ref=e88]
+          - button "Add Condition" [ref=e89] [cursor=pointer]:
+            - img [ref=e90]
+            - text: Add Condition
+          - generic [ref=e91]:
+            - generic [ref=e92]:
+              - generic [ref=e93]: Start Date
+              - textbox [ref=e94]
+            - generic [ref=e95]:
+              - generic [ref=e96]: End Date
+              - textbox [ref=e97]
+            - generic [ref=e98]:
+              - generic [ref=e99]: Group By
+              - combobox [ref=e100] [cursor=pointer]:
+                - option "None" [selected]
+                - option "sourceIp"
+                - option "destinationIp"
+                - option "eventType"
+                - option "severity"
+                - option "userIdField"
+          - generic [ref=e101]:
+            - button "Execute Hunt" [ref=e102] [cursor=pointer]:
+              - img [ref=e103]
+              - text: Execute Hunt
+            - button "Save Hunt" [ref=e107] [cursor=pointer]:
+              - img [ref=e108]
+              - text: Save Hunt
+      - generic [ref=e112]:
+        - heading "Saved Hunts" [level=2] [ref=e113]
+        - generic [ref=e115]:
+          - paragraph [ref=e116]: Data Transfer Investigation
+          - paragraph [ref=e117]: analyst · 3/30/2026
+          - generic [ref=e118]:
+            - button "Load" [ref=e119] [cursor=pointer]:
+              - img [ref=e120]
+              - text: Load
+            - button "Run" [ref=e124] [cursor=pointer]:
+              - img [ref=e125]
+              - text: Run
+  - button "AI Assistant" [ref=e127] [cursor=pointer]:
+    - img [ref=e128]

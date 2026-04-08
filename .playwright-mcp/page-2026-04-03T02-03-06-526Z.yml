@@ -1,0 +1,70 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - img [ref=e6]
+      - generic [ref=e8]: SecureLens
+    - navigation [ref=e10]:
+      - paragraph [ref=e11]: Navigation
+      - link "Dashboard" [ref=e12] [cursor=pointer]:
+        - /url: /dashboard
+        - generic [ref=e13]:
+          - img [ref=e15]
+          - generic [ref=e20]: Dashboard
+      - link "Alerts" [ref=e21] [cursor=pointer]:
+        - /url: /alerts
+        - generic [ref=e22]:
+          - img [ref=e24]
+          - generic [ref=e27]: Alerts
+      - link "Logs" [ref=e28] [cursor=pointer]:
+        - /url: /logs
+        - generic [ref=e29]:
+          - img [ref=e31]
+          - generic [ref=e34]: Logs
+      - link "Threat Intel" [ref=e35] [cursor=pointer]:
+        - /url: /intel
+        - generic [ref=e36]:
+          - img [ref=e38]
+          - generic [ref=e41]: Threat Intel
+      - link "Hunt" [ref=e42] [cursor=pointer]:
+        - /url: /hunt
+        - generic [ref=e43]:
+          - img [ref=e45]
+          - generic [ref=e47]: Hunt
+      - link "Incidents" [ref=e48] [cursor=pointer]:
+        - /url: /incidents
+        - generic [ref=e49]:
+          - img [ref=e52]
+          - generic [ref=e54]: Incidents
+      - link "Simulator" [ref=e55] [cursor=pointer]:
+        - /url: /simulator
+        - generic [ref=e56]:
+          - img [ref=e58]
+          - generic [ref=e60]: Simulator
+      - link "Ingest" [ref=e61] [cursor=pointer]:
+        - /url: /ingest
+        - generic [ref=e62]:
+          - img [ref=e64]
+          - generic [ref=e67]: Ingest
+    - generic [ref=e71]: V
+  - main [ref=e72]:
+    - generic [ref=e74]:
+      - generic [ref=e75]:
+        - generic [ref=e76]:
+          - img [ref=e77]
+          - heading "INCIDENT MANAGEMENT" [level=1] [ref=e79]
+        - button "Create Incident" [ref=e80] [cursor=pointer]:
+          - img [ref=e81]
+          - text: Create Incident
+      - table [ref=e83]:
+        - rowgroup [ref=e84]:
+          - row "Title Severity Status Created By Created" [ref=e85]:
+            - columnheader "Title" [ref=e86]
+            - columnheader "Severity" [ref=e87]
+            - columnheader "Status" [ref=e88]
+            - columnheader "Created By" [ref=e89]
+            - columnheader "Created" [ref=e90]
+        - rowgroup [ref=e91]:
+          - row "No incidents yet" [ref=e92]:
+            - cell "No incidents yet" [ref=e93]
+  - button "AI Assistant" [ref=e94] [cursor=pointer]:
+    - img [ref=e95]

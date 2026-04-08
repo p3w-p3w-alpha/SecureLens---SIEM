@@ -1,0 +1,3 @@
+[      96ms] [WARNING] No routes matched location "/admin"  @ http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=348c33e6:163
+[      96ms] [WARNING] No routes matched location "/admin"  @ http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=348c33e6:163
+[   30219ms] [ERROR] WebSocket connection to 'ws://localhost:5173/?token=GAB6GI9V8imF' failed:  @ http://localhost:5173/@vite/client:840

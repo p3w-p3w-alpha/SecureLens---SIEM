@@ -1,0 +1,79 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - img [ref=e6]
+      - generic [ref=e8]: SecureLens
+    - navigation [ref=e10]:
+      - paragraph [ref=e11]: Navigation
+      - link "Dashboard" [ref=e12] [cursor=pointer]:
+        - /url: /dashboard
+        - generic [ref=e13]:
+          - img [ref=e15]
+          - generic [ref=e20]: Dashboard
+      - link "Alerts" [ref=e21] [cursor=pointer]:
+        - /url: /alerts
+        - generic [ref=e22]:
+          - img [ref=e24]
+          - generic [ref=e27]: Alerts
+      - link "Logs" [ref=e28] [cursor=pointer]:
+        - /url: /logs
+        - generic [ref=e29]:
+          - img [ref=e31]
+          - generic [ref=e34]: Logs
+      - link "Threat Intel" [ref=e35] [cursor=pointer]:
+        - /url: /intel
+        - generic [ref=e36]:
+          - img [ref=e38]
+          - generic [ref=e41]: Threat Intel
+      - link "Hunt" [ref=e42] [cursor=pointer]:
+        - /url: /hunt
+        - generic [ref=e43]:
+          - img [ref=e45]
+          - generic [ref=e47]: Hunt
+      - link "Incidents" [ref=e48] [cursor=pointer]:
+        - /url: /incidents
+        - generic [ref=e49]:
+          - img [ref=e51]
+          - generic [ref=e53]: Incidents
+      - link "Simulator" [ref=e54] [cursor=pointer]:
+        - /url: /simulator
+        - generic [ref=e55]:
+          - img [ref=e57]
+          - generic [ref=e59]: Simulator
+      - link "Ingest" [ref=e60] [cursor=pointer]:
+        - /url: /ingest
+        - generic [ref=e61]:
+          - img [ref=e64]
+          - generic [ref=e67]: Ingest
+    - generic [ref=e71]: V
+  - main [ref=e72]:
+    - generic [ref=e75]:
+      - generic [ref=e76]:
+        - generic [ref=e77]:
+          - img [ref=e78]
+          - heading "DATA INGESTION TERMINAL" [level=1] [ref=e82]
+        - paragraph [ref=e83]: Upload log files or paste raw log data. Supports JSON, CSV, and syslog with auto-normalization.
+      - generic [ref=e85] [cursor=pointer]:
+        - img [ref=e86]
+        - paragraph [ref=e89]: Drop log files here or click to browse
+        - paragraph [ref=e90]: .json, .csv, .log, .txt
+      - generic [ref=e91]:
+        - generic [ref=e92]:
+          - button "JSON" [ref=e93] [cursor=pointer]: JSON
+          - button "CSV" [ref=e95] [cursor=pointer]
+          - button "Syslog" [ref=e96] [cursor=pointer]
+        - generic [ref=e97]:
+          - 'textbox "[ { \"timestamp\": \"2026-01-15T10:30:00Z\", \"src_ip\": \"192.168.1.100\", \"event_type\": \"login_failed\", \"severity\": \"HIGH\", \"message\": \"Failed login attempt\" } ]" [ref=e99]':
+            - /placeholder: "[\n  {\n    \"timestamp\": \"2026-01-15T10:30:00Z\",\n    \"src_ip\": \"192.168.1.100\",\n    \"event_type\": \"login_failed\",\n    \"severity\": \"HIGH\",\n    \"message\": \"Failed login attempt\"\n  }\n]"
+          - generic [ref=e100]:
+            - button "INGEST" [disabled] [ref=e101]
+            - generic [ref=e102]: "Format: JSON"
+      - generic [ref=e103]:
+        - button "Sample CSV" [ref=e104] [cursor=pointer]:
+          - img [ref=e105]
+          - text: Sample CSV
+        - button "Sample JSON" [ref=e108] [cursor=pointer]:
+          - img [ref=e109]
+          - text: Sample JSON
+  - button "AI Assistant" [ref=e112] [cursor=pointer]:
+    - img [ref=e113]

@@ -1,0 +1,52 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - img [ref=e6]
+      - generic [ref=e8]: SecureLens
+    - navigation [ref=e10]:
+      - paragraph [ref=e11]: Navigation
+      - link "Dashboard" [ref=e12] [cursor=pointer]:
+        - /url: /dashboard
+        - generic [ref=e13]:
+          - img [ref=e16]
+          - generic [ref=e21]: Dashboard
+      - link "Alerts" [ref=e22] [cursor=pointer]:
+        - /url: /alerts
+        - generic [ref=e23]:
+          - img [ref=e25]
+          - generic [ref=e28]: Alerts
+      - link "Logs" [ref=e29] [cursor=pointer]:
+        - /url: /logs
+        - generic [ref=e30]:
+          - img [ref=e32]
+          - generic [ref=e35]: Logs
+      - link "Threat Intel" [ref=e36] [cursor=pointer]:
+        - /url: /intel
+        - generic [ref=e37]:
+          - img [ref=e39]
+          - generic [ref=e42]: Threat Intel
+      - link "Hunt" [ref=e43] [cursor=pointer]:
+        - /url: /hunt
+        - generic [ref=e44]:
+          - img [ref=e46]
+          - generic [ref=e48]: Hunt
+      - link "Incidents" [ref=e49] [cursor=pointer]:
+        - /url: /incidents
+        - generic [ref=e50]:
+          - img [ref=e52]
+          - generic [ref=e54]: Incidents
+      - link "Simulator" [ref=e55] [cursor=pointer]:
+        - /url: /simulator
+        - generic [ref=e56]:
+          - img [ref=e58]
+          - generic [ref=e60]: Simulator
+      - link "Ingest" [ref=e61] [cursor=pointer]:
+        - /url: /ingest
+        - generic [ref=e62]:
+          - img [ref=e64]
+          - generic [ref=e67]: Ingest
+    - generic [ref=e71]: V
+  - main [ref=e72]:
+    - generic [ref=e74]: Loading dashboard...
+  - button "AI Assistant" [ref=e75] [cursor=pointer]:
+    - img [ref=e76]

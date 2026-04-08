@@ -1,0 +1,27 @@
+- main [ref=e4]:
+  - generic [ref=e7]:
+    - paragraph [ref=e13]: GLOBAL THREAT MONITORING
+    - generic [ref=e18]:
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - img [ref=e21]
+          - heading "SECURELENS" [level=1] [ref=e24]
+        - paragraph [ref=e26]: Security Operations Platform
+      - generic [ref=e29]:
+        - generic [ref=e30]:
+          - generic [ref=e31]: EMAIL
+          - generic [ref=e32]:
+            - img [ref=e33]
+            - textbox "analyst@securelens.io" [ref=e36]
+        - generic [ref=e37]:
+          - generic [ref=e38]: PASSWORD
+          - generic [ref=e39]:
+            - img [ref=e40]
+            - textbox "Enter credentials" [ref=e43]
+        - button "AUTHENTICATE" [ref=e45] [cursor=pointer]:
+          - generic [ref=e46]: AUTHENTICATE
+      - paragraph [ref=e50]:
+        - text: No account?
+        - link "Request access" [ref=e51] [cursor=pointer]:
+          - /url: /register
+      - paragraph [ref=e53]: v2.0.0 // SECURELENS SIEM

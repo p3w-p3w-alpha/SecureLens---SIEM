@@ -24,6 +24,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final AuditService auditService;
 
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
@@ -37,10 +38,12 @@ public class AuthService {
                 .username(request.getUsername())
                 .email(request.getEmail())
                 .passwordHash(passwordEncoder.encode(request.getPassword()))
-                .role(Role.ANALYST)
+                .role(userRepository.count() == 0 ? Role.ADMIN : Role.ANALYST)
                 .build();
 
         user = userRepository.save(user);
+
+        try { auditService.log("USER_REGISTER", "USER", user.getId().toString(), user.getUsername(), "User registered: " + user.getUsername()); } catch (Exception ignored) {}
 
         String token = jwtUtil.generateToken(user);
         return buildAuthResponse(user, token);
@@ -53,6 +56,8 @@ public class AuthService {
         if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
             throw new InvalidCredentialsException("Invalid email or password");
         }
+
+        try { auditService.log("USER_LOGIN", "USER", user.getId().toString(), user.getUsername(), "User logged in: " + user.getUsername()); } catch (Exception ignored) {}
 
         String token = jwtUtil.generateToken(user);
         return buildAuthResponse(user, token);

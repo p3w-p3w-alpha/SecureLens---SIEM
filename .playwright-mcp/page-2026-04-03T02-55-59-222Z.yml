@@ -1,0 +1,273 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - complementary [ref=e57]:
+      - generic [ref=e58]:
+        - img [ref=e59]
+        - generic: SecureLens
+      - navigation [ref=e62]:
+        - paragraph [ref=e63]: Navigation
+        - link "Dashboard" [ref=e64] [cursor=pointer]:
+          - /url: /dashboard
+          - generic [ref=e65]:
+            - img [ref=e68]
+            - generic: Dashboard
+        - link "9+ Alerts" [ref=e73] [cursor=pointer]:
+          - /url: /alerts
+          - generic [ref=e74]:
+            - generic [ref=e75]:
+              - img [ref=e76]
+              - generic [ref=e79]: 9+
+            - generic: Alerts
+        - link "Logs" [ref=e80] [cursor=pointer]:
+          - /url: /logs
+          - generic [ref=e81]:
+            - img [ref=e83]
+            - generic: Logs
+        - link "Threat Intel" [ref=e86] [cursor=pointer]:
+          - /url: /intel
+          - generic [ref=e87]:
+            - img [ref=e89]
+            - generic: Threat Intel
+        - link "Hunt" [ref=e92] [cursor=pointer]:
+          - /url: /hunt
+          - generic [ref=e93]:
+            - img [ref=e95]
+            - generic: Hunt
+        - link "Incidents" [ref=e97] [cursor=pointer]:
+          - /url: /incidents
+          - generic [ref=e98]:
+            - img [ref=e100]
+            - generic: Incidents
+        - link "Simulator" [ref=e102] [cursor=pointer]:
+          - /url: /simulator
+          - generic [ref=e103]:
+            - img [ref=e105]
+            - generic: Simulator
+        - link "Ingest" [ref=e107] [cursor=pointer]:
+          - /url: /ingest
+          - generic [ref=e108]:
+            - img [ref=e110]
+            - generic: Ingest
+      - generic [ref=e116]: V
+    - main [ref=e4]:
+      - generic [ref=e118]:
+        - generic [ref=e119]:
+          - heading "SOC Dashboard" [level=1] [ref=e120]
+          - generic [ref=e121]:
+            - img [ref=e122]
+            - text: Live
+        - generic [ref=e126]:
+          - img
+          - generic [ref=e127]:
+            - generic [ref=e132]:
+              - img [ref=e134]
+              - generic [ref=e136]:
+                - text: "954"
+                - paragraph [ref=e137]: Total Events
+            - generic [ref=e142]:
+              - img [ref=e144]
+              - generic [ref=e146]:
+                - text: "8"
+                - paragraph [ref=e147]: Active Alerts
+            - generic [ref=e152]:
+              - img [ref=e154]
+              - generic [ref=e156]:
+                - text: "13"
+                - paragraph [ref=e157]: Critical Threats
+            - generic [ref=e162]:
+              - img [ref=e164]
+              - generic [ref=e166]:
+                - text: "1"
+                - paragraph [ref=e167]: Open Incidents
+        - generic [ref=e168]:
+          - generic [ref=e172]:
+            - generic [ref=e173]: Threat Origin Map
+            - generic [ref=e174]: 10 sources
+          - generic [ref=e181]:
+            - generic [ref=e182]:
+              - generic [ref=e183]: By Severity
+              - application [ref=e186]:
+                - generic [ref=e201]:
+                  - generic [ref=e203]: HIGH
+                  - generic [ref=e205]: MEDIUM
+                  - generic [ref=e207]: CRITICAL
+            - generic [ref=e208]:
+              - generic [ref=e209]: By Rule
+              - generic [ref=e210]:
+                - application [ref=e213]
+                - generic:
+                  - generic:
+                    - paragraph: "37"
+                    - paragraph: total
+            - generic [ref=e241]:
+              - generic [ref=e242]: Top Attackers
+              - generic [ref=e243]:
+                - link "10.0.1.100 6" [ref=e244] [cursor=pointer]:
+                  - /url: /intel?ip=10.0.1.100
+                  - generic [ref=e245]: 10.0.1.100
+                  - generic [ref=e248]: "6"
+                - link "172.16.50.99 5" [ref=e249] [cursor=pointer]:
+                  - /url: /intel?ip=172.16.50.99
+                  - generic [ref=e250]: 172.16.50.99
+                  - generic [ref=e253]: "5"
+                - link "185.220.101.3 5" [ref=e254] [cursor=pointer]:
+                  - /url: /intel?ip=185.220.101.3
+                  - generic [ref=e255]: 185.220.101.3
+                  - generic [ref=e258]: "5"
+                - link "10.0.1.10 4" [ref=e259] [cursor=pointer]:
+                  - /url: /intel?ip=10.0.1.10
+                  - generic [ref=e260]: 10.0.1.10
+                  - generic [ref=e263]: "4"
+                - link "10.0.1.45 4" [ref=e264] [cursor=pointer]:
+                  - /url: /intel?ip=10.0.1.45
+                  - generic [ref=e265]: 10.0.1.45
+                  - generic [ref=e268]: "4"
+                - link "91.198.174.1 4" [ref=e269] [cursor=pointer]:
+                  - /url: /intel?ip=91.198.174.1
+                  - generic [ref=e270]: 91.198.174.1
+                  - generic [ref=e273]: "4"
+                - link "10.0.0.77 4" [ref=e274] [cursor=pointer]:
+                  - /url: /intel?ip=10.0.0.77
+                  - generic [ref=e275]: 10.0.0.77
+                  - generic [ref=e278]: "4"
+        - generic [ref=e279]:
+          - generic [ref=e280]:
+            - generic [ref=e281]:
+              - generic [ref=e282]: Alert Trend
+              - generic [ref=e283]: 24h
+            - application [ref=e286]:
+              - generic [ref=e295]:
+                - generic [ref=e297]: 03:00
+                - generic [ref=e299]: 07:00
+                - generic [ref=e301]: 11:00
+                - generic [ref=e303]: 15:00
+                - generic [ref=e305]: 19:00
+                - generic [ref=e307]: 23:00
+          - generic [ref=e308]:
+            - generic [ref=e309]: Hourly Activity
+            - generic [ref=e311]:
+              - generic [ref=e312]: Low
+              - generic [ref=e318]: High
+          - generic [ref=e319]:
+            - generic [ref=e320]: MITRE ATT&CK Coverage
+            - generic [ref=e321]:
+              - 'generic "Initial Access Rules: R-002, R-008" [ref=e322]':
+                - paragraph [ref=e323]: TA0001
+                - paragraph [ref=e324]: Initial Access
+              - 'generic "Priv Escalation Rules: R-003" [ref=e325]':
+                - paragraph [ref=e326]: TA0004
+                - paragraph [ref=e327]: Priv Escalation
+              - 'generic "Credential Access Rules: R-001" [ref=e328]':
+                - paragraph [ref=e329]: TA0006
+                - paragraph [ref=e330]: Credential Access
+              - 'generic "Discovery Rules: R-005" [ref=e331]':
+                - paragraph [ref=e332]: TA0007
+                - paragraph [ref=e333]: Discovery
+              - 'generic "Lateral Movement Rules: R-006" [ref=e334]':
+                - paragraph [ref=e335]: TA0008
+                - paragraph [ref=e336]: Lateral Movement
+              - 'generic "Exfiltration Rules: R-004" [ref=e337]':
+                - paragraph [ref=e338]: TA0010
+                - paragraph [ref=e339]: Exfiltration
+              - 'generic "Command & Control Rules: R-007" [ref=e340]':
+                - paragraph [ref=e341]: TA0011
+                - paragraph [ref=e342]: Command & Control
+            - paragraph [ref=e343]: 7/7 tactics active
+        - generic [ref=e344]:
+          - generic [ref=e345]:
+            - generic [ref=e346]: Event Types
+            - application [ref=e349]
+          - generic [ref=e350]:
+            - generic [ref=e351]:
+              - generic [ref=e352]: Recent Alerts
+              - link "View all" [ref=e353] [cursor=pointer]:
+                - /url: /alerts
+                - text: View all
+                - img [ref=e354]
+            - generic [ref=e357]:
+              - link "M Manual Hunt Finding 2h" [ref=e358] [cursor=pointer]:
+                - /url: /alerts/96
+                - generic [ref=e359]: M
+                - generic [ref=e360]: Manual Hunt Finding
+                - generic [ref=e361]: 2h
+              - link "H Privilege Escalation 12h" [ref=e362] [cursor=pointer]:
+                - /url: /alerts/95
+                - generic [ref=e363]: H
+                - generic [ref=e364]: Privilege Escalation
+                - generic [ref=e365]: 12h
+              - link "M Port Scan 12h" [ref=e366] [cursor=pointer]:
+                - /url: /alerts/94
+                - generic [ref=e367]: M
+                - generic [ref=e368]: Port Scan
+                - generic [ref=e369]: 12h
+              - link "C Malware Beacon (C2) 12h" [ref=e370] [cursor=pointer]:
+                - /url: /alerts/93
+                - generic [ref=e371]: C
+                - generic [ref=e372]: Malware Beacon (C2)
+                - generic [ref=e373]: 12h
+              - link "H Lateral Movement 12h" [ref=e374] [cursor=pointer]:
+                - /url: /alerts/92
+                - generic [ref=e375]: H
+                - generic [ref=e376]: Lateral Movement
+                - generic [ref=e377]: 12h
+              - link "C Impossible Travel 12h" [ref=e378] [cursor=pointer]:
+                - /url: /alerts/91
+                - generic [ref=e379]: C
+                - generic [ref=e380]: Impossible Travel
+                - generic [ref=e381]: 12h
+              - link "C Data Exfiltration 12h" [ref=e382] [cursor=pointer]:
+                - /url: /alerts/90
+                - generic [ref=e383]: C
+                - generic [ref=e384]: Data Exfiltration
+                - generic [ref=e385]: 12h
+              - link "H Brute Force Login 12h" [ref=e386] [cursor=pointer]:
+                - /url: /alerts/89
+                - generic [ref=e387]: H
+                - generic [ref=e388]: Brute Force Login
+                - generic [ref=e389]: 12h
+          - generic [ref=e390]:
+            - generic [ref=e391]: Activity
+            - generic [ref=e392]:
+              - generic [ref=e393]:
+                - generic [ref=e394]: USER_LOGIN
+                - generic [ref=e395]: "User logged in: verifier"
+                - generic [ref=e396]: 0s
+              - generic [ref=e397]:
+                - generic [ref=e398]: USER_LOGIN
+                - generic [ref=e399]: "User logged in: verifier"
+                - generic [ref=e400]: 49s
+              - generic [ref=e401]:
+                - generic [ref=e402]: USER_LOGIN
+                - generic [ref=e403]: "User logged in: testanalyst"
+                - generic [ref=e404]: 3m
+              - generic [ref=e405]:
+                - generic [ref=e406]: USER_LOGIN
+                - generic [ref=e407]: "User logged in: verifier"
+                - generic [ref=e408]: 3m
+              - generic [ref=e409]:
+                - generic [ref=e410]: USER_LOGIN
+                - generic [ref=e411]: "User logged in: verifier"
+                - generic [ref=e412]: 18m
+              - generic [ref=e413]:
+                - generic [ref=e414]: USER_LOGIN
+                - generic [ref=e415]: "User logged in: testanalyst"
+                - generic [ref=e416]: 19m
+              - generic [ref=e417]:
+                - generic [ref=e418]: USER_LOGIN
+                - generic [ref=e419]: "User logged in: verifier"
+                - generic [ref=e420]: 55m
+              - generic [ref=e421]:
+                - generic [ref=e422]: USER_REGISTER
+                - generic [ref=e423]: "User registered: verifier"
+                - generic [ref=e424]: 55m
+              - generic [ref=e425]:
+                - generic [ref=e426]: USER_LOGIN
+                - generic [ref=e427]: "User logged in: testanalyst"
+                - generic [ref=e428]: 1h
+              - generic [ref=e429]:
+                - generic [ref=e430]: ALERT_STATUS_CHANGE
+                - generic [ref=e431]: Alert 96 status → FALSE_POSITIVE
+                - generic [ref=e432]: 1h
+    - button "AI Assistant" [ref=e433] [cursor=pointer]:
+      - img [ref=e434]
+  - generic [ref=e437]: HIGH

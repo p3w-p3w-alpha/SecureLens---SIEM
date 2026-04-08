@@ -1,0 +1,4 @@
+[      10ms] TypeError: Cannot read properties of undefined (reading 'dashOffset')
+    at Object.current (http://localhost:5173/src/components/intel/ThreatGlobe3D.jsx:188:29)
+    at update (http://localhost:5173/node_modules/.vite/deps/react-three-fiber.esm-S8bBd4UI.js?v=577d7362:9063:20)
+    at loop (http://localhost:5173/node_modules/.vite/deps/react-three-fiber.esm-S8bBd4UI.js?v=577d7362:9083:175)
